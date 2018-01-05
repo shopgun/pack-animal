@@ -1,4 +1,4 @@
-import packAnimal from "../src/pack-animal";
+import packAnimal from "../src";
 
 /**
  * Dummy test

@@ -16,10 +16,10 @@ const randomPack = (
   polygons: IPoint[][]
 ) =>
   polygons.map(points => ({
-    rotate: ~~(Math.random() * 360),
+    rotate: Math.round(Math.random() * 360),
     scale: 1,
-    translateX: ~~(Math.random() * squareWidth / 2),
-    translateY: ~~(Math.random() * squareHeight / 2)
+    translateX: Math.round(Math.random() * squareWidth / 2),
+    translateY: Math.round(Math.random() * squareHeight / 2)
   }));
 
 export default (
