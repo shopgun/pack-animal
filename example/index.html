@@ -1,5 +1,5 @@
 Provided polys:
-<div class="providedPolys" style="display: flex"></div>
+<div class="providedPolys" style="display: flex;align-items: center;"></div>
 Box to pack polys in:
 <div class="boxToPack" style="border: 1px solid teal;"></div>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -94,14 +94,18 @@ Box to pack polys in:
     </div>`);
   });
   $('.boxToPack').width(realData.width).height(realData.height);
+  console.time('bogusPack')
   const childTransforms = packAnimal(realData.width, realData.height, polygons);
+  console.timeEnd('bogusPack');
   console.log(childTransforms);
   $('.boxToPack').append(`<svg viewBox="0 0 ${realData.width} ${realData.height}">
     ${realData.children.map((child, index) => {
       const svgPoints = child.contour.points.map(({ x, y }) => `${x},${y}`).join(' ');
       const transform = childTransforms[index];
-      const transformAttributeValue = `rotate(${transform.rotate} ${child.width / 2} ${child.height / 2}) scale(${transform.scale}) translate(${transform.translateX}, ${transform.translateY})`
-      return `
+//      const transformAttributeValue = `rotate(${transform.rotate} ${child.width / 2} ${child.height / 2}) scale(${transform.scale}) translate(${transform.translateX}, ${transform.translateY})`
+        const transformAttributeValue = transform.cssTransform;
+
+return `
       <polygon
         points="${svgPoints}"
         style="fill:${child.colorPalette[3]}; opacity: 0.5;"
