@@ -94,18 +94,18 @@ Box to pack polys in:
     </div>`);
   });
   $('.boxToPack').width(realData.width).height(realData.height);
-  console.time('bogusPack')
+  console.time('greedyBottomLeftPack')
   const childTransforms = packAnimal(realData.width, realData.height, polygons);
-  console.timeEnd('bogusPack');
+  console.timeEnd('greedyBottomLeftPack');
   console.log(childTransforms);
   $('.boxToPack').append(`<svg viewBox="0 0 ${realData.width} ${realData.height}">
     ${realData.children.map((child, index) => {
       const svgPoints = child.contour.points.map(({ x, y }) => `${x},${y}`).join(' ');
       const transform = childTransforms[index];
-//      const transformAttributeValue = `rotate(${transform.rotate} ${child.width / 2} ${child.height / 2}) scale(${transform.scale}) translate(${transform.translateX}, ${transform.translateY})`
-        const transformAttributeValue = transform.cssTransform;
+      //      const transformAttributeValue = `rotate(${transform.rotate} ${child.width / 2} ${child.height / 2}) scale(${transform.scale}) translate(${transform.translateX}, ${transform.translateY})`
+      const transformAttributeValue = transform.cssTransform;
 
-return `
+      return `
       <polygon
         points="${svgPoints}"
         style="fill:${child.colorPalette[3]}; opacity: 0.5;"
@@ -113,7 +113,7 @@ return `
         />
       <image href="${child.url}" height="${child.height}" width="${child.width}"
         transform="${transformAttributeValue}"/>    
-    `})}
+    `}).join('')}
     </svg>`)
 
 </script>
