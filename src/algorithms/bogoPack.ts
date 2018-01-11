@@ -13,6 +13,9 @@ export const bogoPack = (
   rectangleHeight: number,
   polygons: IPoint[][]
 ): ITransform[] => {
+  if (!polygons.length) {
+    return [];
+  }
   const rectangle: IPoint[] = [
     { x: 0, y: 0 },
     { x: rectangleWidth, y: rectangleHeight }

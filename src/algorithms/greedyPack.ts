@@ -1,6 +1,5 @@
 import { Matrix } from "transformation-matrix-js";
-import { verifyPack } from "../geometry";
-import { IPoint, ITransform, polygonArea } from "../geometry.js";
+import { IPoint, ITransform, polygonArea, verifyPack } from "../geometry";
 
 const polygonBounds = (points: IPoint[]) => {
   const left = Math.min(...points.map(point => point.x));
@@ -20,6 +19,9 @@ export const greedyPack = (
   rectangleHeight: number,
   polygons: IPoint[][]
 ): ITransform[] => {
+  if (!polygons.length) {
+    return [];
+  }
   const rectangle: IPoint[] = [
     { x: 0, y: 0 },
     { x: rectangleWidth, y: rectangleHeight }

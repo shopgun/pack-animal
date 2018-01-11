@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`greedyPack gives nothing for nothingg 1`] = `Array []`;
+
+exports[`greedyPack works 1`] = `
+Array [
+  Object {
+    "cssTransform": "matrix(0.97,0,0,0.97,0,378)",
+    "matrix": "{\\"a\\":0.97,\\"b\\":0,\\"c\\":0,\\"d\\":0.97,\\"e\\":0,\\"f\\":378}",
+    "points": Array [
+      Object {
+        "x": 0.97,
+        "y": 378.97,
+      },
+      Object {
+        "x": 0.97,
+        "y": 733.02,
+      },
+      Object {
+        "x": 774.06,
+        "y": 733.02,
+      },
+      Object {
+        "x": 774.06,
+        "y": 378.97,
+      },
+    ],
+    "rotate": 120,
+    "scale": 0.97,
+    "translateX": 0,
+    "translateY": 378,
+  },
+  Object {
+    "cssTransform": "matrix(0.97,0,0,0.97,20,0)",
+    "matrix": "{\\"a\\":0.97,\\"b\\":0,\\"c\\":0,\\"d\\":0.97,\\"e\\":20,\\"f\\":0}",
+    "points": Array [
+      Object {
+        "x": 20.97,
+        "y": 0.97,
+      },
+      Object {
+        "x": 59.769999999999996,
+        "y": 378.3,
+      },
+      Object {
+        "x": 769.81,
+        "y": 378.3,
+      },
+      Object {
+        "x": 794.06,
+        "y": 0.97,
+      },
+    ],
+    "rotate": 32,
+    "scale": 0.97,
+    "translateX": 20,
+    "translateY": 0,
+  },
+]
+`;
