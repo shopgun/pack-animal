@@ -8,6 +8,4 @@ export default (
   squareHeight: number,
   polygons: IPoint[][],
   { algorithm = greedyPack } = {}
-): ITransform[] => {
-  return algorithm(squareWidth, squareHeight, polygons);
-};
+): ITransform[] => algorithm(squareWidth, squareHeight, polygons);
