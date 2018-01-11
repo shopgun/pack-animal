@@ -93,7 +93,6 @@ Box to pack polys in:
       </svg>
     </div>`);
   });
-  $('.boxToPack').width(realData.width).height(realData.height);
   console.time('greedyBottomLeftPack')
   const childTransforms = packAnimal(realData.width, realData.height, polygons);
   console.timeEnd('greedyBottomLeftPack');
