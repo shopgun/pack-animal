@@ -12,7 +12,7 @@
   "author": "klarstrup <jk@shopgun.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/shopgun/pack-animal.git"
   },
   "license": "MIT",
   "engines": {
