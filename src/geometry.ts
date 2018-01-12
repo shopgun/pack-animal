@@ -95,11 +95,13 @@ export const verifyPack = (
     !(
       transformPolygons.length > 1 &&
       transformPolygons.some((transformPolygon, index) =>
-        doPolygonsOverlap(
-          transformPolygons[index].points,
-          transformPolygons[(index + 1) % polygonsLength].points
-        )
+        transformPolygons
+          .filter((value, arrIndex) => index !== arrIndex)
+          .some(otherPolygon =>
+            doPolygonsOverlap(transformPolygon.points, otherPolygon.points)
+          )
       )
     )
   );
 };
+const arrayWithoutElementAtIndex = (arr: any[], index: number) => arr;
