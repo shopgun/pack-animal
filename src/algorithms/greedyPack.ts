@@ -46,7 +46,7 @@ export const greedyPack = (
   let scale = 1;
   let j = 0;
   do {
-    scale = scale - 0.01 * j;
+    scale = scale - 0.001 * j;
     transformPolygons = polygons.reduce(
       (memo: ITransform[], points: IPoint[]): ITransform[] => {
         const width = Math.floor(
@@ -67,7 +67,7 @@ export const greedyPack = (
         let transformPolygon;
         const translateXIncrement = 1;
         const translateYIncrement = 1;
-        const rotateIncrement = 4;
+        const rotateIncrement = 1;
         let i = 0;
         let previousTranslateY = null;
         do {
@@ -130,7 +130,6 @@ export const greedyPack = (
           };
           i++;
         } while (verifyPack([...memo, transformPolygon], rectangle));
-
         const finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
         finalMatrix.translate(translateX, translateY).scale(scale, scale);
         transformPolygon = {
