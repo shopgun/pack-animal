@@ -1,8 +1,8 @@
 import {
   doPolygonsOverlap,
   IPoint,
-  ITransform,
   isPolygonWithinRectangle,
+  ITransform,
   polygonArea,
   rotateMatrixAroundPoint,
   verifyPack
