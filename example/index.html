@@ -5,100 +5,30 @@ Box to pack polys in:
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
 <script src="../dist/pack-animal.umd.js"></script>
+<script src="./realdata.js"></script>
 <script>
-  const realData = {
-    "width": 800,
-    "height": 742,
-    "children": [
-      {
-        "url": "https://api.republica.dk/image/motive-id/376-7407",
-        "channels": 4,
-        "width": 800,
-        "height": 366,
-        "hash": "d16533c995c232f9f177bad3398c6f99a9a4882bba9c69328f81f1d3938ef47e0868446ca9c122bd183773b97df55cf0e6463b0f0db91328f82a454557864811",
-        "colorPalette": [
-          "#c9d2e0",
-          "#19215d",
-          "#7f8ca5",
-          "#992c50",
-          "#676c79"
-        ],
-        "contour": {
-          "points": [
-            {
-              "x": 1,
-              "y": 1
-            },
-            {
-              "x": 1,
-              "y": 366
-            },
-            {
-              "x": 798,
-              "y": 366
-            },
-            {
-              "x": 798,
-              "y": 1
-            }
-          ],
-          "area": 290905
-        }
-      },
-      {
-        "url": "https://api.republica.dk/image/motive-id/376-7408",
-        "channels": 4,
-        "width": 800,
-        "height": 390,
-        "hash": "e412b744600a1d9964230f39825e8ac70ca5f546de7d82edec974d869d89e05ef9541848d2a3ddde162bda53e11051c1298845d3de0b0554f38ceb4df02a917a",
-        "colorPalette": [
-          "#bac5d4",
-          "#1c1f3b",
-          "#707c8f",
-          "#742840",
-          "#666474"
-        ],
-        "contour": {
-          "points": [
-            {
-              "x": 1,
-              "y": 1
-            },
-            {
-              "x": 41,
-              "y": 390
-            },
-            {
-              "x": 773,
-              "y": 390
-            },
-            {
-              "x": 798,
-              "y": 1
-            }
-          ],
-          "area": 297390.5
-        }
-      }
-    ]
-  };
-
-  const polygons = realData.children.map(child => child.contour.points);
-  realData.children.forEach(({ width, height, contour: { points }, url }) => {
+  const realData = Object.keys(window.incitoImages).map(url => ({
+    url,
+    ...window.incitoImages[url],
+  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(11, 22);
+  const polygons = realData.map(child => child.contour.points);
+  const width = 800;
+  const height = 742;
+  realData.forEach(({ contour: { points }, url, width, height, colorPalette }) => {
     const svgPoints = points.map(({ x, y }) => `${x},${y}`).join(' ');
     $('.providedPolys').append(`
     <div style="border: 30px solid rgba(0,0,0,0.125); width: 100%; height: auto;">
       <svg viewBox="0 0 ${width} ${height}" style="background:url(${url}); background-size: cover;">
-        <polygon points="${svgPoints}" style="fill:#992c50;opacity: 0.5;" />
+        <polygon points="${svgPoints}" style="fill:${colorPalette[3]};opacity: 0.5;" />
       </svg>
     </div>`);
   });
   console.time('greedyBottomLeftPack')
-  const childTransforms = packAnimal(realData.width, realData.height, polygons);
+  const childTransforms = packAnimal(width, height, polygons);
   console.timeEnd('greedyBottomLeftPack');
   console.log(childTransforms);
-  $('.boxToPack').append(`<svg viewBox="0 0 ${realData.width} ${realData.height}">
-    ${realData.children.map((child, index) => {
+  $('.boxToPack').append(`<svg viewBox="0 0 ${width} ${height}">
+    ${realData.map((child, index) => {
       const svgPoints = child.contour.points.map(({ x, y }) => `${x},${y}`).join(' ');
       const transform = childTransforms[index];
       //      const transformAttributeValue = `rotate(${transform.rotate} ${child.width / 2} ${child.height / 2}) scale(${transform.scale}) translate(${transform.translateX}, ${transform.translateY})`
