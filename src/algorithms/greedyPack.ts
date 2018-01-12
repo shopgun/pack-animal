@@ -59,6 +59,7 @@ export const greedyPack = (
             Math.min(...points.map(point => point.y))) *
             scale
         );
+        const center = { x: width / 2, y: height / 2 };
 
         let rotate = 0;
         let translateX = 0;
@@ -114,10 +115,7 @@ export const greedyPack = (
         do {
           previousRotate = rotate;
           rotate = rotate + rotateIncrement * i;
-          const m = rotateMatrixAroundPoint(
-            { x: width / 2, y: height / 2 },
-            rotate
-          );
+          const m = rotateMatrixAroundPoint(center, rotate);
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
           );
@@ -133,10 +131,7 @@ export const greedyPack = (
           i++;
         } while (verifyPack([...memo, transformPolygon], rectangle));
 
-        const finalMatrix = rotateMatrixAroundPoint(
-          { x: width / 2, y: height / 2 },
-          previousRotate
-        );
+        const finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
         finalMatrix.multiply(
           new Matrix().translate(translateX, translateY).scale(scale, scale)
         );
@@ -151,7 +146,6 @@ export const greedyPack = (
         };
 
         return [...memo, transformPolygon];
-        //    do {} while (!verifyPack(transformPolygons, rectangle));
       },
       []
     );
