@@ -106,8 +106,5 @@
     "typescript": "^2.3.4",
     "validate-commit-msg": "^2.12.2"
   },
-  "dependencies": {
-    "@turf/turf": "^5.1.6",
-    "polygon-overlap": "^1.0.5"
-  }
+  "dependencies": {}
 }

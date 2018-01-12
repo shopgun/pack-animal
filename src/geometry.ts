@@ -1,5 +1,5 @@
-import polygonOverlap from "polygon-overlap";
 import { Matrix } from "./vendor/matrix";
+import polygonOverlap from "./vendor/polygon-overlap";
 
 export interface IPoint {
   x: number;
