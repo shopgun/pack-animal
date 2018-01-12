@@ -13,19 +13,6 @@
  *
  * To synchronize a DOM element you can use [`toCSS()`]{@link Matrix#toCSS} or [`toCSS3D()`]{@link Matrix#toCSS3D}.
  * together with for example the `style.transform` property.
- *
- * @param {CanvasRenderingContext2D} [context] - Optional context to sync with Matrix
- * @param {HTMLElement} [element=null] - DOM Element to synchronize
- * @prop {number} a - scale x
- * @prop {number} b - shear y
- * @prop {number} c - shear x
- * @prop {number} d - scale y
- * @prop {number} e - translate x
- * @prop {number} f - translate y
- * @prop {CanvasRenderingContext2D} [context] - set or get current synchronized 2D context
- * @prop {HTMLElement} [element] - get current synchronized DOM element
- * @prop {boolean} [useCSS3D=false] - is a DOM element is defined for sync., choose whether to use 2D (false) or 3D (true) matrix to sync it.
- * @constructor
  * @license MIT license (header required)
  * @copyright Epistemex.com 2014-2017
  */
@@ -233,9 +220,10 @@ export class Matrix {
   public e: number;
   public f: number;
   public context: CanvasRenderingContext2D;
-  public useCSS3D: boolean = false;
-  private _px: string | undefined;
-  private _st: CSSStyleDeclaration;
+  private useCSS3D: boolean = false;
+  private px: string;
+  private st: { [index: string]: any };
+  private el: HTMLElement;
 
   constructor(context?: CanvasRenderingContext2D, element?: HTMLElement) {
     this.a = this.d = 1;
@@ -246,19 +234,20 @@ export class Matrix {
       (this.context = context).setTransform(1, 0, 0, 1, 0, 0);
     }
     if (element) {
-      this.element = element;
+      this.el = element;
     }
   }
   get element(): HTMLElement {
-    return this.element;
+    return this.el;
   }
   set element(el) {
-    if (!this.element) {
-      this._px = this._getPX();
+    if (!this.el) {
+      this.px = this._getPX();
       this.useCSS3D = false;
     }
-    this.element = el;
-    (this._st = this.element.style)[this._px] = this.toCSS();
+    this.el = el;
+    this.st = this.el.style;
+    this.st[this.px] = this.toCSS();
   }
 
   /**
@@ -318,8 +307,8 @@ export class Matrix {
    * rotates (accumulative). x can instead contain an object with
    * properties x and y and if so, y parameter will be ignored.
    */
-  rotateFromVector(x: { x: number; y: number }): Matrix;
-  rotateFromVector(x: number, y: number): Matrix;
+  public rotateFromVector(x: { x: number; y: number }): Matrix;
+  public rotateFromVector(x: number, y: number): Matrix;
   public rotateFromVector(x: any, y?: any) {
     return this.rotate(
       typeof x === "number" ? Math.atan2(y, x) : Math.atan2(x.y, x.x)
@@ -742,10 +731,10 @@ export class Matrix {
    * @param {Array} points - array with point objects or pairs
    * @returns {Array} A new array with transformed points
    */
-  applyToArray(
+  public applyToArray(
     points: Array<{ x: number; y: number }>
   ): Array<{ x: number; y: number }>;
-  applyToArray(points: number[]): number[];
+  public applyToArray(points: number[]): number[];
   public applyToArray(points: any) {
     if (typeof points[0] === "number") {
       const mxPoints = [];
@@ -807,10 +796,11 @@ export class Matrix {
    * The method will auto-detect the correct browser prefix if any.
    */
   public applyToElement(element: HTMLElement, use3D: boolean = false): Matrix {
-    if (!this._px) {
-      this._px = this._getPX();
+    if (!this.px) {
+      this.px = this._getPX();
     }
-    element.style[this._px] = use3D ? this.toCSS3D() : this.toCSS();
+    const elementStyle: { [index: string]: any } = element.style;
+    elementStyle[this.px] = use3D ? this.toCSS3D() : this.toCSS();
     return this;
   }
 
@@ -930,9 +920,14 @@ export class Matrix {
    * Returns a JSON compatible string of current matrix.
    */
   public toJSON() {
-    return `{"a":${this.a},"b":${this.b},"c":${this.c},"d":${this.d},"e":${
-      this.e
-    },"f":${this.f}`;
+    return `{
+      "a":${this.a},
+      "b":${this.b},
+      "c":${this.c},
+      "d":${this.d},
+      "e":${this.e},
+      "f":${this.f}
+    }`;
   }
 
   /**
@@ -1000,14 +995,17 @@ export class Matrix {
     if (this.context) {
       this.context.setTransform(this.a, this.b, this.c, this.d, this.e, this.f);
     }
-    if (this._st) {
-      this._st[this._px] = this.useCSS3D ? this.toCSS3D() : this.toCSS(); // can be optimized pre-storing func ref.
+    if (this.st) {
+      this.st[this.px] = this.useCSS3D ? this.toCSS3D() : this.toCSS(); // can be optimized pre-storing func ref.
     }
     return this;
   }
-  private _getPX(): string | undefined {
-    const lst = ["t", "oT", "msT", "mozT", "webkitT", "khtmlT"];
-    const style = document.createElement("div").style;
-    return lst.find(p => typeof style[p + "ransform"] !== "undefined");
+  private _getPX(): string {
+    const style: { [index: string]: any } = document.createElement("div").style;
+    return (
+      ["t", "oT", "msT", "mozT", "webkitT", "khtmlT"].find(
+        p => typeof style[p + "ransform"] !== "undefined"
+      ) || "transform"
+    );
   }
 }
