@@ -2,7 +2,6 @@ import { IPoint, ITransform } from "./geometry";
 
 import { bogoPack, greedyPack } from "./algorithms";
 
-//export * from "./algorithms";
 export default (
   squareWidth: number,
   squareHeight: number,

@@ -108,7 +108,6 @@
   },
   "dependencies": {
     "@turf/turf": "^5.1.6",
-    "polygon-overlap": "^1.0.5",
-    "transformation-matrix-js": "^2.7.1"
+    "polygon-overlap": "^1.0.5"
   }
 }

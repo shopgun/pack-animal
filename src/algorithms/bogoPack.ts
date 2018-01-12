@@ -1,12 +1,13 @@
-import { Matrix } from "transformation-matrix-js";
-import { verifyPack } from "../geometry";
 import {
   doPolygonsOverlap,
   IPoint,
-  isPolygonWithinRectangle,
   ITransform,
-  polygonArea
-} from "../geometry.js";
+  isPolygonWithinRectangle,
+  polygonArea,
+  rotateMatrixAroundPoint,
+  verifyPack
+} from "../geometry";
+import { Matrix } from "../vendor/matrix";
 
 export const bogoPack = (
   rectangleWidth: number,
@@ -38,11 +39,10 @@ export const bogoPack = (
       const rotate = Math.round(Math.random() * 180 - 90);
       const translateX = Math.round(Math.random() * rectangleWidth / 2);
       const translateY = Math.round(Math.random() * rectangleHeight / 2);
-      const m = new Matrix();
-
-      m.multiply(new Matrix().translate(width / 2, height / 2));
-      m.multiply(new Matrix().rotateDeg(rotate));
-      m.multiply(new Matrix().translate(-(width / 2), -(height / 2)));
+      const m = rotateMatrixAroundPoint(
+        { x: width / 2, y: height / 2 },
+        rotate
+      );
 
       m.multiply(
         new Matrix().translate(translateX, translateY).scale(scale, scale)

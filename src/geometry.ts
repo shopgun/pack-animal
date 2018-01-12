@@ -1,4 +1,5 @@
 import polygonOverlap from "polygon-overlap";
+import { Matrix } from "./vendor/matrix";
 
 export interface IPoint {
   x: number;
@@ -11,9 +12,22 @@ export interface ITransform {
   scale: number;
   translateX: number;
   translateY: number;
-  matrix: string;
+  matrix: Matrix;
   points: IPoint[];
 }
+
+export const rotateMatrixAroundPoint = (
+  point: IPoint,
+  degrees: number,
+  matrix = new Matrix()
+) => {
+  const rotatedMatrix = matrix.clone();
+  const { x, y } = point;
+  rotatedMatrix.multiply(new Matrix().translate(x, y));
+  rotatedMatrix.multiply(new Matrix().rotateDeg(degrees));
+  rotatedMatrix.multiply(new Matrix().translate(-x, -y));
+  return rotatedMatrix;
+};
 
 export const doPolygonsOverlap = (polygon1: IPoint[], polygon2: IPoint[]) =>
   polygonOverlap(

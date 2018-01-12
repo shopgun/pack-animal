@@ -1,5 +1,11 @@
-import { Matrix } from "transformation-matrix-js";
-import { IPoint, ITransform, polygonArea, verifyPack } from "../geometry";
+import {
+  IPoint,
+  ITransform,
+  polygonArea,
+  rotateMatrixAroundPoint,
+  verifyPack
+} from "../geometry";
+import { Matrix } from "../vendor/matrix";
 
 const polygonBounds = (points: IPoint[]) => {
   const left = Math.min(...points.map(point => point.x));
@@ -67,9 +73,6 @@ export const greedyPack = (
           previousTranslateY = translateY;
           translateY = translateY + translateYIncrement * i;
           const m = new Matrix();
-          m.multiply(new Matrix().translate(width / 2, height / 2));
-          m.multiply(new Matrix().rotateDeg(rotate));
-          m.multiply(new Matrix().translate(-(width / 2), -(height / 2)));
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
           );
@@ -91,9 +94,6 @@ export const greedyPack = (
           previousTranslateX = translateX;
           translateX = translateX + translateXIncrement * i;
           const m = new Matrix();
-          m.multiply(new Matrix().translate(width / 2, height / 2));
-          m.multiply(new Matrix().rotateDeg(rotate));
-          m.multiply(new Matrix().translate(-(width / 2), -(height / 2)));
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
           );
@@ -114,10 +114,10 @@ export const greedyPack = (
         do {
           previousRotate = rotate;
           rotate = rotate + rotateIncrement * i;
-          const m = new Matrix();
-          m.multiply(new Matrix().translate(width / 2, height / 2));
-          m.multiply(new Matrix().rotateDeg(rotate));
-          m.multiply(new Matrix().translate(-(width / 2), -(height / 2)));
+          const m = rotateMatrixAroundPoint(
+            { x: width / 2, y: height / 2 },
+            rotate
+          );
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
           );
@@ -132,17 +132,18 @@ export const greedyPack = (
           };
           i++;
         } while (verifyPack([...memo, transformPolygon], rectangle));
-        const m = new Matrix();
-        m.multiply(new Matrix().translate(width / 2, height / 2));
-        m.multiply(new Matrix().rotateDeg(previousRotate));
-        m.multiply(new Matrix().translate(-(width / 2), -(height / 2)));
-        m.multiply(
+
+        const finalMatrix = rotateMatrixAroundPoint(
+          { x: width / 2, y: height / 2 },
+          previousRotate
+        );
+        finalMatrix.multiply(
           new Matrix().translate(translateX, translateY).scale(scale, scale)
         );
         transformPolygon = {
-          cssTransform: m.toCSS(),
-          matrix: m,
-          points: m.applyToArray(points),
+          cssTransform: finalMatrix.toCSS(),
+          matrix: finalMatrix,
+          points: finalMatrix.applyToArray(points),
           rotate,
           scale,
           translateX,
