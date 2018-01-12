@@ -132,9 +132,7 @@ export const greedyPack = (
         } while (verifyPack([...memo, transformPolygon], rectangle));
 
         const finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
-        finalMatrix.multiply(
-          new Matrix().translate(translateX, translateY).scale(scale, scale)
-        );
+        finalMatrix.translate(translateX, translateY).scale(scale, scale);
         transformPolygon = {
           cssTransform: finalMatrix.toCSS(),
           matrix: finalMatrix,
