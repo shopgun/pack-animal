@@ -67,13 +67,13 @@ export const verifyPack = (
   transformPolygons: ITransform[],
   rectangle: IPoint[]
 ) => {
+  /*
   const rectangleArea = polygonArea([
     rectangle[0],
     { x: rectangle[1].x, y: 0 },
     rectangle[1],
     { x: 0, y: rectangle[1].y }
   ]);
-  /*
   console.log({
     utilization:
       Math.round(
