@@ -1,15 +1,16 @@
 {
   "name": "pack-animal",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "keywords": [],
   "main": "dist/pack-animal.umd.js",
   "module": "dist/pack-animal.es5.js",
+  "jsnext:main": "dist/pack-animal.es5.js",
   "typings": "dist/types/pack-animal.d.ts",
   "files": [
     "dist"
   ],
-  "author": "klarstrup <jk@shopgun.com>",
+  "author": "klarstrup <jk@shopgun.com> (https://shopgun.com/)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shopgun/pack-animal.git"
@@ -106,7 +107,5 @@
     "typescript": "^2.3.4",
     "validate-commit-msg": "^2.12.2"
   },
-  "dependencies": {
-    "polygon-overlap": "^1.0.5"
-  }
+  "dependencies": {}
 }

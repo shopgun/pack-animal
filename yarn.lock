@@ -2785,10 +2785,6 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lines-intersect@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/lines-intersect/-/lines-intersect-1.0.0.tgz#a60c87a3d957a0871d114d054a685ab71f728042"
-
 lint-staged@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-6.0.0.tgz#7ab7d345f2fe302ff196f1de6a005594ace03210"
@@ -3652,17 +3648,6 @@ pkginfo@0.x.x:
 pn@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
-
-point-inside-polygon@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/point-inside-polygon/-/point-inside-polygon-1.0.1.tgz#f4f6de901bf8f9cd2f7d9b5fb4758f1afa9812ab"
-
-polygon-overlap@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/polygon-overlap/-/polygon-overlap-1.0.5.tgz#0ce3526a8bd98674ab046fc92dd02664b6d8242d"
-  dependencies:
-    lines-intersect "1.0.0"
-    point-inside-polygon "1.0.1"
 
 prelude-ls@~1.1.2:
   version "1.1.2"
