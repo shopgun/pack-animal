@@ -1,0 +1,62 @@
+<script src="../dist/pack-animal.umd.js"></script>
+<svg id="boxToPack" style="border: 1px solid teal;"></svg>
+<script>
+  // Example data
+  const rectangleWidth = 800;
+  const rectangleHeight = 742;
+  const images = [
+    "https://api.republica.dk/image/motive-id/376-7407",
+    "https://api.republica.dk/image/motive-id/376-7408"
+  ];
+  const polygons = [
+    [
+      {
+        x: 1,
+        y: 1
+      },
+      {
+        x: 1,
+        y: 366
+      },
+      {
+        x: 798,
+        y: 366
+      },
+      {
+        x: 798,
+        y: 1
+      }
+    ],
+    [
+      {
+        x: 1,
+        y: 1
+      },
+      {
+        x: 41,
+        y: 390
+      },
+      {
+        x: 773,
+        y: 390
+      },
+      {
+        x: 798,
+        y: 1
+      }
+    ]
+  ];
+
+  // Pack polys
+  const polygonTransforms = packAnimal(rectangleWidth, rectangleHeight, polygons);
+
+  // Display
+  const boxToPack = document.getElementById('boxToPack');
+  boxToPack.setAttribute('viewBox', `0 0 ${rectangleWidth} ${rectangleHeight}`);
+  polygonTransforms.forEach((polygonTransform, index) => {
+    const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+    image.setAttribute('href', images[index]);
+    image.setAttribute('transform', polygonTransform.cssTransform);
+    boxToPack.appendChild(image);
+  })
+</script>
