@@ -68,8 +68,9 @@ export const greedyPack = (
         const translateXIncrement = 1;
         const translateYIncrement = 1;
         const rotateIncrement = 1;
-        let i = 0;
+        let i;
         let previousTranslateY = null;
+        i = 0;
         do {
           previousTranslateY = translateY;
           translateY = translateY + translateYIncrement * i;
@@ -91,6 +92,7 @@ export const greedyPack = (
         translateY = previousTranslateY;
 
         let previousTranslateX = null;
+        i = 0;
         do {
           previousTranslateX = translateX;
           translateX = translateX + translateXIncrement * i;
@@ -112,6 +114,7 @@ export const greedyPack = (
         translateX = previousTranslateX;
 
         let previousRotate = null;
+        i = 0;
         do {
           previousRotate = rotate;
           rotate = rotate + rotateIncrement * i;
