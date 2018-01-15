@@ -48,6 +48,19 @@ export const polygonArea = (points: IPoint[]) => {
   return Math.abs(det) / 2;
 };
 
+export const polygonBounds = (points: IPoint[]): IPoint[] => {
+  const left = Math.min(...points.map(point => point.x));
+  const top = Math.min(...points.map(point => point.y));
+  const right = Math.max(...points.map(point => point.x));
+  const bottom = Math.max(...points.map(point => point.y));
+  return [
+    { x: left, y: top },
+    { x: right, y: top },
+    { x: right, y: bottom },
+    { x: left, y: bottom }
+  ];
+};
+
 export const isPolygonWithinRectangle = (
   polygon: IPoint[],
   rectangle: IPoint[]

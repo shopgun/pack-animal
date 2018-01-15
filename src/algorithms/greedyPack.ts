@@ -7,19 +7,6 @@ import {
 } from "../geometry";
 import { Matrix } from "../vendor/matrix";
 
-const polygonBounds = (points: IPoint[]) => {
-  const left = Math.min(...points.map(point => point.x));
-  const top = Math.min(...points.map(point => point.y));
-  const right = Math.max(...points.map(point => point.x));
-  const bottom = Math.max(...points.map(point => point.y));
-  return [
-    { x: left, y: top },
-    { x: right, y: top },
-    { x: right, y: bottom },
-    { x: left, y: bottom }
-  ];
-};
-
 export const greedyPack = (
   rectangleWidth: number,
   rectangleHeight: number,
