@@ -1,4 +1,4 @@
-import { IPoint, ITransform } from "./geometry";
+import { IPoint, ITransform, radiansToDegrees } from "./geometry";
 import { Matrix } from "./vendor/matrix";
 
 export const getPolygonTransform = (
@@ -20,8 +20,9 @@ export const getPolygonTransform = (
 
   const relativeHeight = height * scale / rectangleHeight;
   const relativeWidth = width * scale / rectangleWidth;
-  const translateXRelative = simpleTransform.translate.x / width;
-  const translateYRelative = simpleTransform.translate.y / height;
+  const translateXRelative = simpleTransform.translate.x / (width * scale);
+  const translateYRelative = simpleTransform.translate.y / (height * scale);
+  const degreesRotation = radiansToDegrees(simpleTransform.rotation);
   return {
     cssText: `
         position: absolute;
@@ -33,12 +34,12 @@ export const getPolygonTransform = (
         transform: ${[
           `translateX(${translateXRelative * 100}%)`,
           `translateY(${translateYRelative * 100}%)`,
-          `rotate(${simpleTransform.rotation}deg)`
+          `rotate(${degreesRotation}deg)`
         ].join(" ")}
       `,
     matrix,
     points: matrix.applyToArray(points),
-    rotate: simpleTransform.rotation,
+    rotate: degreesRotation,
     scale,
     svgTransform: matrix.toCSS(),
     translateX: simpleTransform.translate.x,

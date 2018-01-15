@@ -114,3 +114,5 @@ export const verifyPack = (polygons: IPoint[][], rectangle: IPoint[]) => {
   );
 };
 const arrayWithoutElementAtIndex = (arr: any[], index: number) => arr;
+
+export const radiansToDegrees = (radians: number) => radians * 180 / Math.PI;
