@@ -63,10 +63,7 @@ export const isPolygonWithinRectangle = (
   return true;
 };
 
-export const verifyPack = (
-  transformPolygons: ITransform[],
-  rectangle: IPoint[]
-) => {
+export const verifyPack = (polygons: IPoint[][], rectangle: IPoint[]) => {
   /*
   const rectangleArea = polygonArea([
     rectangle[0],
@@ -87,19 +84,14 @@ export const verifyPack = (
       ) + "%"
   });
 */
-  const polygonsLength = transformPolygons.length;
   return (
-    transformPolygons.every(({ points }) =>
-      isPolygonWithinRectangle(points, rectangle)
-    ) &&
+    polygons.every(polygon => isPolygonWithinRectangle(polygon, rectangle)) &&
     !(
-      transformPolygons.length > 1 &&
-      transformPolygons.some((transformPolygon, index) =>
-        transformPolygons
+      polygons.length > 1 &&
+      polygons.some((polygon, index) =>
+        polygons
           .filter((value, arrIndex) => index !== arrIndex)
-          .some(otherPolygon =>
-            doPolygonsOverlap(transformPolygon.points, otherPolygon.points)
-          )
+          .some(otherPolygon => doPolygonsOverlap(polygon, otherPolygon))
       )
     )
   );

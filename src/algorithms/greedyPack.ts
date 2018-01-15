@@ -39,14 +39,15 @@ export const greedyPack = (
     { x: 0, y: rectangleHeight }
   ];
   let transformPolygons;
-  const rawPerfectUtilization = polygons.reduce(
-    (memo, polygon) => memo - polygonArea(polygonBounds(polygon)) * 0.8,
-    polygonArea(rectanglePolygon)
-  );
+  const scaleIncrement = 0.001;
+  const translateXIncrement = 1;
+  const translateYIncrement = 1;
+  const rotateIncrement = 4;
+
   let scale = 1;
   let j = 0;
   do {
-    scale = scale - 0.001 * j;
+    scale = scale - scaleIncrement * j;
     transformPolygons = polygons.reduce(
       (memo: ITransform[], points: IPoint[]): ITransform[] => {
         const width = Math.floor(
@@ -59,15 +60,14 @@ export const greedyPack = (
             Math.min(...points.map(point => point.y))) *
             scale
         );
+        const memoPoints = memo.map(transformPoly => transformPoly.points);
         const center = { x: width / 2, y: height / 2 };
 
         let rotate = 0;
         let translateX = 0;
         let translateY = 0;
         let transformPolygon;
-        const translateXIncrement = 1;
-        const translateYIncrement = 1;
-        const rotateIncrement = 1;
+        let transformedPoints;
         let i;
         let previousTranslateY = null;
         i = 0;
@@ -78,17 +78,9 @@ export const greedyPack = (
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
           );
-          transformPolygon = {
-            cssTransform: m.toCSS(),
-            matrix: m,
-            points: m.applyToArray(points),
-            rotate,
-            scale,
-            translateX,
-            translateY
-          };
+          transformedPoints = m.applyToArray(points);
           i++;
-        } while (verifyPack([...memo, transformPolygon], rectangle));
+        } while (verifyPack([...memoPoints, transformedPoints], rectangle));
         translateY = previousTranslateY;
 
         let previousTranslateX = null;
@@ -100,17 +92,9 @@ export const greedyPack = (
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
           );
-          transformPolygon = {
-            cssTransform: m.toCSS(),
-            matrix: m,
-            points: m.applyToArray(points),
-            rotate,
-            scale,
-            translateX,
-            translateY
-          };
+          transformedPoints = m.applyToArray(points);
           i++;
-        } while (verifyPack([...memo, transformPolygon], rectangle));
+        } while (verifyPack([...memoPoints, transformedPoints], rectangle));
         translateX = previousTranslateX;
 
         let previousRotate = null;
@@ -122,17 +106,9 @@ export const greedyPack = (
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
           );
-          transformPolygon = {
-            cssTransform: m.toCSS(),
-            matrix: m,
-            points: m.applyToArray(points),
-            rotate,
-            scale,
-            translateX,
-            translateY
-          };
+          transformedPoints = m.applyToArray(points);
           i++;
-        } while (verifyPack([...memo, transformPolygon], rectangle));
+        } while (verifyPack([...memoPoints, transformedPoints], rectangle));
         const finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
         finalMatrix.translate(translateX, translateY).scale(scale, scale);
         transformPolygon = {
@@ -144,13 +120,15 @@ export const greedyPack = (
           translateX,
           translateY
         };
-
-        return [...memo, transformPolygon];
+        memo.push(transformPolygon);
+        return memo;
       },
       []
     );
     j++;
-  } while (!verifyPack(transformPolygons, rectangle));
+  } while (
+    !verifyPack(transformPolygons.map(({ points }) => points), rectangle)
+  );
 
   return transformPolygons;
 };
