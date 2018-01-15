@@ -1,5 +1,7 @@
 <script src="../dist/pack-animal.umd.js"></script>
-<div id="boxToPack" style="border: 1px solid teal; position: relative;"></div>
+<div id="boxToPack" style="border: 1px solid teal; position: relative;">
+  <div id="boxToPackFluffer"></div>
+</div>
 <script>
   // Example data
   const rectangleWidth = 800;
@@ -52,19 +54,12 @@
 
   // Display
   const boxToPack = document.getElementById('boxToPack');
-  boxToPack.style.width = rectangleWidth;
-  boxToPack.style.height = rectangleHeight;
+  const fluffer = document.getElementById('boxToPackFluffer');
+  fluffer.style.paddingTop = `${(rectangleHeight / rectangleWidth) * 100}%`;
   polygonTransforms.forEach((polygonTransform, index) => {
     const image = document.createElement("img");
-    image.setAttribute('src', images[index]);
-    image.style.position = 'absolute';
-    image.style.transformOrigin = '0 0';
-    image.style.transform = [
-      `translateX(${polygonTransform.translateX * polygonTransform.scale}px)`,
-      `translateY(${polygonTransform.translateY * polygonTransform.scale}px)`,
-      `scale(${polygonTransform.scale})`,
-      `rotate(${polygonTransform.rotate}deg)`
-    ].join(' ');
+    image.src = images[index];
+    image.style.cssText = polygonTransform.cssText;
     boxToPack.appendChild(image);
   })
 </script>

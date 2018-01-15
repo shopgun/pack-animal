@@ -56,7 +56,7 @@
   polygonTransforms.forEach((polygonTransform, index) => {
     const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
     image.setAttribute('href', images[index]);
-    image.setAttribute('transform', polygonTransform.cssTransform);
+    image.setAttribute('transform', polygonTransform.svgTransform);
     boxToPack.appendChild(image);
   })
 </script>

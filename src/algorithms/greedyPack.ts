@@ -5,6 +5,7 @@ import {
   rotateMatrixAroundPoint,
   verifyPack
 } from "../geometry";
+import { getPolygonTransform } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 
 export const greedyPack = (
@@ -25,7 +26,7 @@ export const greedyPack = (
     { x: rectangleWidth, y: rectangleHeight },
     { x: 0, y: rectangleHeight }
   ];
-  let transformPolygons;
+  let polygonTransforms;
   const scaleIncrement = 0.01;
   const translateXIncrement = rectangleWidth * 0.01;
   const translateYIncrement = rectangleHeight * 0.01;
@@ -40,7 +41,7 @@ export const greedyPack = (
 
   do {
     scale = scaleInitial - scaleIncrement * j;
-    transformPolygons = polygons.reduce(
+    polygonTransforms = polygons.reduce(
       (memo: ITransform[], points: IPoint[]): ITransform[] => {
         const width = Math.floor(
           (Math.max(...points.map(point => point.x)) -
@@ -58,7 +59,6 @@ export const greedyPack = (
         let rotate = rotateInitial;
         let translateX = translateXInitial;
         let translateY = translateYInitial;
-        let transformPolygon;
         let transformedPoints;
         let i;
         let previousTranslateY = null;
@@ -101,26 +101,26 @@ export const greedyPack = (
           transformedPoints = m.applyToArray(points);
           i++;
         } while (verifyPack([...memoPoints, transformedPoints], rectangle));
+
         const finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
         finalMatrix.translate(translateX, translateY).scale(scale, scale);
-        transformPolygon = {
-          cssTransform: finalMatrix.toCSS(),
-          matrix: finalMatrix,
-          points: finalMatrix.applyToArray(points),
-          rotate: previousRotate,
-          scale,
-          translateX,
-          translateY
-        };
-        memo.push(transformPolygon);
+
+        memo.push(
+          getPolygonTransform(
+            rectangleWidth,
+            rectangleHeight,
+            points,
+            finalMatrix
+          )
+        );
         return memo;
       },
       []
     );
     j++;
   } while (
-    !verifyPack(transformPolygons.map(({ points }) => points), rectangle)
+    !verifyPack(polygonTransforms.map(({ points }) => points), rectangle)
   );
 
-  return transformPolygons;
+  return polygonTransforms;
 };

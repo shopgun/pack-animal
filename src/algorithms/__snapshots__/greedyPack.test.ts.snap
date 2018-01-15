@@ -5,70 +5,88 @@ exports[`greedyPack gives nothing for nothingg 1`] = `Array []`;
 exports[`greedyPack works 1`] = `
 Array [
   Object {
-    "cssTransform": "matrix(0.964,0,0,0.964,28,378)",
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 96.63625%;
+        height: 47.71563342318059%;
+        transform: translateX(3.0112923462986196%) translateY(105.70958904109588%) rotate(0deg)
+      ",
     "matrix": "{
-      \\"a\\":0.964,
+      \\"a\\":0.97,
       \\"b\\":0,
       \\"c\\":0,
-      \\"d\\":0.964,
-      \\"e\\":28,
-      \\"f\\":378
+      \\"d\\":0.97,
+      \\"e\\":24,
+      \\"f\\":385.84
     }",
     "points": Array [
       Object {
-        "x": 28.964,
-        "y": 378.964,
+        "x": 24.97,
+        "y": 386.81,
       },
       Object {
-        "x": 28.964,
-        "y": 730.8240000000001,
+        "x": 24.97,
+        "y": 740.8599999999999,
       },
       Object {
-        "x": 797.2719999999999,
-        "y": 730.8240000000001,
+        "x": 798.06,
+        "y": 740.8599999999999,
       },
       Object {
-        "x": 797.2719999999999,
-        "y": 378.964,
+        "x": 798.06,
+        "y": 386.81,
       },
     ],
-    "rotate": 4,
-    "scale": 0.964,
-    "translateX": 28,
-    "translateY": 378,
+    "rotate": -0,
+    "scale": 0.97,
+    "svgTransform": "matrix(0.97,0,0,0.97,24,385.84)",
+    "translateX": 24,
+    "translateY": 385.84,
   },
   Object {
-    "cssTransform": "matrix(0.964,0,0,0.964,28,3)",
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 96.63625%;
+        height: 50.85309973045822%;
+        transform: translateX(3.0112923462986196%) translateY(1.9074550128534702%) rotate(0deg)
+      ",
     "matrix": "{
-      \\"a\\":0.964,
+      \\"a\\":0.97,
       \\"b\\":0,
       \\"c\\":0,
-      \\"d\\":0.964,
-      \\"e\\":28,
-      \\"f\\":3
+      \\"d\\":0.97,
+      \\"e\\":24,
+      \\"f\\":7.42
     }",
     "points": Array [
       Object {
-        "x": 28.964,
-        "y": 3.964,
+        "x": 24.97,
+        "y": 8.39,
       },
       Object {
-        "x": 67.524,
-        "y": 378.96,
+        "x": 63.769999999999996,
+        "y": 385.72,
       },
       Object {
-        "x": 773.172,
-        "y": 378.96,
+        "x": 773.81,
+        "y": 385.72,
       },
       Object {
-        "x": 797.2719999999999,
-        "y": 3.964,
+        "x": 798.06,
+        "y": 8.39,
       },
     ],
-    "rotate": 4,
-    "scale": 0.964,
-    "translateX": 28,
-    "translateY": 3,
+    "rotate": -0,
+    "scale": 0.97,
+    "svgTransform": "matrix(0.97,0,0,0.97,24,7.42)",
+    "translateX": 24,
+    "translateY": 7.42,
   },
 ]
 `;

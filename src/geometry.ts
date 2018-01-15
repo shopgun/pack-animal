@@ -7,13 +7,14 @@ export interface IPoint {
 }
 
 export interface ITransform {
-  cssTransform: string;
+  cssText: string;
   rotate: number;
   scale: number;
   translateX: number;
   translateY: number;
   matrix: Matrix;
   points: IPoint[];
+  svgTransform: string;
 }
 
 export const rotateMatrixAroundPoint = (

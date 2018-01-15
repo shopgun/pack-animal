@@ -10,7 +10,9 @@ Box to pack polys in:
   const realData = Object.keys(window.incitoImages).map(url => ({
     url,
     ...window.incitoImages[url],
-  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(11, 22);
+    //  })).slice(0, 2);
+    // })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 20);
+  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(8, 13);
   const polygons = realData.map(child => child.contour.points);
   const width = 800;
   const height = 742;
@@ -31,8 +33,7 @@ Box to pack polys in:
     ${realData.map((child, index) => {
       const svgPoints = child.contour.points.map(({ x, y }) => `${x},${y}`).join(' ');
       const transform = childTransforms[index];
-      //      const transformAttributeValue = `rotate(${transform.rotate} ${child.width / 2} ${child.height / 2}) scale(${transform.scale}) translate(${transform.translateX}, ${transform.translateY})`
-      const transformAttributeValue = transform.cssTransform;
+      const transformAttributeValue = transform.svgTransform;
 
       return `
       <polygon
@@ -40,8 +41,7 @@ Box to pack polys in:
         style="fill:${child.colorPalette[3]}; opacity: 0.5;"
         transform="${transformAttributeValue}"
         />
-      <image href="${child.url}" height="${child.height}" width="${child.width}"
-        transform="${transformAttributeValue}"/>    
+      <image href="${child.url}" transform="${transformAttributeValue}"/>    
     `}).join('')}
     </svg>`)
 
