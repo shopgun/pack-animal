@@ -5,69 +5,69 @@ exports[`greedyPack gives nothing for nothingg 1`] = `Array []`;
 exports[`greedyPack works 1`] = `
 Array [
   Object {
-    "cssTransform": "matrix(0.964,0,0,0.964,29,378)",
+    "cssTransform": "matrix(0.964,0,0,0.964,28,378)",
     "matrix": "{
       \\"a\\":0.964,
       \\"b\\":0,
       \\"c\\":0,
       \\"d\\":0.964,
-      \\"e\\":29,
+      \\"e\\":28,
       \\"f\\":378
     }",
     "points": Array [
       Object {
-        "x": 29.964,
+        "x": 28.964,
         "y": 378.964,
       },
       Object {
-        "x": 29.964,
+        "x": 28.964,
         "y": 730.8240000000001,
       },
       Object {
-        "x": 798.2719999999999,
+        "x": 797.2719999999999,
         "y": 730.8240000000001,
       },
       Object {
-        "x": 798.2719999999999,
+        "x": 797.2719999999999,
         "y": 378.964,
       },
     ],
-    "rotate": 31,
+    "rotate": 4,
     "scale": 0.964,
-    "translateX": 29,
+    "translateX": 28,
     "translateY": 378,
   },
   Object {
-    "cssTransform": "matrix(0.964,0,0,0.964,30,3)",
+    "cssTransform": "matrix(0.964,0,0,0.964,28,3)",
     "matrix": "{
       \\"a\\":0.964,
       \\"b\\":0,
       \\"c\\":0,
       \\"d\\":0.964,
-      \\"e\\":30,
+      \\"e\\":28,
       \\"f\\":3
     }",
     "points": Array [
       Object {
-        "x": 30.964,
+        "x": 28.964,
         "y": 3.964,
       },
       Object {
-        "x": 69.524,
+        "x": 67.524,
         "y": 378.96,
       },
       Object {
-        "x": 775.172,
+        "x": 773.172,
         "y": 378.96,
       },
       Object {
-        "x": 799.2719999999999,
+        "x": 797.2719999999999,
         "y": 3.964,
       },
     ],
-    "rotate": 10,
+    "rotate": 4,
     "scale": 0.964,
-    "translateX": 30,
+    "translateX": 28,
     "translateY": 3,
   },
 ]

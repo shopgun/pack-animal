@@ -1,19 +1,25 @@
 import packAnimal from ".";
 import { bogoPack } from "./algorithms/bogoPack";
-/**
- * Dummy test
- */
-describe("Dummy test", () => {
-  it("works if true is truthy", () => {
-    expect(true).toBeTruthy();
-  });
 
-  it("packAnimal runs at all", () => {
-    expect(packAnimal(0, 0, [])).toBeTruthy();
+describe("packAnimal", () => {
+  it("needs polygons to pack", () => {
+    expect(() => packAnimal(0, 0, [])).toThrow();
   });
-
-  it("packAnimal can take an alternative algorithm", () => {
-    expect(packAnimal(0, 0, [], { algorithm: bogoPack })).toBeTruthy();
-    expect(packAnimal(0, 0, [[]], { algorithm: bogoPack })).toBeTruthy();
+  it("doesn't like pointless polygons", () => {
+    expect(() => packAnimal(0, 0, [[]])).toThrow();
+  });
+  it("can take an alternative algorithm", () => {
+    expect(
+      packAnimal(
+        50,
+        50,
+        [
+          [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 2.5, y: 5 }],
+          [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 5, y: 5 }, { x: 0, y: 5 }],
+          [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 2.5, y: 5 }]
+        ],
+        { algorithm: bogoPack }
+      )
+    ).toBeTruthy();
   });
 });

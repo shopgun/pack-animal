@@ -7,4 +7,9 @@ export default (
   squareHeight: number,
   polygons: IPoint[][],
   { algorithm = greedyPack } = {}
-): ITransform[] => algorithm(squareWidth, squareHeight, polygons);
+): ITransform[] => {
+  if (!polygons.length) {
+    throw new Error("No polygons to pack.");
+  }
+  return algorithm(squareWidth, squareHeight, polygons);
+};

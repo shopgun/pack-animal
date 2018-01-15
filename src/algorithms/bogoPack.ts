@@ -32,7 +32,7 @@ export const bogoPack = (
   let i = 0;
   let scale = 1;
   do {
-    scale = scale > 0.5 ? scale - 0.0005 : 1;
+    scale = scale - 0.0005 * i;
     transformPolygons = polygons.map(points => {
       const width = Math.max(...points.map(point => point.x));
       const height = Math.max(...points.map(point => point.y));
@@ -58,7 +58,12 @@ export const bogoPack = (
       };
     });
     i++;
-  } while (!verifyPack(transformPolygons, rectangle));
+  } while (
+    !verifyPack(
+      transformPolygons.map(transformPolygon => transformPolygon.points),
+      rectangle
+    )
+  );
 
   return transformPolygons;
 };

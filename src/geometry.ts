@@ -65,6 +65,9 @@ export const isPolygonWithinRectangle = (
   polygon: IPoint[],
   rectangle: IPoint[]
 ) => {
+  if (!polygon.length) {
+    throw new Error("Checking a pointless polygon is pointless.");
+  }
   for (const { x, y } of polygon) {
     if (x < rectangle[0].x || x > rectangle[1].x) {
       return false;
