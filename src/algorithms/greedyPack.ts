@@ -26,15 +26,20 @@ export const greedyPack = (
     { x: 0, y: rectangleHeight }
   ];
   let transformPolygons;
-  const scaleIncrement = 0.001;
-  const translateXIncrement = 1;
-  const translateYIncrement = 1;
+  const scaleIncrement = 0.01;
+  const translateXIncrement = rectangleWidth * 0.01;
+  const translateYIncrement = rectangleHeight * 0.01;
   const rotateIncrement = 4;
 
-  let scale = 1;
+  const scaleInitial = 1;
+  const rotateInitial = 0;
+  const translateXInitial = 0;
+  const translateYInitial = 0;
+  let scale: number;
   let j = 0;
+
   do {
-    scale = scale - scaleIncrement * j;
+    scale = scaleInitial - scaleIncrement * j;
     transformPolygons = polygons.reduce(
       (memo: ITransform[], points: IPoint[]): ITransform[] => {
         const width = Math.floor(
@@ -50,9 +55,9 @@ export const greedyPack = (
         const memoPoints = memo.map(transformPoly => transformPoly.points);
         const center = { x: width / 2, y: height / 2 };
 
-        let rotate = 0;
-        let translateX = 0;
-        let translateY = 0;
+        let rotate = rotateInitial;
+        let translateX = translateXInitial;
+        let translateY = translateYInitial;
         let transformPolygon;
         let transformedPoints;
         let i;
@@ -60,7 +65,7 @@ export const greedyPack = (
         i = 0;
         do {
           previousTranslateY = translateY;
-          translateY = translateY + translateYIncrement * i;
+          translateY = translateYInitial + translateYIncrement * i;
           const m = new Matrix();
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
@@ -74,7 +79,7 @@ export const greedyPack = (
         i = 0;
         do {
           previousTranslateX = translateX;
-          translateX = translateX + translateXIncrement * i;
+          translateX = translateXInitial + translateXIncrement * i;
           const m = new Matrix();
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
@@ -88,7 +93,7 @@ export const greedyPack = (
         i = 0;
         do {
           previousRotate = rotate;
-          rotate = rotate + rotateIncrement * i;
+          rotate = rotateInitial + rotateIncrement * i;
           const m = rotateMatrixAroundPoint(center, rotate);
           m.multiply(
             new Matrix().translate(translateX, translateY).scale(scale, scale)
@@ -102,7 +107,7 @@ export const greedyPack = (
           cssTransform: finalMatrix.toCSS(),
           matrix: finalMatrix,
           points: finalMatrix.applyToArray(points),
-          rotate,
+          rotate: previousRotate,
           scale,
           translateX,
           translateY
