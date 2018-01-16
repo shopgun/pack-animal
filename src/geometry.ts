@@ -98,7 +98,7 @@ const arrayWithoutElementAtIndex = (arr: any[], index: number) => arr;
 export const packUtilization = (
   rectangleWidth: number,
   rectangleHeight: number,
-  transformPolygons: ITransform[]
+  polygons: IPoint[][]
 ) => {
   const rectanglePolygon: IPoint[] = [
     { x: 0, y: 0 },
@@ -108,15 +108,12 @@ export const packUtilization = (
   ];
   const rectangleArea = polygonArea(rectanglePolygon);
   const utilization =
-    Math.round(
-      (1 -
-        transformPolygons.reduce(
-          (memo, { points }) => memo - polygonArea(points),
-          rectangleArea
-        ) /
-          rectangleArea) *
-        100
-    ) + "%";
+    1 -
+    polygons.reduce(
+      (memo, points) => memo - polygonArea(points),
+      rectangleArea
+    ) /
+      rectangleArea;
   return utilization;
 };
 
