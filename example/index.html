@@ -1,7 +1,12 @@
 Provided polys:
 <div class="providedPolys" style="display: flex;align-items: center;"></div>
-Box to pack polys in:
-<div class="boxToPack" style="border: 1px solid teal;"></div>
+Boxes to pack polys in:
+<div style="display: flex;align-items: center;">
+  <div class="boxToPack" style="flex: 1; border: 1px solid teal;"></div>
+  <div id="boxToPack" style="flex: 1; border: 1px solid teal; position: relative;">
+    <div id="boxToPackFluffer"></div>
+  </div>
+</div>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
 <script src="../dist/pack-animal.umd.js"></script>
@@ -10,8 +15,8 @@ Box to pack polys in:
   const realData = Object.keys(window.incitoImages).map(url => ({
     url,
     ...window.incitoImages[url],
-    //  })).slice(0, 2);
-    // })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 20);
+//      })).slice(4, 7);
+   //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 20);
   })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(8, 13);
   const polygons = realData.map(child => child.contour.points);
   const width = 800;
@@ -29,6 +34,7 @@ Box to pack polys in:
   const childTransforms = packAnimal(width, height, polygons);
   console.timeEnd('greedyBottomLeftPack');
   console.log(childTransforms);
+  // SVG displllay
   $('.boxToPack').append(`<svg viewBox="0 0 ${width} ${height}">
     ${realData.map((child, index) => {
       const svgPoints = child.contour.points.map(({ x, y }) => `${x},${y}`).join(' ');
@@ -44,5 +50,15 @@ Box to pack polys in:
       <image href="${child.url}" transform="${transformAttributeValue}"/>    
     `}).join('')}
     </svg>`)
+  // non-SVG displaly
+  const boxToPack = document.getElementById('boxToPack');
+  const fluffer = document.getElementById('boxToPackFluffer');
+  fluffer.style.paddingTop = `${(height / width) * 100}%`;
+  childTransforms.forEach((polygonTransform, index) => {
+    const image = document.createElement("img");
+    image.src = realData[index].url;
+    image.style.cssText = polygonTransform.cssText;
+    boxToPack.appendChild(image);
+  })
 
 </script>
