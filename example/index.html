@@ -15,8 +15,8 @@ Boxes to pack polys in:
   const realData = Object.keys(window.incitoImages).map(url => ({
     url,
     ...window.incitoImages[url],
-//      })).slice(4, 7);
-   //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 20);
+    //      })).slice(4, 7);
+    //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 20);
   })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(8, 13);
   const polygons = realData.map(child => child.contour.points);
   const width = 800;
@@ -30,9 +30,7 @@ Boxes to pack polys in:
       </svg>
     </div>`);
   });
-  console.time('greedyBottomLeftPack')
-  const childTransforms = packAnimal(width, height, polygons);
-  console.timeEnd('greedyBottomLeftPack');
+  const childTransforms = packAnimal(width, height, polygons, { debug: true });
   console.log(childTransforms);
   // SVG displllay
   $('.boxToPack').append(`<svg viewBox="0 0 ${width} ${height}">

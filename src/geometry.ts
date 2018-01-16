@@ -81,26 +81,6 @@ export const isPolygonWithinRectangle = (
 };
 
 export const verifyPack = (polygons: IPoint[][], rectangle: IPoint[]) => {
-  /*
-  const rectangleArea = polygonArea([
-    rectangle[0],
-    { x: rectangle[1].x, y: 0 },
-    rectangle[1],
-    { x: 0, y: rectangle[1].y }
-  ]);
-  console.log({
-    utilization:
-      Math.round(
-        (1 -
-          transformPolygons.reduce(
-            (memo, { points }) => memo - polygonArea(points),
-            rectangleArea
-          ) /
-            rectangleArea) *
-          100
-      ) + "%"
-  });
-*/
   return (
     polygons.every(polygon => isPolygonWithinRectangle(polygon, rectangle)) &&
     !(
@@ -114,5 +94,30 @@ export const verifyPack = (polygons: IPoint[][], rectangle: IPoint[]) => {
   );
 };
 const arrayWithoutElementAtIndex = (arr: any[], index: number) => arr;
+
+export const packUtilization = (
+  rectangleWidth: number,
+  rectangleHeight: number,
+  transformPolygons: ITransform[]
+) => {
+  const rectanglePolygon: IPoint[] = [
+    { x: 0, y: 0 },
+    { x: rectangleWidth, y: 0 },
+    { x: rectangleWidth, y: rectangleHeight },
+    { x: 0, y: rectangleHeight }
+  ];
+  const rectangleArea = polygonArea(rectanglePolygon);
+  const utilization =
+    Math.round(
+      (1 -
+        transformPolygons.reduce(
+          (memo, { points }) => memo - polygonArea(points),
+          rectangleArea
+        ) /
+          rectangleArea) *
+        100
+    ) + "%";
+  return utilization;
+};
 
 export const radiansToDegrees = (radians: number) => radians * 180 / Math.PI;
