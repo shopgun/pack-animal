@@ -4,7 +4,6 @@ import resolve from 'rollup-plugin-node-resolve'
 import sourceMaps from 'rollup-plugin-sourcemaps'
 
 const pkg = require('./package.json')
-console.log(pkg)
 const libraryName = 'pack-animal'
 
 export default {
