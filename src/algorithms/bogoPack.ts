@@ -7,6 +7,7 @@ import {
   rotateMatrixAroundPoint,
   verifyPack
 } from "../geometry";
+import { getPolygonTransform } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 
 export const bogoPack = (
@@ -47,15 +48,7 @@ export const bogoPack = (
       m.multiply(
         new Matrix().translate(translateX, translateY).scale(scale, scale)
       );
-      return {
-        cssTransform: m.toCSS(),
-        matrix: m,
-        points: m.applyToArray(points),
-        rotate,
-        scale,
-        translateX,
-        translateY
-      };
+      return getPolygonTransform(rectangleWidth, rectangleHeight, points, m);
     });
     i++;
   } while (
