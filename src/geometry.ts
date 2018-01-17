@@ -75,19 +75,16 @@ export const isPolygonWithinRectangle = (polygon: IPoint[], rectangle: IPoint[])
   return true;
 };
 
-export const verifyPack = (polygons: IPoint[][], rectangle: IPoint[]) => {
-  return (
-    polygons.every(polygon => isPolygonWithinRectangle(polygon, rectangle)) &&
-    !(
-      polygons.length > 1 &&
-      polygons.some((polygon, index) =>
-        polygons
-          .filter((_, arrIndex) => index !== arrIndex)
-          .some(otherPolygon => doPolygonsOverlap(polygon, otherPolygon))
-      )
+export const verifyPack = (polygons: IPoint[][], rectangle: IPoint[]) =>
+  polygons.every(polygon => isPolygonWithinRectangle(polygon, rectangle)) &&
+  !(
+    polygons.length > 1 &&
+    polygons.some((polygon, index) =>
+      polygons
+        .filter((_, arrIndex) => index !== arrIndex)
+        .some(otherPolygon => doPolygonsOverlap(polygon, otherPolygon))
     )
   );
-};
 
 export const packUtilization = (
   rectangleWidth: number,
