@@ -1,3 +1,4 @@
+import { getPolygonTransform } from "./utilities";
 import { Matrix } from "./vendor/matrix";
 import polygonOverlap from "./vendor/polygon-overlap";
 
@@ -17,11 +18,7 @@ export interface ITransform {
   svgTransform: string;
 }
 
-export const rotateMatrixAroundPoint = (
-  point: IPoint,
-  degrees: number,
-  matrix = new Matrix()
-) => {
+export const rotateMatrixAroundPoint = (point: IPoint, degrees: number, matrix = new Matrix()) => {
   const rotatedMatrix = matrix.clone();
   const { x, y } = point;
   rotatedMatrix.multiply(new Matrix().translate(x, y));
@@ -31,10 +28,7 @@ export const rotateMatrixAroundPoint = (
 };
 
 export const doPolygonsOverlap = (polygon1: IPoint[], polygon2: IPoint[]) =>
-  polygonOverlap(
-    polygon1.map(({ x, y }) => [x, y]),
-    polygon2.map(({ x, y }) => [x, y])
-  );
+  polygonOverlap(polygon1.map(({ x, y }) => [x, y]), polygon2.map(({ x, y }) => [x, y]));
 
 export const polygonArea = (points: IPoint[]) => {
   const l = points.length;
@@ -61,11 +55,12 @@ export const polygonBounds = (points: IPoint[]): IPoint[] => {
     { x: left, y: bottom }
   ];
 };
+export const polygonsBounds = (polygons: IPoint[][]): IPoint[] => {
+  const polygonsPoints = Array.prototype.concat(...polygons);
+  return polygonBounds(polygonsPoints);
+};
 
-export const isPolygonWithinRectangle = (
-  polygon: IPoint[],
-  rectangle: IPoint[]
-) => {
+export const isPolygonWithinRectangle = (polygon: IPoint[], rectangle: IPoint[]) => {
   if (!polygon.length) {
     throw new Error("Checking a pointless polygon is pointless.");
   }
@@ -109,12 +104,31 @@ export const packUtilization = (
   const rectangleArea = polygonArea(rectanglePolygon);
   const utilization =
     1 -
-    polygons.reduce(
-      (memo, points) => memo - polygonArea(points),
-      rectangleArea
-    ) /
-      rectangleArea;
+    polygons.reduce((memo, points) => memo - polygonArea(points), rectangleArea) / rectangleArea;
   return utilization;
 };
 
 export const radiansToDegrees = (radians: number) => radians * 180 / Math.PI;
+
+export const centerPolygonTransforms = (
+  rectangleWidth: number,
+  rectangleHeight: number,
+  polygonTransforms: ITransform[]
+): ITransform[] => {
+  const packBounds = polygonsBounds(polygonTransforms.map(({ points }) => points));
+  const centeringTranslateX = (packBounds[2].x - packBounds[0].x - rectangleWidth) / 2;
+  const centeringTranslateY = (packBounds[2].y - packBounds[0].y - rectangleHeight) / 2;
+  return polygonTransforms.map(polygonTransform =>
+    getPolygonTransform(
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransform.matrix
+        .clone()
+        .inverse()
+        .applyToArray(polygonTransform.points),
+      polygonTransform.matrix.multiply(
+        new Matrix().translate(centeringTranslateX, centeringTranslateY)
+      )
+    )
+  );
+};

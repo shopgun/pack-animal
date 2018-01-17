@@ -1,12 +1,12 @@
-import { IPoint, ITransform, packUtilization } from "./geometry";
+import { centerPolygonTransforms, IPoint, ITransform, packUtilization } from "./geometry";
 
 import { bogoPack, greedyPack } from "./algorithms";
 
 export default (
-  squareWidth: number,
-  squareHeight: number,
+  rectangleWidth: number,
+  rectangleHeight: number,
   polygons: IPoint[][],
-  { algorithm = greedyPack, /* istanbul ignore next */ debug = false } = {}
+  { algorithm = greedyPack, center = true, /* istanbul ignore next */ debug = false } = {}
 ): ITransform[] => {
   if (!polygons.length) {
     throw new Error("No polygons to pack.");
@@ -16,7 +16,10 @@ export default (
     // tslint:disable-next-line
     console.time(algorithm.name);
   }
-  const polygonTranforms = algorithm(squareWidth, squareHeight, polygons);
+  let polygonTransforms = algorithm(rectangleWidth, rectangleHeight, polygons);
+  if (center) {
+    polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
+  }
   /* istanbul ignore next */
   if (debug) {
     // tslint:disable-next-line
@@ -25,12 +28,12 @@ export default (
     console.log(
       Math.round(
         packUtilization(
-          squareWidth,
-          squareHeight,
-          polygonTranforms.map(({ points }) => points)
+          rectangleWidth,
+          rectangleHeight,
+          polygonTransforms.map(({ points }) => points)
         ) * 100
       ) + "%"
     );
   }
-  return polygonTranforms;
+  return polygonTransforms;
 };
