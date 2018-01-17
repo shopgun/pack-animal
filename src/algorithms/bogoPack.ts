@@ -1,5 +1,5 @@
-import { IPoint, ITransform, rotateMatrixAroundPoint, verifyPack } from "../geometry";
-import { getPolygonTransform } from "../utilities";
+import { IPoint, rotateMatrixAroundPoint, verifyPack } from "../geometry";
+import { getPolygonTransform, ITransform } from "../transform";
 import { Matrix } from "../vendor/matrix";
 
 export const bogoPack = (

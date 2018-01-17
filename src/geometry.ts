@@ -1,21 +1,9 @@
-import { getPolygonTransform } from "./utilities";
 import { Matrix } from "./vendor/matrix";
 import polygonOverlap from "./vendor/polygon-overlap";
 
 export interface IPoint {
   x: number;
   y: number;
-}
-
-export interface ITransform {
-  cssText: string;
-  rotate: number;
-  scale: number;
-  translateX: number;
-  translateY: number;
-  matrix: Matrix;
-  points: IPoint[];
-  svgTransform: string;
 }
 
 export const rotateMatrixAroundPoint = (point: IPoint, degrees: number, matrix = new Matrix()) => {
@@ -105,26 +93,3 @@ export const packUtilization = (
 };
 
 export const radiansToDegrees = (radians: number) => radians * 180 / Math.PI;
-
-export const centerPolygonTransforms = (
-  rectangleWidth: number,
-  rectangleHeight: number,
-  polygonTransforms: ITransform[]
-): ITransform[] => {
-  const packBounds = polygonsBounds(polygonTransforms.map(({ points }) => points));
-  const centeringTranslateX = (packBounds[2].x - packBounds[0].x - rectangleWidth) / 2;
-  const centeringTranslateY = (packBounds[2].y - packBounds[0].y - rectangleHeight) / 2;
-  return polygonTransforms.map(polygonTransform =>
-    getPolygonTransform(
-      rectangleWidth,
-      rectangleHeight,
-      polygonTransform.matrix
-        .clone()
-        .inverse()
-        .applyToArray(polygonTransform.points),
-      polygonTransform.matrix.multiply(
-        new Matrix().translate(centeringTranslateX, centeringTranslateY)
-      )
-    )
-  );
-};

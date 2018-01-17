@@ -1,4 +1,5 @@
-import { centerPolygonTransforms, IPoint, ITransform, packUtilization } from "./geometry";
+import { IPoint, packUtilization } from "./geometry";
+import { centerPolygonTransforms, ITransform } from "./transform";
 
 import { greedyPack } from "./algorithms";
 
