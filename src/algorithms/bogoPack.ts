@@ -1,12 +1,4 @@
-import {
-  doPolygonsOverlap,
-  IPoint,
-  isPolygonWithinRectangle,
-  ITransform,
-  polygonArea,
-  rotateMatrixAroundPoint,
-  verifyPack
-} from "../geometry";
+import { IPoint, ITransform, rotateMatrixAroundPoint, verifyPack } from "../geometry";
 import { getPolygonTransform } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 
@@ -18,16 +10,7 @@ export const bogoPack = (
   if (!polygons.length) {
     return [];
   }
-  const rectangle: IPoint[] = [
-    { x: 0, y: 0 },
-    { x: rectangleWidth, y: rectangleHeight }
-  ];
-  const rectanglePolygon: IPoint[] = [
-    { x: 0, y: 0 },
-    { x: rectangleWidth, y: 0 },
-    { x: rectangleWidth, y: rectangleHeight },
-    { x: 0, y: rectangleHeight }
-  ];
+  const rectangle: IPoint[] = [{ x: 0, y: 0 }, { x: rectangleWidth, y: rectangleHeight }];
   let transformPolygons: ITransform[];
 
   let i = 0;
@@ -40,22 +23,14 @@ export const bogoPack = (
       const rotate = Math.round(Math.random() * 180 - 90);
       const translateX = Math.round(Math.random() * rectangleWidth / 2);
       const translateY = Math.round(Math.random() * rectangleHeight / 2);
-      const m = rotateMatrixAroundPoint(
-        { x: width / 2, y: height / 2 },
-        rotate
-      );
+      const m = rotateMatrixAroundPoint({ x: width / 2, y: height / 2 }, rotate);
 
-      m.multiply(
-        new Matrix().translate(translateX, translateY).scale(scale, scale)
-      );
+      m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
       return getPolygonTransform(rectangleWidth, rectangleHeight, points, m);
     });
     i++;
   } while (
-    !verifyPack(
-      transformPolygons.map(transformPolygon => transformPolygon.points),
-      rectangle
-    )
+    !verifyPack(transformPolygons.map(transformPolygon => transformPolygon.points), rectangle)
   );
 
   return transformPolygons;

@@ -10,6 +10,8 @@
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "declarationDir": "dist/types",
         "outDir": "dist/es",
         "typeRoots": [

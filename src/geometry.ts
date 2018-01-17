@@ -82,13 +82,12 @@ export const verifyPack = (polygons: IPoint[][], rectangle: IPoint[]) => {
       polygons.length > 1 &&
       polygons.some((polygon, index) =>
         polygons
-          .filter((value, arrIndex) => index !== arrIndex)
+          .filter((_, arrIndex) => index !== arrIndex)
           .some(otherPolygon => doPolygonsOverlap(polygon, otherPolygon))
       )
     )
   );
 };
-const arrayWithoutElementAtIndex = (arr: any[], index: number) => arr;
 
 export const packUtilization = (
   rectangleWidth: number,
