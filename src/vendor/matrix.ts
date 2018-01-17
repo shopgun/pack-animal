@@ -46,11 +46,7 @@ export class Matrix {
     t2: Array<{ x: number; y: number }>,
     context?: CanvasRenderingContext2D
   ): Matrix;
-  public static fromTriangles(
-    t1: any,
-    t2: any,
-    context?: CanvasRenderingContext2D
-  ): Matrix {
+  public static fromTriangles(t1: any, t2: any, context?: CanvasRenderingContext2D): Matrix {
     /**
      * Returns a new matrix that transforms a triangle `t1` into another triangle
      * `t2`, or throws an exception if it is impossible.
@@ -80,40 +76,12 @@ export class Matrix {
         ry1 = t1[2].y;
         rx2 = t2[2].x;
         ry2 = t2[2].y;
-        r1 = [
-          t1[0].x - rx1,
-          t1[0].y - ry1,
-          t1[1].x - rx1,
-          t1[1].y - ry1,
-          rx1,
-          ry1
-        ];
-        r2 = [
-          t2[0].x - rx2,
-          t2[0].y - ry2,
-          t2[1].x - rx2,
-          t2[1].y - ry2,
-          rx2,
-          ry2
-        ];
+        r1 = [t1[0].x - rx1, t1[0].y - ry1, t1[1].x - rx1, t1[1].y - ry1, rx1, ry1];
+        r2 = [t2[0].x - rx2, t2[0].y - ry2, t2[1].x - rx2, t2[1].y - ry2, rx2, ry2];
       }
     } else {
-      r1 = [
-        t1.px - t1.rx,
-        t1.py - t1.ry,
-        t1.qx - t1.rx,
-        t1.qy - t1.ry,
-        t1.rx,
-        t1.ry
-      ];
-      r2 = [
-        t2.px - t2.rx,
-        t2.py - t2.ry,
-        t2.qx - t2.rx,
-        t2.qy - t2.ry,
-        t2.rx,
-        t2.ry
-      ];
+      r1 = [t1.px - t1.rx, t1.py - t1.ry, t1.qx - t1.rx, t1.qy - t1.ry, t1.rx, t1.ry];
+      r2 = [t2.px - t2.rx, t2.py - t2.ry, t2.qx - t2.rx, t2.qy - t2.ry, t2.rx, t2.ry];
     }
 
     m1.setTransform.apply(m1, r1);
@@ -144,21 +112,9 @@ export class Matrix {
     return m;
   }
 
-  public static from(
-    a: number,
-    b: number,
-    c: number,
-    d: number,
-    e: number,
-    f: number
-  ): Matrix;
+  public static from(a: number, b: number, c: number, d: number, e: number, f: number): Matrix;
   public static from(a: Matrix): Matrix;
-  public static from(
-    a: { x: number; y: number },
-    b: number,
-    c: number,
-    d: number
-  ): Matrix;
+  public static from(a: { x: number; y: number }, b: number, c: number, d: number): Matrix;
   public static from(
     a: any,
     b?: any,
@@ -310,9 +266,7 @@ export class Matrix {
   public rotateFromVector(x: { x: number; y: number }): Matrix;
   public rotateFromVector(x: number, y: number): Matrix;
   public rotateFromVector(x: any, y?: any) {
-    return this.rotate(
-      typeof x === "number" ? Math.atan2(y, x) : Math.atan2(x.y, x.x)
-    );
+    return this.rotate(typeof x === "number" ? Math.atan2(y, x) : Math.atan2(x.y, x.x));
   }
 
   /**
@@ -393,10 +347,7 @@ export class Matrix {
    * Also see [`skew()`]{@link Matrix#skew}.
    */
   public skewDeg(ax: number, ay: number): Matrix {
-    return this.shear(
-      Math.tan(ax / 180 * Math.PI),
-      Math.tan(ay / 180 * Math.PI)
-    );
+    return this.shear(Math.tan(ax / 180 * Math.PI), Math.tan(ay / 180 * Math.PI));
   }
 
   /**
@@ -418,14 +369,7 @@ export class Matrix {
   /**
    * Set current matrix to new absolute matrix.
    */
-  public setTransform(
-    a: number,
-    b: number,
-    c: number,
-    d: number,
-    e: number,
-    f: number
-  ): Matrix {
+  public setTransform(a: number, b: number, c: number, d: number, e: number, f: number): Matrix {
     this.a = a;
     this.b = b;
     this.c = c;
@@ -459,14 +403,7 @@ export class Matrix {
   /**
    * Multiplies current matrix with new matrix values. Also see [`multiply()`]{@link Matrix#multiply}.
    */
-  public transform(
-    a2: number,
-    b2: number,
-    c2: number,
-    d2: number,
-    e2: number,
-    f2: number
-  ): Matrix {
+  public transform(a2: number, b2: number, c2: number, d2: number, e2: number, f2: number): Matrix {
     const a1 = this.a;
     const b1 = this.b;
     const c1 = this.c;
@@ -731,9 +668,7 @@ export class Matrix {
    * @param {Array} points - array with point objects or pairs
    * @returns {Array} A new array with transformed points
    */
-  public applyToArray(
-    points: Array<{ x: number; y: number }>
-  ): Array<{ x: number; y: number }>;
+  public applyToArray(points: Array<{ x: number; y: number }>): Array<{ x: number; y: number }>;
   public applyToArray(points: number[]): number[];
   public applyToArray(points: any) {
     if (typeof points[0] === "number") {
@@ -747,9 +682,7 @@ export class Matrix {
       }
       return mxPoints;
     }
-    return points.map((p: { x: number; y: number }) =>
-      this.applyToPoint(p.x, p.y)
-    );
+    return points.map((p: { x: number; y: number }) => this.applyToPoint(p.x, p.y));
   }
 
   /**
@@ -828,9 +761,7 @@ export class Matrix {
    * @returns {boolean}
    */
   public isIdentity() {
-    return (
-      this.a === 1 && !this.b && !this.c && this.d === 1 && !this.e && !this.f
-    );
+    return this.a === 1 && !this.b && !this.c && this.d === 1 && !this.e && !this.f;
   }
 
   /**
@@ -911,9 +842,9 @@ export class Matrix {
    */
   public toCSS3D() {
     const n2 = ",0,0,";
-    return `matrix3d(${this.a},${this.b + n2 + this.c},${this.d +
-      n2 +
-      n2},1,0,${this.e},${this.f},0,1)`;
+    return `matrix3d(${this.a},${this.b + n2 + this.c},${this.d + n2 + n2},1,0,${this.e},${
+      this.f
+    },0,1)`;
   }
 
   /**

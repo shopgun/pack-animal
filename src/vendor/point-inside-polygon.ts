@@ -6,10 +6,7 @@ export default function(p: number[], poly: number[][]) {
     if (
       poly[i][1] > p[1] !== poly[j][1] > p[1] &&
       p[0] <
-        (poly[j][0] - poly[i][0]) *
-          (p[1] - poly[i][1]) /
-          (poly[j][1] - poly[i][1]) +
-          poly[i][0]
+        (poly[j][0] - poly[i][0]) * (p[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0]
     ) {
       c = !c;
     }
