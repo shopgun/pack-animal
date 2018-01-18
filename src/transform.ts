@@ -64,16 +64,18 @@ export const centerPolygonTransforms = (
   const packBounds = polygonsBounds(polygonTransforms.map(({ points }) => points));
   const centeringTranslateX = (packBounds[2].x - packBounds[0].x - rectangleWidth) / 2;
   const centeringTranslateY = (packBounds[2].y - packBounds[0].y - rectangleHeight) / 2;
-  return polygonTransforms.map(polygonTransform =>
+  return polygonTransforms.map(({ matrix, points }) =>
     getPolygonTransform(
       rectangleWidth,
       rectangleHeight,
-      polygonTransform.matrix
-        .clone()
-        .inverse()
-        .applyToArray(polygonTransform.points),
-      polygonTransform.matrix.multiply(
-        new Matrix().translate(centeringTranslateX, centeringTranslateY)
+      matrix.inverse().applyToArray(points),
+      Matrix.from(
+        matrix.a,
+        matrix.b,
+        matrix.c,
+        matrix.d,
+        matrix.e + centeringTranslateX,
+        matrix.f + centeringTranslateY
       )
     )
   );
