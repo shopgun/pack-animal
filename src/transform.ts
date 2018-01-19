@@ -74,8 +74,12 @@ export const centerPolygonTransforms = (
         matrix.b,
         matrix.c,
         matrix.d,
-        matrix.e + centeringTranslateX,
-        matrix.f + centeringTranslateY
+        matrix.e + centeringTranslateX >= 0
+          ? matrix.e + centeringTranslateX
+          : matrix.e - centeringTranslateX,
+        matrix.f + centeringTranslateY >= 0
+          ? matrix.f + centeringTranslateY
+          : matrix.f - centeringTranslateY
       )
     )
   );
