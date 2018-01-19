@@ -15,24 +15,63 @@ Boxes to pack polys in:
   const realData = Object.keys(window.incitoImages).map(url => ({
     url,
     ...window.incitoImages[url],
-    //      })).slice(4, 7);
-    //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 20);
-  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(8, 13);
+  })).slice(2, 4);
+  //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 18);
+  //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(8, 13);
   const polygons = realData.map(child => child.contour.points);
-  const width = 800;
-  const height = 742;
+  const rectangles = realData.map(({ width, height }) => [
+    { x: 0, y: 0 },
+    { x: width, y: 0 },
+    { x: width, y: height },
+    { x: 0, y: height },
+    { x: 0, y: 0 }
+  ]);
+  const width = 360;
+  const height = 164 + (1 / 3);
+  console.log(height);
   realData.forEach(({ contour: { points }, url, width, height, colorPalette }) => {
     const svgPoints = points.map(({ x, y }) => `${x},${y}`).join(' ');
     $('.providedPolys').append(`
     <div style="border: 30px solid rgba(0,0,0,0.125); width: 100%; height: auto;">
       <svg viewBox="0 0 ${width} ${height}" style="background:url(${url}); background-size: cover;">
         <polygon points="${svgPoints}" style="fill:${colorPalette[3]};opacity: 0.5;" />
-      <image href="${url}"/>    
+      <!--<image href="${url}"/>    -->
       </svg>
     </div>`);
   });
-  const childTransforms = packAnimal(width, height, polygons, { debug: true });
+  const childTransforms = packAnimal(width, height, /*polygons*/rectangles, { debug: true, center: false });
   console.log(childTransforms);
+
+
+  const ctx = { width, height }
+  const childViews = realData.map((image, i) => {
+    const simpleTransform = childTransforms[i].matrix.decompose();
+    const scale = simpleTransform.scale.x;
+    const relativeHeight = image.height * scale / ctx.height;
+    const relativeWidth = image.width * scale / ctx.width;
+    const translateXRelative = simpleTransform.translate.x / (image.width * scale);
+    const translateYRelative = simpleTransform.translate.y / (image.height * scale);
+    const degreesRotation = 0;
+
+    return {
+      transform_translate_x: translateXRelative * 100 + '%',
+      transform_translate_y: translateYRelative * 100 + '%',
+    };
+  });
+
+  console.log(childViews);
+
+
+
+
+
+
+
+
+
+
+
+
   // SVG displllay
   $('.boxToPack').append(`<svg viewBox="0 0 ${width} ${height}">
     ${realData.map((child, index) => {

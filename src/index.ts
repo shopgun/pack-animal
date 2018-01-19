@@ -1,6 +1,7 @@
-import { centerPolygonTransforms, IPoint, ITransform, packUtilization } from "./geometry";
+import { IPoint, packUtilization } from "./geometry";
+import { centerPolygonTransforms, ITransform } from "./transform";
 
-import { bogoPack, greedyPack } from "./algorithms";
+import { greedyPack } from "./algorithms";
 
 export default (
   rectangleWidth: number,
