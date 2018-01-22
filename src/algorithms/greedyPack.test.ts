@@ -25,5 +25,15 @@ describe("greedyPack", () => {
       { rotationMode: RotationMode.Advanced }
     );
     expect(polygonTransforms2).toMatchSnapshot();
+    const polygonTransforms3 = greedyPack(
+      800,
+      742,
+      [
+        [{ x: 1, y: 1 }, { x: 1, y: 366 }, { x: 798, y: 366 }, { x: 798, y: 1 }],
+        [{ x: 1, y: 1 }, { x: 41, y: 390 }, { x: 773, y: 390 }, { x: 798, y: 1 }]
+      ],
+      { polygonHitboxScale: 0.8 }
+    );
+    expect(polygonTransforms3).toMatchSnapshot();
   });
 });

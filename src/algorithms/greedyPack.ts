@@ -10,12 +10,14 @@ export enum RotationMode {
 
 export interface IGreedyPackOptions {
   rotationMode?: RotationMode;
+  polygonHitboxScale?: number;
+  rectangleHitboxScale?: number;
 }
 export const greedyPack = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygons: IPoint[][],
-  { rotationMode = RotationMode.Simple }: IGreedyPackOptions = {}
+  { rotationMode = RotationMode.Simple, polygonHitboxScale }: IGreedyPackOptions = {}
 ): ITransform[] => {
   if (!polygons.length) {
     return [];
@@ -33,7 +35,9 @@ export const greedyPack = (
   const translateYInitial = 0;
   let scale: number;
   let j = 0;
-
+  const verifyPackOptions = {
+    polygonHitboxScale
+  };
   do {
     scale = scaleInitial - scaleIncrement * j;
     polygonTransforms = polygons.reduce((memo: ITransform[], points: IPoint[]): ITransform[] => {
@@ -53,7 +57,7 @@ export const greedyPack = (
         m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
         transformedPoints = m.applyToArray(points);
         i++;
-      } while (verifyPack([...memoPoints, transformedPoints], rectangle));
+      } while (verifyPack([...memoPoints, transformedPoints], rectangle, verifyPackOptions));
       translateY = previousTranslateY;
 
       let previousTranslateX = null;
@@ -65,7 +69,7 @@ export const greedyPack = (
         m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
         transformedPoints = m.applyToArray(points);
         i++;
-      } while (verifyPack([...memoPoints, transformedPoints], rectangle));
+      } while (verifyPack([...memoPoints, transformedPoints], rectangle, verifyPackOptions));
       translateX = previousTranslateX;
 
       let finalMatrix = new Matrix();
@@ -84,7 +88,10 @@ export const greedyPack = (
               m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
               transformedPoints = m.applyToArray(points);
               i++;
-            } while (verifyPack([...memoPoints, transformedPoints], rectangle) && rotate <= 22.5);
+            } while (
+              verifyPack([...memoPoints, transformedPoints], rectangle, verifyPackOptions) &&
+              rotate <= 22.5
+            );
 
             return rotateMatrixAroundPoint(point, previousRotate, memoMatrix);
           }, new Matrix());
@@ -107,7 +114,7 @@ export const greedyPack = (
           m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
           transformedPoints = m.applyToArray(points);
           i++;
-        } while (verifyPack([...memoPoints, transformedPoints], rectangle));
+        } while (verifyPack([...memoPoints, transformedPoints], rectangle, verifyPackOptions));
 
         finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
       }
@@ -118,7 +125,9 @@ export const greedyPack = (
       return memo;
     }, []);
     j++;
-  } while (!verifyPack(polygonTransforms.map(({ points }) => points), rectangle));
+  } while (
+    !verifyPack(polygonTransforms.map(({ points }) => points), rectangle, verifyPackOptions)
+  );
 
   return polygonTransforms;
 };
