@@ -179,3 +179,92 @@ Array [
   },
 ]
 `;
+
+exports[`greedyPack works 3`] = `
+Array [
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 96.63625%;
+        height: 47.71563342318059%;
+        transform: translateX(3.1044250992769276%) translateY(108.97895777432565%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":0.97,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":0.97,
+      \\"e\\":24,
+      \\"f\\":385.84
+    }",
+    "points": Array [
+      Object {
+        "x": 24.97,
+        "y": 386.81,
+      },
+      Object {
+        "x": 24.97,
+        "y": 740.8599999999999,
+      },
+      Object {
+        "x": 798.06,
+        "y": 740.8599999999999,
+      },
+      Object {
+        "x": 798.06,
+        "y": 386.81,
+      },
+    ],
+    "rotate": -0,
+    "scale": 0.97,
+    "svgTransform": "matrix(0.97,0,0,0.97,24,385.84)",
+    "translateX": 24,
+    "translateY": 385.84,
+  },
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 96.63625%;
+        height: 50.85309973045822%;
+        transform: translateX(3.1044250992769276%) translateY(0%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":0.97,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":0.97,
+      \\"e\\":24,
+      \\"f\\":0
+    }",
+    "points": Array [
+      Object {
+        "x": 24.97,
+        "y": 0.97,
+      },
+      Object {
+        "x": 63.769999999999996,
+        "y": 378.3,
+      },
+      Object {
+        "x": 773.81,
+        "y": 378.3,
+      },
+      Object {
+        "x": 798.06,
+        "y": 0.97,
+      },
+    ],
+    "rotate": -0,
+    "scale": 0.97,
+    "svgTransform": "matrix(0.97,0,0,0.97,24,0)",
+    "translateX": 24,
+    "translateY": 0,
+  },
+]
+`;

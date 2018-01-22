@@ -14,7 +14,21 @@ export const rotateMatrixAroundPoint = (point: IPoint, degrees: number, matrix =
   rotatedMatrix.multiply(new Matrix().translate(-x, -y));
   return rotatedMatrix;
 };
-
+export const scaleMatrixAroundPoint = (point: IPoint, scale: number, matrix = new Matrix()) => {
+  const rotatedMatrix = matrix.clone();
+  const { x, y } = point;
+  rotatedMatrix.multiply(new Matrix().translate(x, y));
+  rotatedMatrix.multiply(new Matrix().scaleU(scale));
+  rotatedMatrix.multiply(new Matrix().translate(-x, -y));
+  return rotatedMatrix;
+};
+export const polygonCenter = (points: IPoint[]): IPoint => {
+  const Xs = points.map(point => point.x);
+  const Ys = points.map(point => point.y);
+  const width = Math.max(...Xs) - Math.min(...Xs);
+  const height = Math.max(...Ys) - Math.min(...Ys);
+  return { x: width / 2, y: height / 2 };
+};
 export const doPolygonsOverlap = (polygon1: IPoint[], polygon2: IPoint[]) =>
   polygonOverlap(polygon1.map(({ x, y }) => [x, y]), polygon2.map(({ x, y }) => [x, y]));
 
@@ -58,16 +72,30 @@ export const isPolygonWithinRectangle = (polygon: IPoint[], rectangle: IPoint[])
   return true;
 };
 
-export const verifyPack = (polygons: IPoint[][], rectangle: IPoint[]) =>
-  polygons.every(polygon => isPolygonWithinRectangle(polygon, rectangle)) &&
-  !(
-    polygons.length > 1 &&
-    polygons.some((polygon, index) =>
-      polygons
-        .filter((_, arrIndex) => index !== arrIndex)
-        .some(otherPolygon => doPolygonsOverlap(polygon, otherPolygon))
+export interface IVerifyPackOptions {
+  polygonHitboxScale?: number;
+}
+export const verifyPack = (
+  polygons: IPoint[][],
+  rectangle: IPoint[],
+  { polygonHitboxScale = 1 } = {}
+) => {
+  const adjustedPolygons = polygons.map(polygon =>
+    scaleMatrixAroundPoint(polygonCenter(polygon), polygonHitboxScale).applyToArray(polygon)
+  );
+
+  return (
+    polygons.every(polygon => isPolygonWithinRectangle(polygon, rectangle)) &&
+    !(
+      adjustedPolygons.length > 1 &&
+      adjustedPolygons.some((polygon, index) =>
+        adjustedPolygons
+          .filter((_, arrIndex) => index !== arrIndex)
+          .some(otherPolygon => doPolygonsOverlap(polygon, otherPolygon))
+      )
     )
   );
+};
 
 export const packUtilization = (
   rectangleWidth: number,
