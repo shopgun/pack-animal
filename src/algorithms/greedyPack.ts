@@ -2,10 +2,20 @@ import { IPoint, rotateMatrixAroundPoint, verifyPack } from "../geometry";
 import { getPolygonTransform, ITransform } from "../transform";
 import { Matrix } from "../vendor/matrix";
 
+export enum RotationMode {
+  Off,
+  Simple = "SIMPLE",
+  Advanced = "ADVANCED"
+}
+
+export interface IGreedyPackOptions {
+  rotationMode?: RotationMode;
+}
 export const greedyPack = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][]
+  polygons: IPoint[][],
+  { rotationMode = RotationMode.Simple }: IGreedyPackOptions = {}
 ): ITransform[] => {
   if (!polygons.length) {
     return [];
@@ -15,7 +25,7 @@ export const greedyPack = (
   const scaleIncrement = 0.01;
   const translateXIncrement = rectangleWidth * 0.01;
   const translateYIncrement = rectangleHeight * 0.01;
-  const rotateIncrement = 4;
+  const rotateIncrement = 1;
 
   const scaleInitial = 1;
   const rotateInitial = 0;
@@ -27,16 +37,7 @@ export const greedyPack = (
   do {
     scale = scaleInitial - scaleIncrement * j;
     polygonTransforms = polygons.reduce((memo: ITransform[], points: IPoint[]): ITransform[] => {
-      const width = Math.floor(
-        (Math.max(...points.map(point => point.x)) - Math.min(...points.map(point => point.x))) *
-          scale
-      );
-      const height = Math.floor(
-        (Math.max(...points.map(point => point.y)) - Math.min(...points.map(point => point.y))) *
-          scale
-      );
       const memoPoints = memo.map(transformPoly => transformPoly.points);
-      const center = { x: width / 2, y: height / 2 };
 
       let rotate = rotateInitial;
       let translateX = translateXInitial;
@@ -67,18 +68,50 @@ export const greedyPack = (
       } while (verifyPack([...memoPoints, transformedPoints], rectangle));
       translateX = previousTranslateX;
 
-      let previousRotate = null;
-      i = 0;
-      do {
-        previousRotate = rotate;
-        rotate = rotateInitial + rotateIncrement * i;
-        const m = rotateMatrixAroundPoint(center, rotate);
-        m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
-        transformedPoints = m.applyToArray(points);
-        i++;
-      } while (verifyPack([...memoPoints, transformedPoints], rectangle));
+      let finalMatrix = new Matrix();
+      if (rotationMode === RotationMode.Advanced) {
+        finalMatrix = new Matrix()
+          .translate(translateX, translateY)
+          .scale(scale, scale)
+          .applyToArray(points)
+          .reduce((memoMatrix, point) => {
+            let previousRotate = null;
+            i = 0;
+            do {
+              previousRotate = rotate;
+              rotate = rotateInitial + rotateIncrement * i;
+              const m = rotateMatrixAroundPoint(point, rotate, memoMatrix);
+              m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
+              transformedPoints = m.applyToArray(points);
+              i++;
+            } while (verifyPack([...memoPoints, transformedPoints], rectangle) && rotate <= 22.5);
 
-      const finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
+            return rotateMatrixAroundPoint(point, previousRotate, memoMatrix);
+          }, new Matrix());
+      }
+
+      if (rotationMode === RotationMode.Simple) {
+        const width = Math.floor(
+          Math.max(...points.map(point => point.x)) - Math.min(...points.map(point => point.x))
+        );
+        const height = Math.floor(
+          Math.max(...points.map(point => point.y)) - Math.min(...points.map(point => point.y))
+        );
+        const center = { x: width / 2, y: height / 2 };
+        let previousRotate = null;
+        i = 0;
+        do {
+          previousRotate = rotate;
+          rotate = rotateInitial + rotateIncrement * i;
+          const m = rotateMatrixAroundPoint(center, rotate);
+          m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
+          transformedPoints = m.applyToArray(points);
+          i++;
+        } while (verifyPack([...memoPoints, transformedPoints], rectangle));
+
+        finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
+      }
+
       finalMatrix.translate(translateX, translateY).scale(scale, scale);
 
       memo.push(getPolygonTransform(rectangleWidth, rectangleHeight, points, finalMatrix));
