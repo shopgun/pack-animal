@@ -18,18 +18,14 @@ export const rotateMatrixAroundPoint = (point: IPoint, degrees: number, matrix =
 export const doPolygonsOverlap = (polygon1: IPoint[], polygon2: IPoint[]) =>
   polygonOverlap(polygon1.map(({ x, y }) => [x, y]), polygon2.map(({ x, y }) => [x, y]));
 
-export const polygonArea = (points: IPoint[]) => {
-  const l = points.length;
-  let det = 0;
-
-  points = points.concat(points[0]);
-
-  for (let i = 0; i < l; i++) {
-    det += points[i].x * points[i + 1].y - points[i].y * points[i + 1].x;
-  }
-
-  return Math.abs(det) / 2;
-};
+export const polygonArea = (points: IPoint[]) =>
+  Math.abs(
+    points.reduce(
+      (det, _, i, { length }) =>
+        det + (points[i].x * points[(i + 1) % length].y - points[i].y * points[(i + 1) % length].x),
+      0
+    )
+  ) / 2;
 
 export const polygonBounds = (points: IPoint[]): IPoint[] => {
   const left = Math.min(...points.map(point => point.x));
@@ -43,10 +39,9 @@ export const polygonBounds = (points: IPoint[]): IPoint[] => {
     { x: left, y: bottom }
   ];
 };
-export const polygonsBounds = (polygons: IPoint[][]): IPoint[] => {
-  const polygonsPoints = Array.prototype.concat(...polygons);
-  return polygonBounds(polygonsPoints);
-};
+
+export const polygonsBounds = (polygons: IPoint[][]): IPoint[] =>
+  polygonBounds(Array.prototype.concat(...polygons));
 
 export const isPolygonWithinRectangle = (polygon: IPoint[], rectangle: IPoint[]) => {
   if (!polygon.length) {
