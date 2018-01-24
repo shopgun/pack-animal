@@ -1,4 +1,4 @@
-import { IPoint, rotateMatrixAroundPoint, verifyPack } from "../geometry";
+import { IPoint, IVerifyPackOptions, rotateMatrixAroundPoint, verifyPack } from "../geometry";
 import { getPolygonTransform, ITransform } from "../transform";
 import { Matrix } from "../vendor/matrix";
 
@@ -13,6 +13,37 @@ export interface IGreedyPackOptions {
   polygonHitboxScale?: number;
   rectangleHitboxScale?: number;
 }
+
+enum MatrixAttribute {
+  translateX = "translateX",
+  translateY = "translateY"
+}
+const maxMatrix = (
+  attribute: MatrixAttribute,
+  matrix: Matrix,
+  increment: number,
+  points: IPoint[],
+  verifier: (transformedPoints: IPoint[]) => boolean
+): number => {
+  let i = 0;
+  let previousValue = null;
+  let transformedPoints: IPoint[];
+  const { scale, translate: { x, y } } = matrix.decompose();
+  const initial = attribute === MatrixAttribute.translateX ? x : y;
+  let value = initial;
+  do {
+    previousValue = value;
+    value = initial + increment * i;
+    const m = new Matrix()
+      .translate(x, y)
+      [attribute](value)
+      .scaleU(scale.x);
+    transformedPoints = m.applyToArray(points);
+    i++;
+  } while (verifier(transformedPoints));
+  return previousValue;
+};
+
 export const greedyPack = (
   rectangleWidth: number,
   rectangleHeight: number,
@@ -24,7 +55,7 @@ export const greedyPack = (
   }
   const rectangle: IPoint[] = [{ x: 0, y: 0 }, { x: rectangleWidth, y: rectangleHeight }];
   let polygonTransforms;
-  const scaleIncrement = 0.01;
+  const scaleIncrement = 0.025;
   const translateXIncrement = rectangleWidth * 0.01;
   const translateYIncrement = rectangleHeight * 0.01;
   const rotateIncrement = 1;
@@ -35,42 +66,39 @@ export const greedyPack = (
   const translateYInitial = 0;
   let scale: number;
   let j = 0;
-  const verifyPackOptions = {
+  const verifyPackOptions: IVerifyPackOptions = {
     polygonHitboxScale
   };
   do {
     scale = scaleInitial - scaleIncrement * j;
+    if (scale <= 0.1) {
+      throw new Error("packing failure");
+    }
     polygonTransforms = polygons.reduce((memo: ITransform[], points: IPoint[]): ITransform[] => {
       const memoPoints = memo.map(transformPoly => transformPoly.points);
+      const verifier = (newPoints: IPoint[]) =>
+        verifyPack([...memoPoints, newPoints], rectangle, verifyPackOptions);
 
       let rotate = rotateInitial;
       let translateX = translateXInitial;
       let translateY = translateYInitial;
       let transformedPoints;
       let i;
-      let previousTranslateY = null;
-      i = 0;
-      do {
-        previousTranslateY = translateY;
-        translateY = translateYInitial + translateYIncrement * i;
-        const m = new Matrix();
-        m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
-        transformedPoints = m.applyToArray(points);
-        i++;
-      } while (verifyPack([...memoPoints, transformedPoints], rectangle, verifyPackOptions));
-      translateY = previousTranslateY;
+      translateY = maxMatrix(
+        MatrixAttribute.translateY,
+        new Matrix().translate(translateX, translateY).scaleU(scale),
+        translateYIncrement,
+        points,
+        verifier
+      );
 
-      let previousTranslateX = null;
-      i = 0;
-      do {
-        previousTranslateX = translateX;
-        translateX = translateXInitial + translateXIncrement * i;
-        const m = new Matrix();
-        m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
-        transformedPoints = m.applyToArray(points);
-        i++;
-      } while (verifyPack([...memoPoints, transformedPoints], rectangle, verifyPackOptions));
-      translateX = previousTranslateX;
+      translateX = maxMatrix(
+        MatrixAttribute.translateX,
+        new Matrix().translate(translateX, translateY).scaleU(scale),
+        translateXIncrement,
+        points,
+        verifier
+      );
 
       let finalMatrix = new Matrix();
       if (rotationMode === RotationMode.Advanced) {
@@ -88,10 +116,7 @@ export const greedyPack = (
               m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
               transformedPoints = m.applyToArray(points);
               i++;
-            } while (
-              verifyPack([...memoPoints, transformedPoints], rectangle, verifyPackOptions) &&
-              rotate <= 22.5
-            );
+            } while (verifier(transformedPoints) && rotate <= 22.5);
 
             return rotateMatrixAroundPoint(point, previousRotate, memoMatrix);
           }, new Matrix());
@@ -114,7 +139,7 @@ export const greedyPack = (
           m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
           transformedPoints = m.applyToArray(points);
           i++;
-        } while (verifyPack([...memoPoints, transformedPoints], rectangle, verifyPackOptions));
+        } while (verifier(transformedPoints));
 
         finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
       }

@@ -78,7 +78,7 @@ export interface IVerifyPackOptions {
 export const verifyPack = (
   polygons: IPoint[][],
   rectangle: IPoint[],
-  { polygonHitboxScale = 1 } = {}
+  { polygonHitboxScale = 1 }: IVerifyPackOptions = {}
 ) => {
   const adjustedPolygons =
     polygonHitboxScale !== 1
