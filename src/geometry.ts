@@ -80,9 +80,12 @@ export const verifyPack = (
   rectangle: IPoint[],
   { polygonHitboxScale = 1 } = {}
 ) => {
-  const adjustedPolygons = polygons.map(polygon =>
-    scaleMatrixAroundPoint(polygonCenter(polygon), polygonHitboxScale).applyToArray(polygon)
-  );
+  const adjustedPolygons =
+    polygonHitboxScale !== 1
+      ? polygons.map(polygon =>
+          scaleMatrixAroundPoint(polygonCenter(polygon), polygonHitboxScale).applyToArray(polygon)
+        )
+      : polygons;
 
   return (
     polygons.every(polygon => isPolygonWithinRectangle(polygon, rectangle)) &&
