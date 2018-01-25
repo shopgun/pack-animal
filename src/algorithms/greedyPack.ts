@@ -71,9 +71,6 @@ export const greedyPack = (
   };
   do {
     scale = scaleInitial - scaleIncrement * j;
-    if (scale <= 0.1) {
-      throw new Error("packing failure");
-    }
     polygonTransforms = polygons.reduce((memo: ITransform[], points: IPoint[]): ITransform[] => {
       const memoPoints = memo.map(transformPoly => transformPoly.points);
       const verifier = (newPoints: IPoint[]) =>
