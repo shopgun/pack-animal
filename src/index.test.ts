@@ -32,13 +32,25 @@ describe("packAnimal", () => {
         ],
         { center: false }
       )
-    ).toBeTruthy();
+    ).toMatchSnapshot();
+    expect(
+      packAnimal(
+        50,
+        50,
+        [
+          [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 2.5, y: 5 }],
+          [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 5, y: 5 }, { x: 0, y: 5 }],
+          [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 2.5, y: 5 }]
+        ],
+        { postPackPolygonScale: 0.9 }
+      )
+    ).toMatchSnapshot();
     expect(
       packAnimal(50, 50, [
         [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 2.5, y: 5 }],
         [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 5, y: 5 }, { x: 0, y: 5 }],
         [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 2.5, y: 5 }]
       ])
-    ).toBeTruthy();
+    ).toMatchSnapshot();
   });
 });

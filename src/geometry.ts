@@ -78,11 +78,14 @@ export interface IVerifyPackOptions {
 export const verifyPack = (
   polygons: IPoint[][],
   rectangle: IPoint[],
-  { polygonHitboxScale = 1 } = {}
+  { polygonHitboxScale = 1 }: IVerifyPackOptions = {}
 ) => {
-  const adjustedPolygons = polygons.map(polygon =>
-    scaleMatrixAroundPoint(polygonCenter(polygon), polygonHitboxScale).applyToArray(polygon)
-  );
+  const adjustedPolygons =
+    polygonHitboxScale !== 1
+      ? polygons.map(polygon =>
+          scaleMatrixAroundPoint(polygonCenter(polygon), polygonHitboxScale).applyToArray(polygon)
+        )
+      : polygons;
 
   return (
     polygons.every(polygon => isPolygonWithinRectangle(polygon, rectangle)) &&

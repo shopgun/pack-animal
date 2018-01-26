@@ -180,6 +180,7 @@ export class Matrix {
   private px: string;
   private st: { [index: string]: any };
   private el: HTMLElement;
+  [key: string]: any;
 
   constructor(context?: CanvasRenderingContext2D, element?: HTMLElement) {
     this.a = this.d = 1;
