@@ -1,5 +1,5 @@
 import { IPoint, packUtilization } from "./geometry";
-import { centerPolygonTransforms, ITransform } from "./transform";
+import { centerPolygonTransforms, ITransform, scalePolygonTransforms } from "./transform";
 
 import { greedyPack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
@@ -7,6 +7,7 @@ import { IGreedyPackOptions } from "./algorithms/greedyPack";
 export interface IPackAnimalOptions {
   algorithm?: (...args: any[]) => ITransform[];
   center?: boolean;
+  postPackPolygonScale?: number;
   debug?: boolean;
   algorithmOptions?: IGreedyPackOptions;
 }
@@ -18,6 +19,7 @@ export default (
   {
     algorithm = greedyPack,
     center = true,
+    postPackPolygonScale = 1,
     algorithmOptions = {},
     /* istanbul ignore next */ debug = false
   }: IPackAnimalOptions = {}
@@ -33,6 +35,14 @@ export default (
   let polygonTransforms = algorithm(rectangleWidth, rectangleHeight, polygons, algorithmOptions);
   if (center) {
     polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
+  }
+  if (postPackPolygonScale !== 1) {
+    polygonTransforms = scalePolygonTransforms(
+      postPackPolygonScale,
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
   }
   /* istanbul ignore next */
   if (debug) {

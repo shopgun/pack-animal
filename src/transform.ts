@@ -1,4 +1,10 @@
-import { IPoint, polygonsBounds, radiansToDegrees } from "./geometry";
+import {
+  IPoint,
+  polygonCenter,
+  polygonsBounds,
+  radiansToDegrees,
+  scaleMatrixAroundPoint
+} from "./geometry";
 import { Matrix } from "./vendor/matrix";
 
 export interface ITransform {
@@ -86,3 +92,18 @@ export const centerPolygonTransforms = (
     )
   );
 };
+
+export const scalePolygonTransforms = (
+  scale: number,
+  rectangleWidth: number,
+  rectangleHeight: number,
+  polygonTransforms: ITransform[]
+): ITransform[] =>
+  polygonTransforms.map(({ matrix, points }) =>
+    getPolygonTransform(
+      rectangleWidth,
+      rectangleHeight,
+      matrix.inverse().applyToArray(points),
+      scaleMatrixAroundPoint(polygonCenter(matrix.inverse().applyToArray(points)), scale, matrix)
+    )
+  );

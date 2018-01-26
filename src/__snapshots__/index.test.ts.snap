@@ -1,0 +1,370 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`packAnimal can take an alternative algorithm 1`] = `
+Array [
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 10%;
+        height: 10%;
+        transform: translateX(900%) translateY(900%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":1,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":1,
+      \\"e\\":45,
+      \\"f\\":45
+    }",
+    "points": Array [
+      Object {
+        "x": 45,
+        "y": 45,
+      },
+      Object {
+        "x": 50,
+        "y": 45,
+      },
+      Object {
+        "x": 47.5,
+        "y": 50,
+      },
+    ],
+    "rotate": -0,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,45,45)",
+    "translateX": 45,
+    "translateY": 45,
+  },
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 10%;
+        height: 10%;
+        transform: translateX(790%) translateY(900%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":1,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":1,
+      \\"e\\":39.5,
+      \\"f\\":45
+    }",
+    "points": Array [
+      Object {
+        "x": 39.5,
+        "y": 45,
+      },
+      Object {
+        "x": 44.5,
+        "y": 45,
+      },
+      Object {
+        "x": 44.5,
+        "y": 50,
+      },
+      Object {
+        "x": 39.5,
+        "y": 50,
+      },
+    ],
+    "rotate": -0,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,39.5,45)",
+    "translateX": 39.5,
+    "translateY": 45,
+  },
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 10%;
+        height: 10%;
+        transform: translateX(680%) translateY(900%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":1,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":1,
+      \\"e\\":34,
+      \\"f\\":45
+    }",
+    "points": Array [
+      Object {
+        "x": 34,
+        "y": 45,
+      },
+      Object {
+        "x": 39,
+        "y": 45,
+      },
+      Object {
+        "x": 36.5,
+        "y": 50,
+      },
+    ],
+    "rotate": -0,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,34,45)",
+    "translateX": 34,
+    "translateY": 45,
+  },
+]
+`;
+
+exports[`packAnimal can take an alternative algorithm 2`] = `
+Array [
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 9%;
+        height: 9%;
+        transform: translateX(627.7777777777777%) translateY(505.55555555555554%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":0.9,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":0.9,
+      \\"e\\":28.25,
+      \\"f\\":22.75
+    }",
+    "points": Array [
+      Object {
+        "x": 28.25,
+        "y": 22.75,
+      },
+      Object {
+        "x": 32.75,
+        "y": 22.75,
+      },
+      Object {
+        "x": 30.5,
+        "y": 27.25,
+      },
+    ],
+    "rotate": -0,
+    "scale": 0.9,
+    "svgTransform": "matrix(0.9,0,0,0.9,28.25,22.75)",
+    "translateX": 28.25,
+    "translateY": 22.75,
+  },
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 9%;
+        height: 9%;
+        transform: translateX(505.55555555555554%) translateY(505.55555555555554%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":0.9,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":0.9,
+      \\"e\\":22.75,
+      \\"f\\":22.75
+    }",
+    "points": Array [
+      Object {
+        "x": 22.75,
+        "y": 22.75,
+      },
+      Object {
+        "x": 27.25,
+        "y": 22.75,
+      },
+      Object {
+        "x": 27.25,
+        "y": 27.25,
+      },
+      Object {
+        "x": 22.75,
+        "y": 27.25,
+      },
+    ],
+    "rotate": -0,
+    "scale": 0.9,
+    "svgTransform": "matrix(0.9,0,0,0.9,22.75,22.75)",
+    "translateX": 22.75,
+    "translateY": 22.75,
+  },
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 9%;
+        height: 9%;
+        transform: translateX(383.33333333333337%) translateY(505.55555555555554%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":0.9,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":0.9,
+      \\"e\\":17.25,
+      \\"f\\":22.75
+    }",
+    "points": Array [
+      Object {
+        "x": 17.25,
+        "y": 22.75,
+      },
+      Object {
+        "x": 21.75,
+        "y": 22.75,
+      },
+      Object {
+        "x": 19.5,
+        "y": 27.25,
+      },
+    ],
+    "rotate": -0,
+    "scale": 0.9,
+    "svgTransform": "matrix(0.9,0,0,0.9,17.25,22.75)",
+    "translateX": 17.25,
+    "translateY": 22.75,
+  },
+]
+`;
+
+exports[`packAnimal can take an alternative algorithm 3`] = `
+Array [
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 10%;
+        height: 10%;
+        transform: translateX(560%) translateY(450%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":1,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":1,
+      \\"e\\":28,
+      \\"f\\":22.5
+    }",
+    "points": Array [
+      Object {
+        "x": 28,
+        "y": 22.5,
+      },
+      Object {
+        "x": 33,
+        "y": 22.5,
+      },
+      Object {
+        "x": 30.5,
+        "y": 27.5,
+      },
+    ],
+    "rotate": -0,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,28,22.5)",
+    "translateX": 28,
+    "translateY": 22.5,
+  },
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 10%;
+        height: 10%;
+        transform: translateX(450%) translateY(450%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":1,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":1,
+      \\"e\\":22.5,
+      \\"f\\":22.5
+    }",
+    "points": Array [
+      Object {
+        "x": 22.5,
+        "y": 22.5,
+      },
+      Object {
+        "x": 27.5,
+        "y": 22.5,
+      },
+      Object {
+        "x": 27.5,
+        "y": 27.5,
+      },
+      Object {
+        "x": 22.5,
+        "y": 27.5,
+      },
+    ],
+    "rotate": -0,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,22.5,22.5)",
+    "translateX": 22.5,
+    "translateY": 22.5,
+  },
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 10%;
+        height: 10%;
+        transform: translateX(340%) translateY(450%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":1,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":1,
+      \\"e\\":17,
+      \\"f\\":22.5
+    }",
+    "points": Array [
+      Object {
+        "x": 17,
+        "y": 22.5,
+      },
+      Object {
+        "x": 22,
+        "y": 22.5,
+      },
+      Object {
+        "x": 19.5,
+        "y": 27.5,
+      },
+    ],
+    "rotate": -0,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,17,22.5)",
+    "translateX": 17,
+    "translateY": 22.5,
+  },
+]
+`;

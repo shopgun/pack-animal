@@ -11,7 +11,6 @@ export enum RotationMode {
 export interface IGreedyPackOptions {
   rotationMode?: RotationMode;
   polygonHitboxScale?: number;
-  rectangleHitboxScale?: number;
 }
 
 enum MatrixAttribute {
