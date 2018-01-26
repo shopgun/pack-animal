@@ -163,10 +163,10 @@ export const jitterPolygonTransforms = (
   const seed = polygonTransforms
     .map(({ points }) => points.map(({ x, y }) => `${x}${y}`).join(""))
     .join("");
-  const seededRandom = Alea(seed);
-  const randomInRange = (min: number, max: number) => seededRandom() * (max - min) + min;
   const { rotate = 0, scale = 0, position = 0 } = jitter;
-  return polygonTransforms.map(({ matrix, points }) => {
+  return polygonTransforms.map(({ matrix, points }, index) => {
+    const seededRandom = Alea(index + seed);
+    const randomInRange = (min: number, max: number) => seededRandom() * (max - min) + min;
     const center = polygonCenter(matrix.inverse().applyToArray(points));
     return getPolygonTransform(
       rectangleWidth,
