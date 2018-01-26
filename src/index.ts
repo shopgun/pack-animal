@@ -1,5 +1,11 @@
 import { IPoint, packUtilization } from "./geometry";
-import { centerPolygonTransforms, ITransform, scalePolygonTransforms } from "./transform";
+import {
+  centerPolygonTransforms,
+  IJitterOptions,
+  ITransform,
+  jitterPolygonTransforms,
+  scalePolygonTransforms
+} from "./transform";
 
 import { greedyPack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
@@ -10,6 +16,7 @@ export interface IPackAnimalOptions {
   postPackPolygonScale?: number;
   debug?: boolean;
   algorithmOptions?: IGreedyPackOptions;
+  jitter?: IJitterOptions;
 }
 
 export default (
@@ -19,7 +26,8 @@ export default (
   {
     algorithm = greedyPack,
     center = true,
-    postPackPolygonScale = 1,
+    postPackPolygonScale,
+    jitter,
     algorithmOptions = {},
     /* istanbul ignore next */ debug = false
   }: IPackAnimalOptions = {}
@@ -36,9 +44,17 @@ export default (
   if (center) {
     polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
   }
-  if (postPackPolygonScale !== 1) {
+  if (postPackPolygonScale) {
     polygonTransforms = scalePolygonTransforms(
       postPackPolygonScale,
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
+  }
+  if (jitter) {
+    polygonTransforms = jitterPolygonTransforms(
+      jitter,
       rectangleWidth,
       rectangleHeight,
       polygonTransforms

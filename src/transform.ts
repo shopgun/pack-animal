@@ -3,6 +3,7 @@ import {
   polygonCenter,
   polygonsBounds,
   radiansToDegrees,
+  rotateMatrixAroundPoint,
   scaleMatrixAroundPoint
 } from "./geometry";
 import { Matrix } from "./vendor/matrix";
@@ -107,3 +108,74 @@ export const scalePolygonTransforms = (
       scaleMatrixAroundPoint(polygonCenter(matrix.inverse().applyToArray(points)), scale, matrix)
     )
   );
+
+const Mash = (r: string) => {
+  let n = 4022871197;
+  let t;
+  let s;
+  const e = 0.02519603282416938;
+  for (let u = 0; u < r.length; u++) {
+    s = r.charCodeAt(u);
+    const f = e * (n += s) - Math.trunc(n * e);
+    n = 4294967296 * ((t = f * Math.trunc(e * n)) - Math.trunc(t)) + Math.trunc(t);
+  }
+  return Math.trunc(n) * 2.3283064365386963e-10;
+};
+const Alea = (seed: any = +new Date() + Math.random()) => {
+  let a = Mash(" ");
+  let b = Mash(" ");
+  let c = Mash(" ");
+  let x = 1;
+  seed = seed.toString();
+  a -= Mash(seed);
+  b -= Mash(seed);
+  c -= Mash(seed);
+  if (a < 0) {
+    a++;
+  }
+  if (b < 0) {
+    b++;
+  }
+  if (c < 0) {
+    c++;
+  }
+  return () => {
+    const y = x * 2.3283064365386963e-10 + a * 2091639;
+    a = b;
+    b = c;
+    c = y - (x = Math.trunc(y));
+    return c;
+  };
+};
+
+export interface IJitterOptions {
+  position?: number;
+  rotate?: number;
+  scale?: number;
+}
+export const jitterPolygonTransforms = (
+  jitter: IJitterOptions = {},
+  rectangleWidth: number,
+  rectangleHeight: number,
+  polygonTransforms: ITransform[]
+): ITransform[] => {
+  const seed = polygonTransforms
+    .map(({ points }) => points.map(({ x, y }) => `${x}${y}`).join(""))
+    .join("");
+  const seededRandom = Alea(seed);
+  const randomInRange = (min: number, max: number) => seededRandom() * (max - min) + min;
+  const { rotate = 0, scale = 0, position = 0 } = jitter;
+  return polygonTransforms.map(({ matrix, points }) => {
+    const center = polygonCenter(matrix.inverse().applyToArray(points));
+    return getPolygonTransform(
+      rectangleWidth,
+      rectangleHeight,
+      matrix.inverse().applyToArray(points),
+      rotateMatrixAroundPoint(
+        center,
+        randomInRange(-rotate, rotate),
+        scaleMatrixAroundPoint(center, randomInRange(1 - scale, 1 + scale), matrix)
+      ).translate(randomInRange(-position, position), randomInRange(-position, position))
+    );
+  });
+};
