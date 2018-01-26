@@ -121,6 +121,7 @@ const Mash = (r: string) => {
   }
   return Math.trunc(n) * 2.3283064365386963e-10;
 };
+/* istanbul ignore next */
 const Alea = (seed: any = +new Date() + Math.random()) => {
   let a = Mash(" ");
   let b = Mash(" ");
