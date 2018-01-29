@@ -1,4 +1,11 @@
-import { IPoint, IVerifyPackOptions, rotateMatrixAroundPoint, verifyPack } from "../geometry";
+import {
+  IPoint,
+  IVerifyPackOptions,
+  polygonHeight,
+  polygonWidth,
+  rotateMatrixAroundPoint,
+  verifyPack
+} from "../geometry";
 import { getPolygonTransform, ITransform } from "../transform";
 import { Matrix } from "../vendor/matrix";
 
@@ -119,12 +126,8 @@ export const greedyPack = (
       }
 
       if (rotationMode === RotationMode.Simple) {
-        const width = Math.floor(
-          Math.max(...points.map(point => point.x)) - Math.min(...points.map(point => point.x))
-        );
-        const height = Math.floor(
-          Math.max(...points.map(point => point.y)) - Math.min(...points.map(point => point.y))
-        );
+        const width = polygonWidth(points);
+        const height = polygonHeight(points);
         const center = { x: width / 2, y: height / 2 };
         let previousRotate = null;
         i = 0;
