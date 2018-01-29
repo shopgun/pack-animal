@@ -46,7 +46,7 @@ export const polygonWidth = (points: IPoint[]) => {
   return Math.floor(Math.max(...xs) - Math.min(...xs));
 };
 export const polygonHeight = (points: IPoint[]) => {
-  const ys = points.map(point => point.x);
+  const ys = points.map(point => point.y);
   return Math.floor(Math.max(...ys) - Math.min(...ys));
 };
 
