@@ -155,7 +155,7 @@ export interface IJitterOptions {
   scale?: number;
 }
 export const jitterPolygonTransforms = (
-  jitter: IJitterOptions = {},
+  jitter: IJitterOptions,
   rectangleWidth: number,
   rectangleHeight: number,
   polygonTransforms: ITransform[]

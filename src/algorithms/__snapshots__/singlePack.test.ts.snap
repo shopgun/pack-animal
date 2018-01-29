@@ -1,0 +1,142 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`greedyPack works 1`] = `
+Array [
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 99.625%;
+        height: 49.19137466307278%;
+        transform: translateX(0.18820577164366373%) translateY(51.64383561643836%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":1,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":1,
+      \\"e\\":1.5,
+      \\"f\\":188.5
+    }",
+    "points": Array [
+      Object {
+        "x": 2.5,
+        "y": 189.5,
+      },
+      Object {
+        "x": 2.5,
+        "y": 554.5,
+      },
+      Object {
+        "x": 799.5,
+        "y": 554.5,
+      },
+      Object {
+        "x": 799.5,
+        "y": 189.5,
+      },
+    ],
+    "rotate": -0,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,1.5,188.5)",
+    "translateX": 1.5,
+    "translateY": 188.5,
+  },
+]
+`;
+
+exports[`greedyPack works 2`] = `
+Array [
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 200.00000000000006%;
+        height: 45.796737766624844%;
+        transform: translateX(47.89836888331242%) translateY(-1.5515138641117804e-14%) rotate(90deg)
+      ",
+    "matrix": "{
+      \\"a\\":3.073141277659607e-17,
+      \\"b\\":0.5018820577164367,
+      \\"c\\":-0.5018820577164367,
+      \\"d\\":3.073141277659607e-17,
+      \\"e\\":191.59347553324972,
+      \\"f\\":-2.842170943040401e-14
+    }",
+    "points": Array [
+      Object {
+        "x": 191.09159347553327,
+        "y": 0.5018820577164083,
+      },
+      Object {
+        "x": 7.904642409033897,
+        "y": 0.5018820577164195,
+      },
+      Object {
+        "x": 7.904642409033926,
+        "y": 400.50188205771644,
+      },
+      Object {
+        "x": 191.0915934755333,
+        "y": 400.50188205771644,
+      },
+    ],
+    "rotate": 90,
+    "scale": 0.5018820577164367,
+    "svgTransform": "matrix(3.073141277659607e-17,0.5018820577164367,-0.5018820577164367,3.073141277659607e-17,191.59347553324972,-2.842170943040401e-14)",
+    "translateX": 191.59347553324972,
+    "translateY": -2.842170943040401e-14,
+  },
+]
+`;
+
+exports[`greedyPack works 3`] = `
+Array [
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 99.5%;
+        height: 49.75%;
+        transform: translateX(-0.25125628140703515%) translateY(50.502512562814076%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":1,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":1,
+      \\"e\\":-0.5,
+      \\"f\\":100.5
+    }",
+    "points": Array [
+      Object {
+        "x": 0.5,
+        "y": 101.5,
+      },
+      Object {
+        "x": 199.5,
+        "y": 101.5,
+      },
+      Object {
+        "x": 199.5,
+        "y": 300.5,
+      },
+      Object {
+        "x": 0.5,
+        "y": 300.5,
+      },
+    ],
+    "rotate": -0,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,-0.5,100.5)",
+    "translateX": -0.5,
+    "translateY": 100.5,
+  },
+]
+`;
