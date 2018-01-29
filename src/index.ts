@@ -7,7 +7,7 @@ import {
   scalePolygonTransforms
 } from "./transform";
 
-import { greedyPack } from "./algorithms";
+import { greedyPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
 
 export interface IPackAnimalOptions {
@@ -40,8 +40,16 @@ export default (
     // tslint:disable-next-line
     console.time(algorithm.name);
   }
-  let polygonTransforms = algorithm(rectangleWidth, rectangleHeight, polygons, algorithmOptions);
-  if (center) {
+  let polygonTransforms: ITransform[];
+  if (polygons.length === 1) {
+    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons);
+  } else {
+    polygonTransforms = algorithm(rectangleWidth, rectangleHeight, polygons, algorithmOptions);
+  }
+  if (
+    center &&
+    polygons.length !== 1 /* ignore `center`, single polys are already centered by singlePack*/
+  ) {
     polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
   }
   if (postPackPolygonScale) {

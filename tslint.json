@@ -4,6 +4,6 @@
     "tslint-config-prettier"
   ],
   "rules": {
-    "max-classes-per-file": false
+    "prefer-conditional-expression": false
   }
 }

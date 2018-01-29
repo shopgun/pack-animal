@@ -1,4 +1,4 @@
-import { packUtilization, polygonArea, polygonBounds } from "./geometry";
+import { isPolygonWithinRectangle, packUtilization, polygonArea, polygonBounds } from "./geometry";
 
 describe("geometry: polygonBounds", () => {
   it("gives a bounding box polygon from any polygon", () => {
@@ -15,6 +15,11 @@ describe("geometry: polygonArea", () => {
     expect(polygonArea([{ x: 0, y: 0 }, { x: 0, y: 4 }, { x: 4, y: 4 }, { x: 4, y: 0 }])).toEqual(
       16
     );
+  });
+});
+describe("geometry: isPolygonWithinRectangle", () => {
+  it("dislikes pointless polygons", () => {
+    expect(() => isPolygonWithinRectangle([], [])).toThrow();
   });
 });
 describe("geometry: packUtilization", () => {

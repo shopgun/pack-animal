@@ -41,6 +41,15 @@ export const polygonArea = (points: IPoint[]) =>
     )
   ) / 2;
 
+export const polygonWidth = (points: IPoint[]) => {
+  const xs = points.map(point => point.x);
+  return Math.floor(Math.max(...xs) - Math.min(...xs));
+};
+export const polygonHeight = (points: IPoint[]) => {
+  const ys = points.map(point => point.y);
+  return Math.floor(Math.max(...ys) - Math.min(...ys));
+};
+
 export const polygonBounds = (points: IPoint[]): IPoint[] => {
   const left = Math.min(...points.map(point => point.x));
   const top = Math.min(...points.map(point => point.y));
