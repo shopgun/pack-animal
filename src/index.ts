@@ -6,6 +6,7 @@ import {
   jitterPolygonTransforms,
   scalePolygonTransforms
 } from "./transform";
+import { PackAnimalException } from "./utilities";
 
 import { greedyPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
@@ -32,8 +33,14 @@ export default (
     /* istanbul ignore next */ debug = false
   }: IPackAnimalOptions = {}
 ): ITransform[] => {
-  if (!polygons.length) {
-    throw new Error("No polygons to pack.");
+  if (!polygons || !polygons.length) {
+    throw new PackAnimalException("No polygons to pack, there must be at least one.", { polygons });
+  }
+  if (rectangleWidth < 0 || rectangleHeight < 0) {
+    throw new PackAnimalException("Rectangle width/height too small, must be positive", {
+      rectangleHeight,
+      rectangleWidth
+    });
   }
   /* istanbul ignore next */
   if (debug) {
