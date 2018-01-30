@@ -6,9 +6,10 @@ import {
   polygonWidth,
   rotateMatrixAroundPoint,
   scaleMatrixAroundPoint
-} from "./../geometry";
-import { getPolygonTransform, ITransform } from "./../transform";
-import { Matrix } from "./../vendor/matrix";
+} from "../geometry";
+import { getPolygonTransform, ITransform } from "../transform";
+import { PackAnimalException } from "../utilities";
+import { Matrix } from "../vendor/matrix";
 
 export const singlePack = (
   rectangleWidth: number,
@@ -17,7 +18,7 @@ export const singlePack = (
 ): ITransform[] => {
   const polygon = polygons[0];
   if (!polygon.length) {
-    throw new Error("No pointless polygons allowed.");
+    throw new PackAnimalException("Pointless polygon not allowed.", { polygons });
   }
   const width = polygonWidth(polygon);
   const height = polygonHeight(polygon);

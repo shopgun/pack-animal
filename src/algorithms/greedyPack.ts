@@ -7,8 +7,8 @@ import {
   verifyPack
 } from "../geometry";
 import { getPolygonTransform, ITransform } from "../transform";
+import { PackAnimalException } from "../utilities";
 import { Matrix } from "../vendor/matrix";
-
 export enum RotationMode {
   Off,
   Simple = "SIMPLE",
@@ -77,7 +77,28 @@ export const greedyPack = (
   };
   do {
     scale = scaleInitial - scaleIncrement * j;
+    if (scale <= 0) {
+      throw new PackAnimalException(
+        "greedyPack failure to pack, please open an issue at https://github.com/shopgun/pack-animal/issues and include this data:\n" +
+          btoa(
+            JSON.stringify({
+              polygons,
+              rectangleHeight,
+              rectangleWidth
+            })
+          ),
+        {
+          polygons,
+          rectangleHeight,
+          rectangleWidth,
+          scale
+        }
+      );
+    }
     polygonTransforms = polygons.reduce((memo: ITransform[], points: IPoint[]): ITransform[] => {
+      if (!points.length) {
+        throw new PackAnimalException("No pointless polygons allowed.", { points, polygons });
+      }
       const memoPoints = memo.map(transformPoly => transformPoly.points);
       const verifier = (newPoints: IPoint[]) =>
         verifyPack([...memoPoints, newPoints], rectangle, verifyPackOptions);
@@ -87,21 +108,38 @@ export const greedyPack = (
       let translateY = translateYInitial;
       let transformedPoints;
       let i;
-      translateY = maxMatrix(
-        MatrixAttribute.translateY,
-        new Matrix().translate(translateX, translateY).scaleU(scale),
-        translateYIncrement,
-        points,
-        verifier
-      );
 
-      translateX = maxMatrix(
-        MatrixAttribute.translateX,
-        new Matrix().translate(translateX, translateY).scaleU(scale),
-        translateXIncrement,
-        points,
-        verifier
-      );
+      if (rectangleHeight > rectangleWidth) {
+        translateX = maxMatrix(
+          MatrixAttribute.translateX,
+          new Matrix().translate(translateX, translateY).scaleU(scale),
+          translateXIncrement,
+          points,
+          verifier
+        );
+        translateY = maxMatrix(
+          MatrixAttribute.translateY,
+          new Matrix().translate(translateX, translateY).scaleU(scale),
+          translateYIncrement,
+          points,
+          verifier
+        );
+      } else {
+        translateY = maxMatrix(
+          MatrixAttribute.translateY,
+          new Matrix().translate(translateX, translateY).scaleU(scale),
+          translateYIncrement,
+          points,
+          verifier
+        );
+        translateX = maxMatrix(
+          MatrixAttribute.translateX,
+          new Matrix().translate(translateX, translateY).scaleU(scale),
+          translateXIncrement,
+          points,
+          verifier
+        );
+      }
 
       let finalMatrix = new Matrix();
       if (rotationMode === RotationMode.Advanced) {
