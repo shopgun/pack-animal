@@ -14,6 +14,7 @@ import { IGreedyPackOptions } from "./algorithms/greedyPack";
 export interface IPackAnimalOptions {
   algorithm?: (...args: any[]) => ITransform[];
   center?: boolean;
+  rotate?: boolean;
   postPackPolygonScale?: number;
   debug?: boolean;
   algorithmOptions?: IGreedyPackOptions;
@@ -27,6 +28,7 @@ export default (
   {
     algorithm = greedyPack,
     center = true,
+    rotate = true,
     postPackPolygonScale,
     jitter,
     algorithmOptions = {},
@@ -49,9 +51,12 @@ export default (
   }
   let polygonTransforms: ITransform[];
   if (polygons.length === 1) {
-    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons);
+    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { rotate });
   } else {
-    polygonTransforms = algorithm(rectangleWidth, rectangleHeight, polygons, algorithmOptions);
+    polygonTransforms = algorithm(rectangleWidth, rectangleHeight, polygons, {
+      ...algorithmOptions,
+      ...(rotate ? {} : { rotationMode: "OFF" })
+    });
   }
   if (
     center &&
