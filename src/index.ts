@@ -4,6 +4,7 @@ import {
   IJitterOptions,
   ITransform,
   jitterPolygonTransforms,
+  marginalizePolygonTransforms,
   scalePolygonTransforms
 } from "./transform";
 import { PackAnimalException } from "./utilities";
@@ -14,6 +15,8 @@ import { IGreedyPackOptions } from "./algorithms/greedyPack";
 export interface IPackAnimalOptions {
   algorithm?: (...args: any[]) => ITransform[];
   center?: boolean;
+  rotate?: boolean;
+  margin?: number;
   postPackPolygonScale?: number;
   debug?: boolean;
   algorithmOptions?: IGreedyPackOptions;
@@ -27,6 +30,8 @@ export default (
   {
     algorithm = greedyPack,
     center = true,
+    rotate = true,
+    margin = 0,
     postPackPolygonScale,
     jitter,
     algorithmOptions = {},
@@ -49,15 +54,26 @@ export default (
   }
   let polygonTransforms: ITransform[];
   if (polygons.length === 1) {
-    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons);
+    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { rotate });
   } else {
-    polygonTransforms = algorithm(rectangleWidth, rectangleHeight, polygons, algorithmOptions);
+    polygonTransforms = algorithm(rectangleWidth, rectangleHeight, polygons, {
+      ...algorithmOptions,
+      ...(rotate ? {} : { rotationMode: "OFF" })
+    });
   }
   if (
     center &&
     polygons.length !== 1 /* ignore `center`, single polys are already centered by singlePack*/
   ) {
     polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
+  }
+  if (margin) {
+    polygonTransforms = marginalizePolygonTransforms(
+      margin,
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
   }
   if (postPackPolygonScale) {
     polygonTransforms = scalePolygonTransforms(

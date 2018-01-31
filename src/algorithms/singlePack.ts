@@ -11,10 +11,14 @@ import { getPolygonTransform, ITransform } from "../transform";
 import { PackAnimalException } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 
+export interface ISinglePackOptions {
+  rotate?: boolean;
+}
 export const singlePack = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][]
+  polygons: IPoint[][],
+  { rotate = true }: ISinglePackOptions = {}
 ): ITransform[] => {
   const polygon = polygons[0];
   if (!polygon.length) {
@@ -26,14 +30,15 @@ export const singlePack = (
   const ratio = width / height;
   const rectangleRatio = rectangleWidth / rectangleHeight;
 
-  const rotate =
+  const rotateDegrees =
+    rotate &&
     // Don't rotate square-ish things
     (ratio < 0.9 || ratio > 1.1) &&
     // Rotate only if poly and rectangle aren't both landscape or portrait
     ((ratio > 1 && rectangleRatio < 1) || (ratio < 1 && rectangleRatio > 1))
       ? 90
       : 0;
-  const scale = rotate
+  const scale = rotateDegrees
     ? Math.min(1, rectangleWidth / height, rectangleHeight / width)
     : Math.min(1, rectangleWidth / width, rectangleHeight / height);
   const bounds = polygonBounds(polygon);
@@ -53,7 +58,7 @@ export const singlePack = (
         scale,
         rotateMatrixAroundPoint(
           centerPoint,
-          rotate,
+          rotateDegrees,
           new Matrix().translate(
             translateXpoz ? centeringTranslateX : -centeringTranslateX,
             translateYpoz ? centeringTranslateY : -centeringTranslateY

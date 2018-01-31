@@ -149,6 +149,7 @@ export const greedyPack = (
           .applyToArray(points)
           .reduce((memoMatrix, point) => {
             let previousRotate = null;
+            rotate = rotateInitial;
             i = 0;
             do {
               previousRotate = rotate;
@@ -157,7 +158,7 @@ export const greedyPack = (
               m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
               transformedPoints = m.applyToArray(points);
               i++;
-            } while (verifier(transformedPoints) && rotate <= 22.5);
+            } while (verifier(transformedPoints) && rotate <= 1080);
 
             return rotateMatrixAroundPoint(point, previousRotate, memoMatrix);
           }, new Matrix());
@@ -168,6 +169,7 @@ export const greedyPack = (
         const height = polygonHeight(points);
         const center = { x: width / 2, y: height / 2 };
         let previousRotate = null;
+        rotate = rotateInitial;
         i = 0;
         do {
           previousRotate = rotate;
