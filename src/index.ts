@@ -4,6 +4,7 @@ import {
   IJitterOptions,
   ITransform,
   jitterPolygonTransforms,
+  marginalizePolygonTransforms,
   scalePolygonTransforms
 } from "./transform";
 import { PackAnimalException } from "./utilities";
@@ -15,6 +16,7 @@ export interface IPackAnimalOptions {
   algorithm?: (...args: any[]) => ITransform[];
   center?: boolean;
   rotate?: boolean;
+  margin?: number;
   postPackPolygonScale?: number;
   debug?: boolean;
   algorithmOptions?: IGreedyPackOptions;
@@ -29,6 +31,7 @@ export default (
     algorithm = greedyPack,
     center = true,
     rotate = true,
+    margin = 0,
     postPackPolygonScale,
     jitter,
     algorithmOptions = {},
@@ -63,6 +66,14 @@ export default (
     polygons.length !== 1 /* ignore `center`, single polys are already centered by singlePack*/
   ) {
     polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
+  }
+  if (margin) {
+    polygonTransforms = marginalizePolygonTransforms(
+      margin,
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
   }
   if (postPackPolygonScale) {
     polygonTransforms = scalePolygonTransforms(

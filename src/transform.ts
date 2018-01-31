@@ -2,6 +2,7 @@ import {
   IPoint,
   polygonCenter,
   polygonsBounds,
+  polygonWidth,
   radiansToDegrees,
   rotateMatrixAroundPoint,
   scaleMatrixAroundPoint
@@ -108,6 +109,23 @@ export const scalePolygonTransforms = (
       scaleMatrixAroundPoint(polygonCenter(matrix.inverse().applyToArray(points)), scale, matrix)
     )
   );
+
+export const marginalizePolygonTransforms = (
+  margin: number,
+  rectangleWidth: number,
+  rectangleHeight: number,
+  polygonTransforms: ITransform[]
+): ITransform[] =>
+  polygonTransforms.map(({ matrix, points }) => {
+    const width = polygonWidth(points);
+    const scale = (width - margin) / width;
+    return getPolygonTransform(
+      rectangleWidth,
+      rectangleHeight,
+      matrix.inverse().applyToArray(points),
+      scaleMatrixAroundPoint(polygonCenter(matrix.inverse().applyToArray(points)), scale, matrix)
+    );
+  });
 
 const Mash = (r: string) => {
   let n = 4022871197;

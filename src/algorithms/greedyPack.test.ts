@@ -35,5 +35,11 @@ describe("greedyPack", () => {
       { polygonHitboxScale: 0.8 }
     );
     expect(polygonTransforms3).toMatchSnapshot();
+    expect(
+      greedyPack(742, 800, [
+        [{ x: 1, y: 1 }, { x: 1, y: 366 }, { x: 798, y: 366 }, { x: 798, y: 1 }],
+        [{ x: 1, y: 1 }, { x: 41, y: 390 }, { x: 773, y: 390 }, { x: 798, y: 1 }]
+      ])
+    ).toMatchSnapshot();
   });
 });

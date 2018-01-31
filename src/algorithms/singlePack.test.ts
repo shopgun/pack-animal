@@ -14,5 +14,13 @@ describe("greedyPack", () => {
       [{ x: 1, y: 1 }, { x: 200, y: 1 }, { x: 200, y: 200 }, { x: 1, y: 200 }]
     ]);
     expect(polygonTransforms3).toMatchSnapshot();
+    expect(
+      singlePack(
+        200,
+        400,
+        [[{ x: 1, y: 1 }, { x: 200, y: 1 }, { x: 200, y: 200 }, { x: 1, y: 200 }]],
+        { rotate: false }
+      )
+    ).toMatchSnapshot();
   });
 });

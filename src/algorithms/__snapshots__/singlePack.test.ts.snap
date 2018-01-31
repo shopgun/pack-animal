@@ -140,3 +140,50 @@ Array [
   },
 ]
 `;
+
+exports[`greedyPack works 4`] = `
+Array [
+  Object {
+    "cssText": "
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        width: 99.5%;
+        height: 49.75%;
+        transform: translateX(-0.25125628140703515%) translateY(50.502512562814076%) rotate(0deg)
+      ",
+    "matrix": "{
+      \\"a\\":1,
+      \\"b\\":0,
+      \\"c\\":0,
+      \\"d\\":1,
+      \\"e\\":-0.5,
+      \\"f\\":100.5
+    }",
+    "points": Array [
+      Object {
+        "x": 0.5,
+        "y": 101.5,
+      },
+      Object {
+        "x": 199.5,
+        "y": 101.5,
+      },
+      Object {
+        "x": 199.5,
+        "y": 300.5,
+      },
+      Object {
+        "x": 0.5,
+        "y": 300.5,
+      },
+    ],
+    "rotate": -0,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,-0.5,100.5)",
+    "translateX": -0.5,
+    "translateY": 100.5,
+  },
+]
+`;
