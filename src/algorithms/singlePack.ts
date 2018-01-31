@@ -18,7 +18,7 @@ export const singlePack = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygons: IPoint[][],
-  { rotate }: ISinglePackOptions = {}
+  { rotate = true }: ISinglePackOptions = {}
 ): ITransform[] => {
   const polygon = polygons[0];
   if (!polygon.length) {
