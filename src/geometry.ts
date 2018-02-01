@@ -23,11 +23,12 @@ export const scaleMatrixAroundPoint = (point: IPoint, scale: number, matrix = ne
   return rotatedMatrix;
 };
 export const polygonCenter = (points: IPoint[]): IPoint => {
+  const bounds = polygonBounds(points);
   const Xs = points.map(point => point.x);
   const Ys = points.map(point => point.y);
   const width = Math.max(...Xs) - Math.min(...Xs);
   const height = Math.max(...Ys) - Math.min(...Ys);
-  return { x: width / 2, y: height / 2 };
+  return { x: bounds[0].x + width / 2, y: bounds[0].y + height / 2 };
 };
 export const doPolygonsOverlap = (polygon1: IPoint[], polygon2: IPoint[]) =>
   polygonOverlap(polygon1.map(({ x, y }) => [x, y]), polygon2.map(({ x, y }) => [x, y]));
