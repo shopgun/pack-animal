@@ -188,41 +188,41 @@ Array [
         top: 0;
         left: 0;
         transform-origin: 0 0;
-        width: 94.64375%;
-        height: 46.73180592991914%;
-        transform: translateX(5.28296902859407%) translateY(113.41312184571018%) rotate(0deg)
+        width: 99.625%;
+        height: 49.19137466307278%;
+        transform: translateX(0%) translateY(101.64383561643835%) rotate(0deg)
       ",
     "matrix": "{
-      \\"a\\":0.95,
+      \\"a\\":1,
       \\"b\\":0,
       \\"c\\":0,
-      \\"d\\":0.95,
-      \\"e\\":40,
-      \\"f\\":393.26
+      \\"d\\":1,
+      \\"e\\":0,
+      \\"f\\":371
     }",
     "points": Array [
       Object {
-        "x": 40.95,
-        "y": 394.21,
+        "x": 1,
+        "y": 372,
       },
       Object {
-        "x": 40.95,
-        "y": 740.96,
+        "x": 1,
+        "y": 737,
       },
       Object {
-        "x": 798.0999999999999,
-        "y": 740.96,
+        "x": 798,
+        "y": 737,
       },
       Object {
-        "x": 798.0999999999999,
-        "y": 394.21,
+        "x": 798,
+        "y": 372,
       },
     ],
     "rotate": -0,
-    "scale": 0.95,
-    "svgTransform": "matrix(0.95,0,0,0.95,40,393.26)",
-    "translateX": 40,
-    "translateY": 393.26,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,0,371)",
+    "translateX": 0,
+    "translateY": 371,
   },
   Object {
     "cssText": "
@@ -230,41 +230,41 @@ Array [
         top: 0;
         left: 0;
         transform-origin: 0 0;
-        width: 94.64375%;
-        height: 49.80458221024258%;
-        transform: translateX(5.28296902859407%) translateY(4.015694763902043%) rotate(0deg)
+        width: 99.625%;
+        height: 52.42587601078167%;
+        transform: translateX(0%) translateY(13.352185089974292%) rotate(0deg)
       ",
     "matrix": "{
-      \\"a\\":0.95,
+      \\"a\\":1,
       \\"b\\":0,
       \\"c\\":0,
-      \\"d\\":0.95,
-      \\"e\\":40,
-      \\"f\\":14.84
+      \\"d\\":1,
+      \\"e\\":0,
+      \\"f\\":51.94
     }",
     "points": Array [
       Object {
-        "x": 40.95,
-        "y": 15.79,
+        "x": 1,
+        "y": 52.94,
       },
       Object {
-        "x": 78.94999999999999,
-        "y": 385.34,
+        "x": 41,
+        "y": 441.94,
       },
       Object {
-        "x": 774.3499999999999,
-        "y": 385.34,
+        "x": 773,
+        "y": 441.94,
       },
       Object {
-        "x": 798.0999999999999,
-        "y": 15.79,
+        "x": 798,
+        "y": 52.94,
       },
     ],
     "rotate": -0,
-    "scale": 0.95,
-    "svgTransform": "matrix(0.95,0,0,0.95,40,14.84)",
-    "translateX": 40,
-    "translateY": 14.84,
+    "scale": 1,
+    "svgTransform": "matrix(1,0,0,1,0,51.94)",
+    "translateX": 0,
+    "translateY": 51.94,
   },
 ]
 `;

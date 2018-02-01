@@ -5,6 +5,7 @@ import {
   ITransform,
   jitterPolygonTransforms,
   marginalizePolygonTransforms,
+  maximizePolygonTransforms,
   scalePolygonTransforms
 } from "./transform";
 import { PackAnimalException } from "./utilities";
@@ -17,6 +18,7 @@ export interface IPackAnimalOptions {
   center?: boolean;
   rotate?: boolean;
   margin?: number;
+  maximize?: boolean;
   postPackPolygonScale?: number;
   debug?: boolean;
   algorithmOptions?: IGreedyPackOptions;
@@ -28,10 +30,10 @@ export default (
   rectangleHeight: number,
   polygons: IPoint[][],
   {
-    algorithm = greedyPack,
     center = true,
     rotate = true,
     margin = 0,
+    maximize = true,
     postPackPolygonScale,
     jitter,
     algorithmOptions = {},
@@ -50,13 +52,13 @@ export default (
   /* istanbul ignore next */
   if (debug) {
     // tslint:disable-next-line
-    console.time(algorithm.name);
+    console.time("packAnimal");
   }
   let polygonTransforms: ITransform[];
   if (polygons.length === 1) {
     polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { rotate });
   } else {
-    polygonTransforms = algorithm(rectangleWidth, rectangleHeight, polygons, {
+    polygonTransforms = greedyPack(rectangleWidth, rectangleHeight, polygons, {
       ...algorithmOptions,
       ...(rotate ? {} : { rotationMode: "OFF" })
     });
@@ -91,10 +93,17 @@ export default (
       polygonTransforms
     );
   }
+  if (maximize) {
+    polygonTransforms = maximizePolygonTransforms(
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
+  }
   /* istanbul ignore next */
   if (debug) {
     // tslint:disable-next-line
-    console.timeEnd(algorithm.name);
+    console.timeEnd("packAnimal");
     // tslint:disable-next-line
     console.log(
       Math.round(
