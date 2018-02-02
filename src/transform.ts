@@ -1,6 +1,5 @@
 import {
   IPoint,
-  polygonBounds,
   polygonCenter,
   polygonHeight,
   polygonsBounds,
