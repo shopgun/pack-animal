@@ -1,6 +1,7 @@
 import {
   IPoint,
   IVerifyPackOptions,
+  polygonArea,
   polygonHeight,
   polygonWidth,
   rotateMatrixAroundPoint,
@@ -17,6 +18,7 @@ export enum RotationMode {
 
 export interface IGreedyPackOptions {
   rotationMode?: RotationMode;
+  normalizePolygons?: boolean;
   polygonHitboxScale?: number;
 }
 
@@ -54,7 +56,11 @@ export const greedyPack = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygons: IPoint[][],
-  { rotationMode = RotationMode.Simple, polygonHitboxScale }: IGreedyPackOptions = {}
+  {
+    normalizePolygons = true,
+    rotationMode = RotationMode.Simple,
+    polygonHitboxScale
+  }: IGreedyPackOptions = {}
 ): ITransform[] => {
   if (!polygons.length) {
     return [];
@@ -75,6 +81,8 @@ export const greedyPack = (
   const verifyPackOptions: IVerifyPackOptions = {
     polygonHitboxScale
   };
+  const averageArea =
+    polygons.reduce((memo, points) => memo + polygonArea(points), 0) / polygons.length;
   do {
     scale = scaleInitial - scaleIncrement * j;
     if (scale <= 0) {
@@ -102,7 +110,9 @@ export const greedyPack = (
       const memoPoints = memo.map(transformPoly => transformPoly.points);
       const verifier = (newPoints: IPoint[]) =>
         verifyPack([...memoPoints, newPoints], rectangle, verifyPackOptions);
-
+      const normalizedScale = normalizePolygons
+        ? scale * ((averageArea / polygonArea(points) - 1) / 2 + 1)
+        : scale;
       let rotate = rotateInitial;
       let translateX = translateXInitial;
       let translateY = translateYInitial;
@@ -112,14 +122,14 @@ export const greedyPack = (
       if (rectangleHeight > rectangleWidth) {
         translateX = maxMatrix(
           MatrixAttribute.translateX,
-          new Matrix().translate(translateX, translateY).scaleU(scale),
+          new Matrix().translate(translateX, translateY).scaleU(normalizedScale),
           translateXIncrement,
           points,
           verifier
         );
         translateY = maxMatrix(
           MatrixAttribute.translateY,
-          new Matrix().translate(translateX, translateY).scaleU(scale),
+          new Matrix().translate(translateX, translateY).scaleU(normalizedScale),
           translateYIncrement,
           points,
           verifier
@@ -127,14 +137,14 @@ export const greedyPack = (
       } else {
         translateY = maxMatrix(
           MatrixAttribute.translateY,
-          new Matrix().translate(translateX, translateY).scaleU(scale),
+          new Matrix().translate(translateX, translateY).scaleU(normalizedScale),
           translateYIncrement,
           points,
           verifier
         );
         translateX = maxMatrix(
           MatrixAttribute.translateX,
-          new Matrix().translate(translateX, translateY).scaleU(scale),
+          new Matrix().translate(translateX, translateY).scaleU(normalizedScale),
           translateXIncrement,
           points,
           verifier
@@ -155,7 +165,7 @@ export const greedyPack = (
               previousRotate = rotate;
               rotate = rotateInitial + rotateIncrement * i;
               const m = rotateMatrixAroundPoint(point, rotate, memoMatrix);
-              m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
+              m.multiply(new Matrix().translate(translateX, translateY).scaleU(normalizedScale));
               transformedPoints = m.applyToArray(points);
               i++;
             } while (verifier(transformedPoints) && rotate <= 1080);
@@ -175,7 +185,7 @@ export const greedyPack = (
           previousRotate = rotate;
           rotate = rotateInitial + rotateIncrement * i;
           const m = rotateMatrixAroundPoint(center, rotate);
-          m.multiply(new Matrix().translate(translateX, translateY).scale(scale, scale));
+          m.multiply(new Matrix().translate(translateX, translateY).scaleU(normalizedScale));
           transformedPoints = m.applyToArray(points);
           i++;
         } while (verifier(transformedPoints));
@@ -183,7 +193,7 @@ export const greedyPack = (
         finalMatrix = rotateMatrixAroundPoint(center, previousRotate);
       }
 
-      finalMatrix.translate(translateX, translateY).scale(scale, scale);
+      finalMatrix.translate(translateX, translateY).scaleU(normalizedScale);
 
       memo.push(getPolygonTransform(rectangleWidth, rectangleHeight, points, finalMatrix));
       return memo;

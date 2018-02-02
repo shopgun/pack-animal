@@ -14,7 +14,6 @@ import { greedyPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
 
 export interface IPackAnimalOptions {
-  algorithm?: (...args: any[]) => ITransform[];
   center?: boolean;
   rotate?: boolean;
   margin?: number;
