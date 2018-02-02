@@ -17,8 +17,8 @@ Boxes to pack polys in:
   const realData = Object.keys(window.incitoImages).map(url => ({
     url,
     ...window.incitoImages[url],
-  })).slice(rnd, rnd + Math.ceil(Math.random() * 20));
-  //    })).slice(124, 125);
+  })).slice(rnd, rnd + Math.ceil(Math.random() * 5));
+  //})).slice(56, 58);
   //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 18);
   //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(8, 13);
   const polygons = realData.map(child => child.contour.points);
@@ -41,37 +41,8 @@ Boxes to pack polys in:
       </svg>
     </div>`);
   });
-  const childTransforms = packAnimal(width, height, rectangles, { debug: true, center: true, postPackPolygonScale: 1, algorithmOptions: { rotationMode: "OFF" } });
+  const childTransforms = packAnimal(width, height, rectangles, { debug: true, rotate: false, margin: 5 });
   //  const childTransforms = packAnimal(width, height, polygons, { debug: true, center: false, postPackPolygonScale: 0.9, algorithmOptions: { rotationMode: "SIMPLE" } });
-
-  const ctx = { width, height }
-  const childViews = realData.map((image, i) => {
-    const simpleTransform = childTransforms[i].matrix.decompose();
-    const scale = simpleTransform.scale.x;
-    const relativeHeight = image.height * scale / ctx.height;
-    const relativeWidth = image.width * scale / ctx.width;
-    const translateXRelative = simpleTransform.translate.x / (image.width * scale);
-    const translateYRelative = simpleTransform.translate.y / (image.height * scale);
-    const degreesRotation = 0;
-
-    return {
-      transform_translate_x: translateXRelative * 100 + '%',
-      transform_translate_y: translateYRelative * 100 + '%',
-    };
-  });
-
-  console.log(childViews);
-
-
-
-
-
-
-
-
-
-
-
 
   // SVG displllay
   $('.boxToPack').append(`<svg viewBox="0 0 ${width} ${height}">
@@ -86,7 +57,7 @@ Boxes to pack polys in:
         style="fill:${child.colorPalette[3]}; opacity: 0.5;"
         transform="${transformAttributeValue}"
         />
-      <image href="${child.url}" transform="${transformAttributeValue}"/>    
+      <image href="${child.url}" transform="${transformAttributeValue}"/>
     `}).join('')}
     </svg>`)
   // non-SVG displaly

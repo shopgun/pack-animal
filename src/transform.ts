@@ -1,6 +1,7 @@
 import {
   IPoint,
   polygonCenter,
+  polygonHeight,
   polygonsBounds,
   polygonWidth,
   radiansToDegrees,
@@ -127,6 +128,65 @@ export const marginalizePolygonTransforms = (
     );
   });
 
+export const maximizePolygonTransforms = (
+  rectangleWidth: number,
+  rectangleHeight: number,
+  polygonTransforms: ITransform[]
+): ITransform[] => {
+  const packBounds = polygonsBounds(polygonTransforms.map(({ points }) => points));
+  const rectangleCenter = { x: rectangleWidth / 2, y: rectangleHeight / 2 };
+  const width = polygonWidth(packBounds);
+  const height = polygonHeight(packBounds);
+  let scale: number;
+  if (rectangleWidth / width >= rectangleHeight / height) {
+    scale = rectangleHeight / height;
+  } else {
+    scale = rectangleWidth / width;
+  }
+  const polygonTransformz = polygonTransforms.map(({ matrix, points }) => {
+    const polyCenter = polygonCenter(points);
+    return getPolygonTransform(
+      rectangleWidth,
+      rectangleHeight,
+      matrix.inverse().applyToArray(points),
+      scaleMatrixAroundPoint(
+        polygonCenter(matrix.inverse().applyToArray(points)),
+        scale,
+        Matrix.from(
+          matrix.a,
+          matrix.b,
+          matrix.c,
+          matrix.d,
+          matrix.e + -(rectangleCenter.x - polyCenter.x) * (scale - 1),
+          matrix.f + -(rectangleCenter.y - polyCenter.y) * (scale - 1)
+        )
+      )
+    );
+  });
+
+  const newPackCenter = polygonCenter(
+    polygonsBounds(polygonTransformz.map(({ points }) => points))
+  );
+  // recenter pack and return
+  // maybe some day find out why this is necessary,
+  // but this is quite cheap and I'm not smart enough.
+  // probably just inaccuracy tho
+  return polygonTransformz.map(({ matrix, points }) =>
+    getPolygonTransform(
+      rectangleWidth,
+      rectangleHeight,
+      matrix.inverse().applyToArray(points),
+      Matrix.from(
+        matrix.a,
+        matrix.b,
+        matrix.c,
+        matrix.d,
+        matrix.e + rectangleCenter.x - newPackCenter.x,
+        matrix.f + rectangleCenter.y - newPackCenter.y
+      )
+    )
+  );
+};
 const Mash = (r: string) => {
   let n = 4022871197;
   let t;
