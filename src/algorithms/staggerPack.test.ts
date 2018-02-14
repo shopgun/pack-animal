@@ -1,4 +1,3 @@
-import { RotationMode } from "./";
 import { staggerPack } from "./staggerPack";
 
 describe("staggerPack", () => {
