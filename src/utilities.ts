@@ -8,3 +8,31 @@ export class PackAnimalException {
     }
   }
 }
+
+export const noop = (..._: any[]): void => undefined;
+
+export const numberRange = (start: number, end: number) =>
+  new Array(end + 1 - start).fill(0).map((_: number, i: number) => i + start);
+
+export const permutator = <T>(list: T[], maxLen: number): T[][] => {
+  // Copy initial values as arrays
+  // Our permutation generator
+  const generate = (perm: T[][], currLen: number): T[][] => {
+    // Reached desired length
+    if (currLen === maxLen) {
+      return perm;
+    }
+    // For each existing permutation
+    for (let i = 0, len = perm.length; i < len; i++) {
+      const currPerm = perm.shift() || [];
+      // Create new permutation
+      for (const k of list) {
+        perm.push([...currPerm, k]);
+      }
+    }
+    // Recurse
+    return generate(perm, currLen + 1);
+  };
+  // Start with size 1 because of initial values
+  return generate(list.map(val => [val]), 1);
+};
