@@ -1,4 +1,5 @@
-import { IPoint, packUtilization } from "./geometry";
+import { IPoint, packUtilization, polygonHeight, polygonWidth } from "./geometry";
+import { standardDeviation } from "./maths";
 import {
   centerPolygonTransforms,
   IJitterOptions,
@@ -8,9 +9,9 @@ import {
   maximizePolygonTransforms,
   scalePolygonTransforms
 } from "./transform";
-import { PackAnimalException } from "./utilities";
+import { noop, PackAnimalException } from "./utilities";
 
-import { greedyPack, singlePack } from "./algorithms";
+import { greedyPack, singlePack, staggerPack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
 
 export interface IPackAnimalOptions {
@@ -54,8 +55,15 @@ export default (
     console.time("packAnimal");
   }
   let polygonTransforms: ITransform[];
+  const aspectRatioDeviation = standardDeviation(
+    polygons.map(polygon => polygonWidth(polygon) / polygonHeight(polygon))
+  );
   if (polygons.length === 1) {
     polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { rotate });
+  } else if (polygons.length > 1 && aspectRatioDeviation < 0.25) {
+    polygonTransforms = staggerPack(rectangleWidth, rectangleHeight, polygons, {
+      debug: /* istanbul ignore next */ debug ? console.log : noop
+    });
   } else {
     polygonTransforms = greedyPack(rectangleWidth, rectangleHeight, polygons, {
       ...algorithmOptions,
