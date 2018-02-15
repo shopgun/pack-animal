@@ -93,9 +93,7 @@ gridWidth / gridHeight ≈ gridRatio
       return linePack(rectangleHeight, rectangleWidth, polygons, gridWidth === 1, { debug });
     }
   }
-  // TODO: if we're at this point, we have a 1xY or Xx1 grid and are not twoferpacking
-  // We should use a separate packing algorithm specialized for these scenarios, as grids
-  // can look quite stiff or unnaturally spaced when presented with only a single row or column.
+
   const horizontalOffset = maxWidth - (isVerticalGrid ? maxWidth / 2 : 0);
   const verticalOffset = maxHeight - (!isVerticalGrid ? maxHeight / 2 : 0);
   debug({
