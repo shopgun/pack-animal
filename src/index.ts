@@ -76,6 +76,13 @@ export default (
   ) {
     polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
   }
+  if (maximize) {
+    polygonTransforms = maximizePolygonTransforms(
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
+  }
   if (margin) {
     polygonTransforms = marginalizePolygonTransforms(
       margin,
