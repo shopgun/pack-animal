@@ -8,7 +8,7 @@ import {
   verifyPack
 } from "../geometry";
 import { getPolygonTransform, ITransform } from "../transform";
-import { PackAnimalException } from "../utilities";
+import { btoa, PackAnimalException } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 export enum RotationMode {
   Off,

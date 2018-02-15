@@ -1,4 +1,7 @@
+import { linePack } from "./linePack";
+
 import { IPoint, polygonArea, polygonHeight, polygonWidth } from "../geometry";
+import { standardDeviation } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
 import { noop, numberRange, permutator } from "../utilities";
 import { Matrix } from "../vendor/matrix";
@@ -9,6 +12,7 @@ export const staggerPack = (
   polygons: IPoint[][],
   { debug = noop } = {}
 ): ITransform[] => {
+  debug("staggerPack:");
   // find desired grid dimensions
   /*
 Given cellCount and gridRatio, find gridWidth and gridHeight such that:
@@ -17,6 +21,7 @@ gridWidth / gridHeight ≈ gridRatio
   */
   const cellCount = polygons.length;
   const rectangleRatio = rectangleWidth / rectangleHeight;
+  debug({ rectangleRatio });
   const permutations = permutator(numberRange(1, cellCount), 2);
 
   const averageArea =
@@ -24,24 +29,26 @@ gridWidth / gridHeight ≈ gridRatio
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>
     (averageArea / polygonArea(points) - 1) / 2 + 1;
-  const averageWidth =
-    polygons.reduce(
-      (memo, points) => memo + polygonWidth(points) * normalizedScaleFromPoints(points),
-      0
-    ) / polygons.length;
-  const averageHeight =
-    polygons.reduce(
-      (memo, points) => memo + polygonHeight(points) * normalizedScaleFromPoints(points),
-      0
-    ) / polygons.length;
+  const maxWidth = Math.max(
+    ...polygons.map(points => polygonWidth(points) * normalizedScaleFromPoints(points))
+  );
+  const maxHeight = Math.max(
+    ...polygons.map(points => polygonHeight(points) * normalizedScaleFromPoints(points))
+  );
+  const minWidth = Math.min(
+    ...polygons.map(points => polygonWidth(points) * normalizedScaleFromPoints(points))
+  );
+  const minHeight = Math.min(
+    ...polygons.map(points => polygonHeight(points) * normalizedScaleFromPoints(points))
+  );
   const averageRatio =
     polygons.reduce((memo, points) => memo + polygonWidth(points) / polygonHeight(points), 0) /
     polygons.length;
   const averageRatioInv = 1 + (1 - averageRatio);
   const averageRatios = [averageRatio, averageRatioInv].sort();
-  debug(averageRatios);
-  debug({ averageRatio, averageWidth, averageHeight });
-  const gridDimensionsToRatio = (w: number, h: number) => averageWidth * w / (averageHeight * h);
+
+  const gridDimensionsToRatio = (w: number, h: number) =>
+    maxWidth * w / (maxHeight + maxHeight / 2 * h);
 
   const [gridWidth, gridHeight] = permutations.reduce((bestPermutation, currentPermutation) => {
     const count = currentPermutation[0] * currentPermutation[1];
@@ -75,26 +82,65 @@ gridWidth / gridHeight ≈ gridRatio
     }
     return currentPermutation;
   }, []);
+  debug({ gridHeight, gridWidth });
   const isVerticalGrid = gridHeight > gridWidth;
+  debug(standardDeviation([rectangleRatio, averageRatio]));
+  const twoferPack =
+    polygons.length === 2 && standardDeviation([rectangleRatio, averageRatio]) < 0.25;
+  debug({ twoferPack });
+  if (!twoferPack) {
+    if (gridWidth === 1 || gridHeight === 1) {
+      return linePack(rectangleHeight, rectangleWidth, polygons, gridWidth === 1, { debug });
+    }
+  }
 
-  const horizontalOffset = averageWidth * (gridHeight > 1 ? averageRatios[+!isVerticalGrid] : 1);
-  const verticalOffset = averageHeight * (gridWidth > 1 ? averageRatios[+!!isVerticalGrid] : 1);
+  const horizontalOffset = maxWidth - (isVerticalGrid ? maxWidth / 2 : 0);
+  const verticalOffset = maxHeight - (!isVerticalGrid ? maxHeight / 2 : 0);
+  debug({
+    horizontalOffset,
+    verticalOffset
+  });
   const polygonTransforms = polygons.map((polygon, index) => {
     const normalizingScale = normalizedScaleFromPoints(polygon);
     const x = index % gridWidth;
     const y = Math.floor(index / gridWidth);
-    const horizontalStagger = !isVerticalGrid ? (y % 2) * (averageWidth / 2) * averageRatios[1] : 0;
-    const verticalStagger = isVerticalGrid ? (x % 2) * (averageHeight / 2) * averageRatios[1] : 0;
-    const horizontalCorrection = averageWidth - polygonWidth(polygon) * normalizingScale / 2;
-    const verticalCorrection = averageHeight - polygonHeight(polygon) * normalizingScale / 2;
+    const horizontalStagger =
+      !isVerticalGrid || twoferPack
+        ? +!!(y % 2) * (maxWidth * (0.5 * (twoferPack ? averageRatios[0] : 1)))
+        : 0;
+    const verticalStagger =
+      isVerticalGrid || twoferPack
+        ? +!!(x % 2) * (maxHeight * (0.5 * (twoferPack ? averageRatios[0] : 1)))
+        : 0;
+    debug({
+      horizontalStagger,
+      verticalStagger
+    });
+    const horizontalCorrection = maxWidth - polygonWidth(polygon) * normalizingScale / 2;
+    const verticalCorrection = maxHeight - polygonHeight(polygon) * normalizingScale / 2;
+    debug({
+      horizontalCorrection,
+      verticalCorrection
+    });
+
     return getPolygonTransform(
       rectangleWidth,
       rectangleHeight,
       polygon,
       new Matrix()
         .translate(
-          x * horizontalOffset + horizontalStagger + horizontalCorrection,
-          y * verticalOffset + verticalStagger + verticalCorrection
+          x * horizontalOffset +
+            horizontalStagger +
+            horizontalCorrection +
+            -(twoferPack && index === 1 && !isVerticalGrid
+              ? minWidth * (0.5 * averageRatios[0])
+              : 0),
+          y * verticalOffset +
+            verticalStagger +
+            verticalCorrection +
+            -(twoferPack && index === 1 && isVerticalGrid
+              ? minHeight * (0.5 * averageRatios[0])
+              : 0)
         )
         .scaleU(normalizingScale)
     );

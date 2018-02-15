@@ -36,3 +36,12 @@ export const permutator = <T>(list: T[], maxLen: number): T[][] => {
   // Start with size 1 because of initial values
   return generate(list.map(val => [val]), 1);
 };
+
+export const btoa = (str: string): string => {
+  if (typeof window !== "undefined" && window && window.btoa) {
+    // This only handles ASCII - I'm sure that'll never be a problem...
+    return window.btoa(str);
+  } else {
+    return new Buffer(str.toString(), "binary").toString("base64");
+  }
+};
