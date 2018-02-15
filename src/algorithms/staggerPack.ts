@@ -1,3 +1,5 @@
+import { linePack } from "./linePack";
+
 import { IPoint, polygonArea, polygonHeight, polygonWidth } from "../geometry";
 import { standardDeviation } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
@@ -10,6 +12,7 @@ export const staggerPack = (
   polygons: IPoint[][],
   { debug = noop } = {}
 ): ITransform[] => {
+  debug("staggerPack:");
   // find desired grid dimensions
   /*
 Given cellCount and gridRatio, find gridWidth and gridHeight such that:
@@ -85,6 +88,11 @@ gridWidth / gridHeight ≈ gridRatio
   const twoferPack =
     polygons.length === 2 && standardDeviation([rectangleRatio, averageRatio]) < 0.25;
   debug({ twoferPack });
+  if (!twoferPack) {
+    if (gridWidth === 1 || gridHeight === 1) {
+      return linePack(rectangleHeight, rectangleWidth, polygons, gridWidth === 1, { debug });
+    }
+  }
   // TODO: if we're at this point, we have a 1xY or Xx1 grid and are not twoferpacking
   // We should use a separate packing algorithm specialized for these scenarios, as grids
   // can look quite stiff or unnaturally spaced when presented with only a single row or column.
