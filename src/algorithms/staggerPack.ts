@@ -41,6 +41,8 @@ gridWidth / gridHeight ≈ gridRatio
   const averageRatio =
     polygons.reduce((memo, points) => memo + polygonWidth(points) / polygonHeight(points), 0) /
     polygons.length;
+  const averageRatioInv = 1 + (1 - averageRatio);
+  const averageRatios = [averageRatio, averageRatioInv].sort();
 
   const gridDimensionsToRatio = (w: number, h: number) =>
     maxWidth * w / (maxHeight + maxHeight / 2 * h);
@@ -81,10 +83,7 @@ gridWidth / gridHeight ≈ gridRatio
   const isVerticalGrid = gridHeight > gridWidth;
   debug(standardDeviation([rectangleRatio, averageRatio]));
   const twoferPack =
-    polygons.length === 2 &&
-    standardDeviation(
-      [rectangleRatio, ...polygons.map(points => polygonWidth(points) / polygonHeight(points))]
-    ) < 0.25;
+    polygons.length === 2 && standardDeviation([rectangleRatio, averageRatio]) < 0.25;
   debug({ twoferPack });
   // TODO: if we're at this point, we have a 1xY or Xx1 grid and are not twoferpacking
   // We should use a separate packing algorithm specialized for these scenarios, as grids
@@ -99,8 +98,14 @@ gridWidth / gridHeight ≈ gridRatio
     const normalizingScale = normalizedScaleFromPoints(polygon);
     const x = index % gridWidth;
     const y = Math.floor(index / gridWidth);
-    const horizontalStagger = !isVerticalGrid || twoferPack ? +!!(y % 2) * (maxWidth / 2) : 0;
-    const verticalStagger = isVerticalGrid || twoferPack ? +!!(x % 2) * (maxHeight / 2) : 0;
+    const horizontalStagger =
+      !isVerticalGrid || twoferPack
+        ? +!!(y % 2) * (maxWidth * (0.5 * (twoferPack ? averageRatios[0] : 1)))
+        : 0;
+    const verticalStagger =
+      isVerticalGrid || twoferPack
+        ? +!!(x % 2) * (maxHeight * (0.5 * (twoferPack ? averageRatios[0] : 1)))
+        : 0;
     debug({
       horizontalStagger,
       verticalStagger
@@ -111,9 +116,7 @@ gridWidth / gridHeight ≈ gridRatio
       horizontalCorrection,
       verticalCorrection
     });
-    // TODO: the twoferPack bias below should be tweaked to allow
-    // for more overlap on the longer axis of less square polygons
-    // and less overlap on the shorter axis
+
     return getPolygonTransform(
       rectangleWidth,
       rectangleHeight,
@@ -123,11 +126,15 @@ gridWidth / gridHeight ≈ gridRatio
           x * horizontalOffset +
             horizontalStagger +
             horizontalCorrection +
-            -(twoferPack && index === 1 && !isVerticalGrid ? minWidth / 2 : 0),
+            -(twoferPack && index === 1 && !isVerticalGrid
+              ? minWidth * (0.5 * averageRatios[0])
+              : 0),
           y * verticalOffset +
             verticalStagger +
             verticalCorrection +
-            -(twoferPack && index === 1 && isVerticalGrid ? minHeight / 2 : 0)
+            -(twoferPack && index === 1 && isVerticalGrid
+              ? minHeight * (0.5 * averageRatios[0])
+              : 0)
         )
         .scaleU(normalizingScale)
     );
