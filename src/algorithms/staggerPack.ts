@@ -1,4 +1,5 @@
 import { IPoint, polygonArea, polygonHeight, polygonWidth } from "../geometry";
+import { standardDeviation } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
 import { noop, numberRange, permutator } from "../utilities";
 import { Matrix } from "../vendor/matrix";
@@ -17,6 +18,7 @@ gridWidth / gridHeight ≈ gridRatio
   */
   const cellCount = polygons.length;
   const rectangleRatio = rectangleWidth / rectangleHeight;
+  debug({ rectangleRatio });
   const permutations = permutator(numberRange(1, cellCount), 2);
 
   const averageArea =
@@ -24,24 +26,24 @@ gridWidth / gridHeight ≈ gridRatio
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>
     (averageArea / polygonArea(points) - 1) / 2 + 1;
-  const averageWidth =
-    polygons.reduce(
-      (memo, points) => memo + polygonWidth(points) * normalizedScaleFromPoints(points),
-      0
-    ) / polygons.length;
-  const averageHeight =
-    polygons.reduce(
-      (memo, points) => memo + polygonHeight(points) * normalizedScaleFromPoints(points),
-      0
-    ) / polygons.length;
+  const maxWidth = Math.max(
+    ...polygons.map(points => polygonWidth(points) * normalizedScaleFromPoints(points))
+  );
+  const maxHeight = Math.max(
+    ...polygons.map(points => polygonHeight(points) * normalizedScaleFromPoints(points))
+  );
+  const minWidth = Math.min(
+    ...polygons.map(points => polygonWidth(points) * normalizedScaleFromPoints(points))
+  );
+  const minHeight = Math.min(
+    ...polygons.map(points => polygonHeight(points) * normalizedScaleFromPoints(points))
+  );
   const averageRatio =
     polygons.reduce((memo, points) => memo + polygonWidth(points) / polygonHeight(points), 0) /
     polygons.length;
-  const averageRatioInv = 1 + (1 - averageRatio);
-  const averageRatios = [averageRatio, averageRatioInv].sort();
-  debug(averageRatios);
-  debug({ averageRatio, averageWidth, averageHeight });
-  const gridDimensionsToRatio = (w: number, h: number) => averageWidth * w / (averageHeight * h);
+
+  const gridDimensionsToRatio = (w: number, h: number) =>
+    maxWidth * w / (maxHeight + maxHeight / 2 * h);
 
   const [gridWidth, gridHeight] = permutations.reduce((bestPermutation, currentPermutation) => {
     const count = currentPermutation[0] * currentPermutation[1];
@@ -75,26 +77,57 @@ gridWidth / gridHeight ≈ gridRatio
     }
     return currentPermutation;
   }, []);
+  debug({ gridHeight, gridWidth });
   const isVerticalGrid = gridHeight > gridWidth;
-
-  const horizontalOffset = averageWidth * (gridHeight > 1 ? averageRatios[+!isVerticalGrid] : 1);
-  const verticalOffset = averageHeight * (gridWidth > 1 ? averageRatios[+!!isVerticalGrid] : 1);
+  debug(standardDeviation([rectangleRatio, averageRatio]));
+  const twoferPack =
+    polygons.length === 2 &&
+    standardDeviation(
+      [rectangleRatio, ...polygons.map(points => polygonWidth(points) / polygonHeight(points))]
+    ) < 0.25;
+  debug({ twoferPack });
+  // TODO: if we're at this point, we have a 1xY or Xx1 grid and are not twoferpacking
+  // We should use a separate packing algorithm specialized for these scenarios, as grids
+  // can look quite stiff or unnaturally spaced when presented with only a single row or column.
+  const horizontalOffset = maxWidth;
+  const verticalOffset = maxHeight - (!isVerticalGrid ? maxHeight / 2 : 0);
+  debug({
+    horizontalOffset,
+    verticalOffset
+  });
   const polygonTransforms = polygons.map((polygon, index) => {
     const normalizingScale = normalizedScaleFromPoints(polygon);
     const x = index % gridWidth;
     const y = Math.floor(index / gridWidth);
-    const horizontalStagger = !isVerticalGrid ? (y % 2) * (averageWidth / 2) * averageRatios[1] : 0;
-    const verticalStagger = isVerticalGrid ? (x % 2) * (averageHeight / 2) * averageRatios[1] : 0;
-    const horizontalCorrection = averageWidth - polygonWidth(polygon) * normalizingScale / 2;
-    const verticalCorrection = averageHeight - polygonHeight(polygon) * normalizingScale / 2;
+    const horizontalStagger = !isVerticalGrid || twoferPack ? +!!(y % 2) * (maxWidth / 2) : 0;
+    const verticalStagger = isVerticalGrid || twoferPack ? +!!(x % 2) * (maxHeight / 2) : 0;
+    debug({
+      horizontalStagger,
+      verticalStagger
+    });
+    const horizontalCorrection = maxWidth - polygonWidth(polygon) * normalizingScale / 2;
+    const verticalCorrection = maxHeight - polygonHeight(polygon) * normalizingScale / 2;
+    debug({
+      horizontalCorrection,
+      verticalCorrection
+    });
+    // TODO: the twoferPack bias below should be tweaked to allow
+    // for more overlap on the longer axis of less square polygons
+    // and less overlap on the shorter axis
     return getPolygonTransform(
       rectangleWidth,
       rectangleHeight,
       polygon,
       new Matrix()
         .translate(
-          x * horizontalOffset + horizontalStagger + horizontalCorrection,
-          y * verticalOffset + verticalStagger + verticalCorrection
+          x * horizontalOffset +
+            horizontalStagger +
+            horizontalCorrection +
+            -(twoferPack && index === 1 && !isVerticalGrid ? minWidth / 2 : 0),
+          y * verticalOffset +
+            verticalStagger +
+            verticalCorrection +
+            -(twoferPack && index === 1 && isVerticalGrid ? minHeight / 2 : 0)
         )
         .scaleU(normalizingScale)
     );
