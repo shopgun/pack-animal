@@ -48,15 +48,30 @@ gridWidth / gridHeight ≈ gridRatio
   const averageRatios = [averageRatio, averageRatioInv].sort();
 
   const gridDimensionsToRatio = (w: number, h: number) => {
-    if (w >= h) {
-      const totalWidth = maxWidth * w + (polygons.length >= w ? maxWidth * 0.5 : 0);
-      const totalHeight = maxHeight + maxHeight * 0.5 * (h - 1);
-      return totalWidth / totalHeight;
-    } else {
-      const totalWidth = maxWidth + maxWidth * 0.5 * (w - 1);
-      const totalHeight = maxHeight * h + (polygons.length >= h ? maxHeight * 0.5 : 0);
-      return totalWidth / totalHeight;
+    let totalWidth: number;
+    let totalHeight: number;
+    if (w === 1) {
+      totalWidth = maxWidth;
+      totalHeight = polygons.reduce(
+        (memo, points) => memo + polygonHeight(points) * normalizedScaleFromPoints(points),
+        0
+      );
     }
+    if (h === 1) {
+      totalHeight = maxHeight;
+      totalWidth = polygons.reduce(
+        (memo, points) => memo + polygonWidth(points) * normalizedScaleFromPoints(points),
+        0
+      );
+    }
+    if (w >= h) {
+      totalWidth = maxWidth * w + (polygons.length >= w ? maxWidth * 0.5 : 0);
+      totalHeight = maxHeight + maxHeight * 0.5 * (h - 1);
+    } else {
+      totalWidth = maxWidth + maxWidth * 0.5 * (w - 1);
+      totalHeight = maxHeight * h + (polygons.length >= h ? maxHeight * 0.5 : 0);
+    }
+    return totalWidth / totalHeight;
   };
 
   const [gridWidth, gridHeight] = permutations.reduce((bestPermutation, currentPermutation) => {
