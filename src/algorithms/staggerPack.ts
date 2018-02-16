@@ -47,8 +47,17 @@ gridWidth / gridHeight ≈ gridRatio
   const averageRatioInv = 1 + (1 - averageRatio);
   const averageRatios = [averageRatio, averageRatioInv].sort();
 
-  const gridDimensionsToRatio = (w: number, h: number) =>
-    maxWidth * w / (maxHeight + maxHeight / 2 * h);
+  const gridDimensionsToRatio = (w: number, h: number) => {
+    if (w >= h) {
+      const totalWidth = maxWidth * w + (polygons.length >= w ? maxWidth * 0.5 : 0);
+      const totalHeight = maxHeight + maxHeight * 0.5 * (h - 1);
+      return totalWidth / totalHeight;
+    } else {
+      const totalWidth = maxWidth + maxWidth * 0.5 * (w - 1);
+      const totalHeight = maxHeight * h + (polygons.length >= h ? maxHeight * 0.5 : 0);
+      return totalWidth / totalHeight;
+    }
+  };
 
   const [gridWidth, gridHeight] = permutations.reduce((bestPermutation, currentPermutation) => {
     const count = currentPermutation[0] * currentPermutation[1];
