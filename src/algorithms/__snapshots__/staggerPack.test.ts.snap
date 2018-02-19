@@ -12,6 +12,7 @@ Array [
         transform-origin: 0 0;
         width: 108.21062413075855%;
         height: 45.964057925554165%;
+        z-index: 401;
         transform: translateX(50%) translateY(0%) rotate(0deg)
       ",
     "matrix": "{
@@ -45,6 +46,7 @@ Array [
     "svgTransform": "matrix(1.0074314065874885,0,0,1.0074314065874885,401.4614155251142,0)",
     "translateX": 401.4614155251142,
     "translateY": 0,
+    "zIndex": 401,
   },
   Object {
     "cssText": "
@@ -54,6 +56,7 @@ Array [
         transform-origin: 0 0;
         width: 107.02199017575236%;
         height: 48.448264115979946%;
+        z-index: 1141;
         transform: translateX(51.110644600286534%) translateY(94.87245573034598%) rotate(0deg)
       ",
     "matrix": "{
@@ -87,6 +90,7 @@ Array [
     "svgTransform": "matrix(0.9963653288633407,0,0,0.9963653288633407,405.87124749818713,367.7124634044333)",
     "translateX": 405.87124749818713,
     "translateY": 367.7124634044333,
+    "zIndex": 1141,
   },
   Object {
     "cssText": "
@@ -96,6 +100,7 @@ Array [
         transform-origin: 0 0;
         width: 107.02199017575236%;
         height: 48.448264115979946%;
+        z-index: 1916;
         transform: translateX(51.110644600286534%) translateY(194.87245573034596%) rotate(0deg)
       ",
     "matrix": "{
@@ -129,6 +134,7 @@ Array [
     "svgTransform": "matrix(0.9963653288633407,0,0,0.9963653288633407,405.87124749818713,755.2985763322729)",
     "translateX": 405.87124749818713,
     "translateY": 755.2985763322729,
+    "zIndex": 1916,
   },
 ]
 `;
