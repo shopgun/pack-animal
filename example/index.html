@@ -17,8 +17,9 @@ Boxes to pack polys in:
   const realData = Object.keys(window.incitoImages).map(url => ({
     url,
     ...window.incitoImages[url],
-  })).slice(rnd, rnd + Math.ceil(Math.random() * 5));
-  //})).slice(56, 58);
+    //  })).slice(rnd, rnd + 5)//1 + Math.ceil(Math.random() * 5));
+  })).slice(95, 99);
+  //    })).slice(59, 63);
   //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 18);
   //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(8, 13);
   const polygons = realData.map(child => child.contour.points);
@@ -28,8 +29,8 @@ Boxes to pack polys in:
     { x: width, y: height },
     { x: 0, y: height }
   ]);
-  const width = 100 + ~~(Math.random() * 300);
-  const height = 100 + ~~(Math.random() * 300);
+  const width = 484//590 //100 + ~~(Math.random() * 300);
+  const height = 423.172//445 + ~~(Math.random() * 700);
   console.log(height);
   realData.forEach(({ contour: { points }, url, width, height, colorPalette }) => {
     const svgPoints = points.map(({ x, y }) => `${x},${y}`).join(' ');
@@ -41,7 +42,7 @@ Boxes to pack polys in:
       </svg>
     </div>`);
   });
-  const childTransforms = packAnimal(width, height, rectangles, { debug: true, rotate: false, margin: 5 });
+  const childTransforms = packAnimal(width, height, rectangles, { debug: true, margin: 12 });
   //  const childTransforms = packAnimal(width, height, polygons, { debug: true, center: false, postPackPolygonScale: 0.9, algorithmOptions: { rotationMode: "SIMPLE" } });
 
   // SVG displllay

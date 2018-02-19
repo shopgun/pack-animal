@@ -12,6 +12,7 @@ Array [
         transform-origin: 0 0;
         width: 94.64375%;
         height: 46.73180592991914%;
+        z-index: 827;
         transform: translateX(5.28296902859407%) translateY(113.41312184571018%) rotate(0deg)
       ",
     "matrix": "{
@@ -45,6 +46,7 @@ Array [
     "svgTransform": "matrix(0.95,0,0,0.95,40,393.26)",
     "translateX": 40,
     "translateY": 393.26,
+    "zIndex": 827,
   },
   Object {
     "cssText": "
@@ -54,6 +56,7 @@ Array [
         transform-origin: 0 0;
         width: 94.64375%;
         height: 49.80458221024258%;
+        z-index: 85;
         transform: translateX(5.28296902859407%) translateY(6.023542145853065%) rotate(0deg)
       ",
     "matrix": "{
@@ -87,6 +90,7 @@ Array [
     "svgTransform": "matrix(0.95,0,0,0.95,40,22.259999999999998)",
     "translateX": 40,
     "translateY": 22.259999999999998,
+    "zIndex": 85,
   },
 ]
 `;
@@ -101,6 +105,7 @@ Array [
         transform-origin: 0 0;
         width: 97.67575877568494%;
         height: 48.22890685505281%;
+        z-index: 773;
         transform: translateX(2.047590953035804%) translateY(105.74571004330544%) rotate(0deg)
       ",
     "matrix": "{
@@ -134,6 +139,7 @@ Array [
     "svgTransform": "matrix(0.980434216067101,0,0,0.980434216067101,16,378.42)",
     "translateX": 16,
     "translateY": 378.42,
+    "zIndex": 773,
   },
   Object {
     "cssText": "
@@ -143,6 +149,7 @@ Array [
         transform-origin: 0 0;
         width: 96.60479773621509%;
         height: 50.83654853867456%;
+        z-index: 24;
         transform: translateX(3.105435827516218%) translateY(0%) rotate(0deg)
       ",
     "matrix": "{
@@ -176,6 +183,7 @@ Array [
     "svgTransform": "matrix(0.9696842934626357,0,0,0.9696842934626357,24,0)",
     "translateX": 24,
     "translateY": 0,
+    "zIndex": 24,
   },
 ]
 `;
@@ -190,6 +198,7 @@ Array [
         transform-origin: 0 0;
         width: 62.61266588184932%;
         height: 30.91596593272616%;
+        z-index: 808;
         transform: translateX(158.78875879140813%) translateY(2.8051870536460433%) rotate(90deg)
       ",
     "matrix": "{
@@ -223,6 +232,7 @@ Array [
     "svgTransform": "matrix(3.848351360516409e-17,0.6284834718378852,-0.6284834718378852,3.848351360516409e-17,795.375,6.435000000000059)",
     "translateX": 795.375,
     "translateY": 6.435000000000059,
+    "zIndex": 808,
   },
   Object {
     "cssText": "
@@ -232,6 +242,7 @@ Array [
         transform-origin: 0 0;
         width: 61.92615239500967%;
         height: 32.587531114534976%;
+        z-index: 470;
         transform: translateX(52.56706423343069%) translateY(43.28775678331294%) rotate(52.00000000000001deg)
       ",
     "matrix": "{
@@ -265,6 +276,7 @@ Array [
     "svgTransform": "matrix(0.3826905530213621,0.4898215710590342,-0.4898215710590342,0.3826905530213621,260.42208245421534,104.66957118225378)",
     "translateX": 260.42208245421534,
     "translateY": 104.66957118225378,
+    "zIndex": 470,
   },
 ]
 `;
@@ -279,6 +291,7 @@ Array [
         transform-origin: 0 0;
         width: 97.67575877568494%;
         height: 48.22890685505281%;
+        z-index: 773;
         transform: translateX(2.047590953035804%) translateY(105.74571004330544%) rotate(0deg)
       ",
     "matrix": "{
@@ -312,6 +325,7 @@ Array [
     "svgTransform": "matrix(0.980434216067101,0,0,0.980434216067101,16,378.42)",
     "translateX": 16,
     "translateY": 378.42,
+    "zIndex": 773,
   },
   Object {
     "cssText": "
@@ -321,6 +335,7 @@ Array [
         transform-origin: 0 0;
         width: 96.60479773621509%;
         height: 50.83654853867456%;
+        z-index: 172;
         transform: translateX(3.105435827516218%) translateY(19.67088696509829%) rotate(0deg)
       ",
     "matrix": "{
@@ -354,6 +369,7 @@ Array [
     "svgTransform": "matrix(0.9696842934626357,0,0,0.9696842934626357,24,74.2)",
     "translateX": 24,
     "translateY": 74.2,
+    "zIndex": 172,
   },
 ]
 `;
@@ -368,6 +384,7 @@ Array [
         transform-origin: 0 0;
         width: 97.2099610456744%;
         height: 41.29136409974906%;
+        z-index: 943;
         transform: translateX(2.0574023263524337%) translateY(140.4652068647751%) rotate(0deg)
       ",
     "matrix": "{
@@ -401,6 +418,7 @@ Array [
     "svgTransform": "matrix(0.9050161994465548,0,0,0.9050161994465548,14.84,464)",
     "translateX": 14.84,
     "translateY": 464,
+    "zIndex": 943,
   },
   Object {
     "cssText": "
@@ -410,6 +428,7 @@ Array [
         transform-origin: 0 0;
         width: 96.1441072224409%;
         height: 43.523906556572925%;
+        z-index: 246;
         transform: translateX(3.1203160408563995%) translateY(32.16623025739342%) rotate(0deg)
       ",
     "matrix": "{
@@ -443,6 +462,7 @@ Array [
     "svgTransform": "matrix(0.89509319396551,0,0,0.89509319396551,22.259999999999998,112)",
     "translateX": 22.259999999999998,
     "translateY": 112,
+    "zIndex": 246,
   },
 ]
 `;

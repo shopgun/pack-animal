@@ -11,7 +11,7 @@ import {
 } from "./transform";
 import { noop, PackAnimalException } from "./utilities";
 
-import { greedyPack, singlePack, staggerPack } from "./algorithms";
+import { greedyPack, patternPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
 
 export interface IPackAnimalOptions {
@@ -60,8 +60,8 @@ export default (
   );
   if (polygons.length === 1) {
     polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { rotate });
-  } else if (polygons.length > 1 && aspectRatioDeviation < 0.25) {
-    polygonTransforms = staggerPack(rectangleWidth, rectangleHeight, polygons, {
+  } else if (polygons.length > 1 && aspectRatioDeviation < 1 / 3) {
+    polygonTransforms = patternPack(rectangleWidth, rectangleHeight, polygons, {
       debug: /* istanbul ignore next */ debug ? console.log : noop
     });
   } else {
