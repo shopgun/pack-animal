@@ -2,8 +2,8 @@ import {
   IPoint,
   IVerifyPackOptions,
   polygonArea,
+  polygonCenter,
   polygonHeight,
-  polygonWidth,
   rotateMatrixAroundPoint,
   verifyPack
 } from "../geometry";
@@ -62,11 +62,12 @@ export const greedyPack = (
     polygonHitboxScale
   }: IGreedyPackOptions = {}
 ): ITransform[] => {
-  if (!polygons.length) {
+  const length = polygons.length;
+  if (!length) {
     return [];
   }
   const rectangle: IPoint[] = [{ x: 0, y: 0 }, { x: rectangleWidth, y: rectangleHeight }];
-  let polygonTransforms;
+  let polygonTransforms: ITransform[];
   const scaleIncrement = 0.025;
   const translateXIncrement = rectangleWidth * 0.01;
   const translateYIncrement = rectangleHeight * 0.01;
@@ -81,8 +82,12 @@ export const greedyPack = (
   const verifyPackOptions: IVerifyPackOptions = {
     polygonHitboxScale
   };
-  const averageArea =
-    polygons.reduce((memo, points) => memo + polygonArea(points), 0) / polygons.length;
+  const averageArea = polygons.reduce((memo, points) => memo + polygonArea(points), 0) / length;
+  const polygonsOrder = Array.from({ length }, (_, i) => i).sort(
+    (a, b) =>
+      polygonHeight(polygons[b]) * ((averageArea / polygonArea(polygons[b]) - 1) / 2 + 1) -
+      polygonHeight(polygons[a]) * ((averageArea / polygonArea(polygons[a]) - 1) / 2 + 1)
+  );
   do {
     scale = scaleInitial - scaleIncrement * j;
     if (scale <= 0) {
@@ -103,7 +108,8 @@ export const greedyPack = (
         }
       );
     }
-    polygonTransforms = polygons.reduce((memo: ITransform[], points: IPoint[]): ITransform[] => {
+    polygonTransforms = polygonsOrder.reduce((memo: ITransform[], polyI: number): ITransform[] => {
+      const points = polygons[polyI];
       if (!points.length) {
         throw new PackAnimalException("No pointless polygons allowed.", { points, polygons });
       }
@@ -175,9 +181,7 @@ export const greedyPack = (
       }
 
       if (rotationMode === RotationMode.Simple) {
-        const width = polygonWidth(points);
-        const height = polygonHeight(points);
-        const center = { x: width / 2, y: height / 2 };
+        const center = polygonCenter(points);
         let previousRotate = null;
         rotate = rotateInitial;
         i = 0;
@@ -203,5 +207,10 @@ export const greedyPack = (
     !verifyPack(polygonTransforms.map(({ points }) => points), rectangle, verifyPackOptions)
   );
 
-  return polygonTransforms;
+  return polygonTransforms
+    .map((o, i) => ({ o, i }))
+    .sort((a, b) => {
+      return polygonsOrder[a.i] - polygonsOrder[b.i];
+    })
+    .map(({ o }) => o);
 };
