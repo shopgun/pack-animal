@@ -85,6 +85,7 @@ export const patternPack = (
     */
     [{ x: 0, y: 0 }, { x: 0.5, y: 0.5 }, { x: 0, y: 1 }, { x: 0.5, y: 1.5 }, { x: 0, y: 2 }],
     [{ x: 0, y: 0 }, { x: 0.75, y: 0.5 }, { x: 0, y: 1 }, { x: 0.75, y: 1.5 }, { x: 0, y: 2 }],
+    [{ x: 0, y: 0 }, { x: 0.5, y: 0.75 }, { x: 0, y: 1.5 }, { x: 0.5, y: 2.25 }, { x: 0, y: 3 }],
     /*
         X X
          X
@@ -118,9 +119,6 @@ export const patternPack = (
   if (patternsForPack.length) {
     const averageArea =
       polygons.reduce((memo, points) => memo + polygonArea(points), 0) / polygons.length;
-    const averageRatio =
-      polygons.reduce((memo, points) => memo + polygonWidth(points) / polygonHeight(points), 0) /
-      polygons.length;
 
     const normalizedScaleFromPoints = (points: IPoint[]) =>
       (averageArea / polygonArea(points) - 1) / 2 + 1;
@@ -130,7 +128,13 @@ export const patternPack = (
     const maxHeight = Math.max(
       ...polygons.map(points => polygonHeight(points) * normalizedScaleFromPoints(points))
     );
-    const line = linePack(rectangleWidth, rectangleHeight, polygons, averageRatio > 1, { debug });
+    const line = [
+      linePack(rectangleWidth, rectangleHeight, polygons, false, { debug }),
+      linePack(rectangleWidth, rectangleHeight, polygons, true, { debug })
+    ].sort(
+      (a, b) => Math.abs(packRatio(a) - rectangleRatio) - Math.abs(packRatio(b) - rectangleRatio)
+    )[0];
+
     return patternsForPack.reduce((bestPack: ITransform[], pattern) => {
       const horizontalOffset = maxWidth;
       const verticalOffset = maxHeight;
