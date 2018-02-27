@@ -1,7 +1,7 @@
 import { linePack } from "./linePack";
 
 import { IPoint, polygonArea, polygonHeight, polygonWidth } from "../geometry";
-import { standardDeviation } from "../maths";
+import { average, standardDeviation } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
 import { noop, numberRange, permutator } from "../utilities";
 import { Matrix } from "../vendor/matrix";
@@ -24,8 +24,7 @@ gridWidth / gridHeight ≈ gridRatio
   debug({ rectangleRatio });
   const permutations = permutator(numberRange(1, cellCount), 2);
 
-  const averageArea =
-    polygons.reduce((memo, points) => memo + polygonArea(points), 0) / polygons.length;
+  const averageArea = average(polygons.map(points => polygonArea(points)));
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>
     (averageArea / polygonArea(points) - 1) / 2 + 1;
@@ -41,9 +40,9 @@ gridWidth / gridHeight ≈ gridRatio
   const minHeight = Math.min(
     ...polygons.map(points => polygonHeight(points) * normalizedScaleFromPoints(points))
   );
-  const averageRatio =
-    polygons.reduce((memo, points) => memo + polygonWidth(points) / polygonHeight(points), 0) /
-    polygons.length;
+  const averageRatio = average(
+    polygons.map(points => polygonWidth(points) / polygonHeight(points))
+  );
   const averageRatioInv = 1 + (1 - averageRatio);
   const averageRatios = [averageRatio, averageRatioInv].sort();
 

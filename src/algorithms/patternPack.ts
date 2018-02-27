@@ -1,3 +1,4 @@
+import { average } from "../maths";
 import { linePack } from "./linePack";
 import { staggerPack } from "./staggerPack";
 
@@ -117,8 +118,7 @@ export const patternPack = (
   );
   const patternsForPack = patterns.filter(pattern => pattern.length === polygons.length);
   if (patternsForPack.length) {
-    const averageArea =
-      polygons.reduce((memo, points) => memo + polygonArea(points), 0) / polygons.length;
+    const averageArea = average(polygons.map(points => polygonArea(points)));
 
     const normalizedScaleFromPoints = (points: IPoint[]) =>
       (averageArea / polygonArea(points) - 1) / 2 + 1;

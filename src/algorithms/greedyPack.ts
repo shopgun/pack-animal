@@ -7,6 +7,7 @@ import {
   rotateMatrixAroundPoint,
   verifyPack
 } from "../geometry";
+import { average } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
 import { btoa, PackAnimalException } from "../utilities";
 import { Matrix } from "../vendor/matrix";
@@ -82,7 +83,7 @@ export const greedyPack = (
   const verifyPackOptions: IVerifyPackOptions = {
     polygonHitboxScale
   };
-  const averageArea = polygons.reduce((memo, points) => memo + polygonArea(points), 0) / length;
+  const averageArea = average(polygons.map(points => polygonArea(points)));
   const polygonsOrder = Array.from({ length }, (_, i) => i).sort(
     (a, b) =>
       polygonHeight(polygons[b]) * ((averageArea / polygonArea(polygons[b]) - 1) / 2 + 1) -

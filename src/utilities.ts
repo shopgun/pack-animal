@@ -45,6 +45,3 @@ export const btoa = (str: string): string => {
     return new Buffer(str.toString(), "binary").toString("base64");
   }
 };
-
-export const average = (values: number[]) =>
-  values.reduce((memo, value) => memo + value, 0) / values.length;

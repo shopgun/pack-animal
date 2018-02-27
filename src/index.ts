@@ -9,7 +9,7 @@ import {
   rotateMatrixAroundPoint
 } from "./geometry";
 
-import { standardDeviation } from "./maths";
+import { average, standardDeviation } from "./maths";
 import {
   centerPolygonTransforms,
   getPolygonTransform,
@@ -20,7 +20,7 @@ import {
   maximizePolygonTransforms,
   scalePolygonTransforms
 } from "./transform";
-import { average, noop, PackAnimalException } from "./utilities";
+import { noop, PackAnimalException } from "./utilities";
 
 import { greedyPack, patternPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";

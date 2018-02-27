@@ -1,4 +1,5 @@
 import { IPoint, polygonArea, polygonHeight, polygonWidth } from "../geometry";
+import { average } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
 import { noop } from "../utilities";
 import { Matrix } from "../vendor/matrix";
@@ -11,8 +12,7 @@ export const linePack = (
   { debug = noop } = {}
 ): ITransform[] => {
   debug("linePack:");
-  const averageArea =
-    polygons.reduce((memo, points) => memo + polygonArea(points), 0) / polygons.length;
+  const averageArea = average(polygons.map(points => polygonArea(points)));
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>
     (averageArea / polygonArea(points) - 1) / 2 + 1;
