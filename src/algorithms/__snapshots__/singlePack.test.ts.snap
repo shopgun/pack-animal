@@ -10,7 +10,7 @@ Array [
         transform-origin: 0 0;
         width: 99.625%;
         height: 49.19137466307278%;
-        z-index: 379;
+        z-index: 3720000000401;
         transform: translateX(0.18820577164366373%) translateY(51.64383561643836%) rotate(0deg)
       ",
     "matrix": "{
@@ -44,7 +44,7 @@ Array [
     "svgTransform": "matrix(1,0,0,1,1.5,188.5)",
     "translateX": 1.5,
     "translateY": 188.5,
-    "zIndex": 379,
+    "zIndex": 3720000000401,
   },
 ]
 `;
@@ -57,10 +57,10 @@ Array [
         top: 0;
         left: 0;
         transform-origin: 0 0;
-        width: 200.00000000000006%;
-        height: 45.796737766624844%;
-        z-index: 194;
-        transform: translateX(48.27383939774153%) translateY(0.27191780821917444%) rotate(90deg)
+        width: 91.5934755332497%;
+        height: 100%;
+        z-index: 201101;
+        transform: translateX(105.40890410958906%) translateY(0.12452948557088916%) rotate(90deg)
       ",
     "matrix": "{
       \\"a\\":3.073141277659607e-17,
@@ -93,7 +93,7 @@ Array [
     "svgTransform": "matrix(3.073141277659607e-17,0.5018820577164367,-0.5018820577164367,3.073141277659607e-17,193.09535759096616,0.49811794228355666)",
     "translateX": 193.09535759096616,
     "translateY": 0.49811794228355666,
-    "zIndex": 194,
+    "zIndex": 201101,
   },
 ]
 `;
@@ -108,7 +108,7 @@ Array [
         transform-origin: 0 0;
         width: 99.5%;
         height: 49.75%;
-        z-index: 201;
+        z-index: 2010000000100;
         transform: translateX(-0.25125628140703515%) translateY(50.502512562814076%) rotate(0deg)
       ",
     "matrix": "{
@@ -142,7 +142,7 @@ Array [
     "svgTransform": "matrix(1,0,0,1,-0.5,100.5)",
     "translateX": -0.5,
     "translateY": 100.5,
-    "zIndex": 201,
+    "zIndex": 2010000000100,
   },
 ]
 `;
@@ -157,7 +157,7 @@ Array [
         transform-origin: 0 0;
         width: 99.5%;
         height: 49.75%;
-        z-index: 201;
+        z-index: 2010000000100;
         transform: translateX(-0.25125628140703515%) translateY(50.502512562814076%) rotate(0deg)
       ",
     "matrix": "{
@@ -191,7 +191,7 @@ Array [
     "svgTransform": "matrix(1,0,0,1,-0.5,100.5)",
     "translateX": -0.5,
     "translateY": 100.5,
-    "zIndex": 201,
+    "zIndex": 2010000000100,
   },
 ]
 `;

@@ -11,8 +11,8 @@ Array [
         left: 0;
         transform-origin: 0 0;
         width: 97.13437499999999%;
-        height: 47.961590296495956%;
-        z-index: 16;
+        height: 47.96159029649595%;
+        z-index: 178;
         transform: translateX(2.059003313708458%) translateY(0%) rotate(0deg)
       ",
     "matrix": "{
@@ -46,7 +46,7 @@ Array [
     "svgTransform": "matrix(0.975,0,0,0.975,16,0)",
     "translateX": 16,
     "translateY": 0,
-    "zIndex": 16,
+    "zIndex": 178,
   },
   Object {
     "cssText": "
@@ -56,7 +56,7 @@ Array [
         transform-origin: 0 0;
         width: 97.13437499999999%;
         height: 51.115229110512125%;
-        z-index: 728;
+        z-index: 546;
         transform: translateX(2.059003313708458%) translateY(93.90547755586316%) rotate(0deg)
       ",
     "matrix": "{
@@ -90,7 +90,7 @@ Array [
     "svgTransform": "matrix(0.975,0,0,0.975,16,356.15999999999997)",
     "translateX": 16,
     "translateY": 356.15999999999997,
-    "zIndex": 728,
+    "zIndex": 546,
   },
 ]
 `;
@@ -105,7 +105,7 @@ Array [
         transform-origin: 0 0;
         width: 97.67575877568494%;
         height: 48.22890685505281%;
-        z-index: 16;
+        z-index: 179;
         transform: translateX(2.047590953035804%) translateY(0%) rotate(0deg)
       ",
     "matrix": "{
@@ -139,7 +139,7 @@ Array [
     "svgTransform": "matrix(0.980434216067101,0,0,0.980434216067101,16,0)",
     "translateX": 16,
     "translateY": 0,
-    "zIndex": 16,
+    "zIndex": 179,
   },
   Object {
     "cssText": "
@@ -149,8 +149,8 @@ Array [
         transform-origin: 0 0;
         width: 96.60479773621509%;
         height: 50.83654853867456%;
-        z-index: 751;
-        transform: translateX(3.105435827516218%) translateY(96.3873461289816%) rotate(0deg)
+        z-index: 553;
+        transform: translateX(3.105435827516218%) translateY(96.38734612898162%) rotate(0deg)
       ",
     "matrix": "{
       \\"a\\":0.9696842934626357,
@@ -183,7 +183,7 @@ Array [
     "svgTransform": "matrix(0.9696842934626357,0,0,0.9696842934626357,24,363.58)",
     "translateX": 24,
     "translateY": 363.58,
-    "zIndex": 751,
+    "zIndex": 553,
   },
 ]
 `;
@@ -196,10 +196,10 @@ Array [
         top: 0;
         left: 0;
         transform-origin: 0 0;
-        width: 62.61266588184932%;
-        height: 30.91596593272616%;
-        z-index: 1220;
-        transform: translateX(59.48324561603041%) translateY(201.00285641035063%) rotate(4.999999999999992deg)
+        width: 64.87355822042824%;
+        height: 36.68193687454369%;
+        z-index: 597;
+        transform: translateX(57.41020972935782%) translateY(169.40756106789826%) rotate(4.999999999999992deg)
       ",
     "matrix": "{
       \\"a\\":0.6260919024831941,
@@ -232,7 +232,7 @@ Array [
     "svgTransform": "matrix(0.6260919024831941,0.05477594379265779,-0.05477594379265779,0.6260919024831941,297.95236666595923,461.09345161829816)",
     "translateX": 297.95236666595923,
     "translateY": 461.09345161829816,
-    "zIndex": 1220,
+    "zIndex": 597,
   },
   Object {
     "cssText": "
@@ -240,10 +240,10 @@ Array [
         top: 0;
         left: 0;
         transform-origin: 0 0;
-        width: 61.92615239500967%;
-        height: 32.587531114534976%;
-        z-index: 790;
-        transform: translateX(159.64806932573455%) translateY(-0.2523672695215269%) rotate(89deg)
+        width: 31.246850661035097%;
+        height: 66.75657222862951%;
+        z-index: 247;
+        transform: translateX(316.3963875233948%) translateY(-0.12319425598512085%) rotate(89deg)
       ",
     "matrix": "{
       \\"a\\":0.010848284875230851,
@@ -276,7 +276,7 @@ Array [
     "svgTransform": "matrix(0.010848284875230851,0.6214978242615193,-0.6214978242615193,0.010848284875230851,790.9112536507605,-0.6102227475884661)",
     "translateX": 790.9112536507605,
     "translateY": -0.6102227475884661,
-    "zIndex": 790,
+    "zIndex": 247,
   },
 ]
 `;
@@ -291,7 +291,7 @@ Array [
         transform-origin: 0 0;
         width: 97.67575877568494%;
         height: 48.22890685505281%;
-        z-index: 164;
+        z-index: 254;
         transform: translateX(2.047590953035804%) translateY(20.73445294966773%) rotate(0deg)
       ",
     "matrix": "{
@@ -325,7 +325,7 @@ Array [
     "svgTransform": "matrix(0.980434216067101,0,0,0.980434216067101,16,74.2)",
     "translateX": 16,
     "translateY": 74.2,
-    "zIndex": 164,
+    "zIndex": 254,
   },
   Object {
     "cssText": "
@@ -335,8 +335,8 @@ Array [
         transform-origin: 0 0;
         width: 96.60479773621509%;
         height: 50.83654853867456%;
-        z-index: 751;
-        transform: translateX(3.105435827516218%) translateY(96.3873461289816%) rotate(0deg)
+        z-index: 553;
+        transform: translateX(3.105435827516218%) translateY(96.38734612898162%) rotate(0deg)
       ",
     "matrix": "{
       \\"a\\":0.9696842934626357,
@@ -369,7 +369,7 @@ Array [
     "svgTransform": "matrix(0.9696842934626357,0,0,0.9696842934626357,24,363.58)",
     "translateX": 24,
     "translateY": 363.58,
-    "zIndex": 751,
+    "zIndex": 553,
   },
 ]
 `;
@@ -384,7 +384,7 @@ Array [
         transform-origin: 0 0;
         width: 97.2099610456744%;
         height: 41.29136409974906%;
-        z-index: 239;
+        z-index: 278;
         transform: translateX(2.0574023263524337%) translateY(33.905394760462954%) rotate(0deg)
       ",
     "matrix": "{
@@ -418,7 +418,7 @@ Array [
     "svgTransform": "matrix(0.9050161994465548,0,0,0.9050161994465548,14.84,112)",
     "translateX": 14.84,
     "translateY": 112,
-    "zIndex": 239,
+    "zIndex": 278,
   },
   Object {
     "cssText": "
@@ -428,7 +428,7 @@ Array [
         transform-origin: 0 0;
         width: 96.1441072224409%;
         height: 43.523906556572925%;
-        z-index: 918;
+        z-index: 622;
         transform: translateX(3.1203160408563995%) translateY(128.6649210295737%) rotate(0deg)
       ",
     "matrix": "{
@@ -462,7 +462,7 @@ Array [
     "svgTransform": "matrix(0.89509319396551,0,0,0.89509319396551,22.259999999999998,448)",
     "translateX": 22.259999999999998,
     "translateY": 448,
-    "zIndex": 918,
+    "zIndex": 622,
   },
 ]
 `;
