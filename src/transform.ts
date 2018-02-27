@@ -1,5 +1,6 @@
 import {
   IPoint,
+  polygonBounds,
   polygonCenter,
   polygonHeight,
   polygonsBounds,
@@ -28,20 +29,18 @@ export const getPolygonTransform = (
   points: IPoint[],
   matrix: Matrix
 ): ITransform => {
+  const transformedPoints = matrix.applyToArray(points);
   const simpleTransform = matrix.decompose();
   const scale = simpleTransform.scale.x;
-  const width = Math.floor(
-    Math.max(...points.map(point => point.x)) - Math.min(...points.map(point => point.x))
-  );
-  const height = Math.floor(
-    Math.max(...points.map(point => point.y)) - Math.min(...points.map(point => point.y))
-  );
-
-  const relativeHeight = height * scale / rectangleHeight;
-  const relativeWidth = width * scale / rectangleWidth;
-  const translateXRelative = simpleTransform.translate.x / (width * scale);
-  const translateYRelative = simpleTransform.translate.y / (height * scale);
+  const width = polygonWidth(transformedPoints);
+  const height = polygonHeight(transformedPoints);
+  const relativeHeight = height / rectangleHeight;
+  const relativeWidth = width / rectangleWidth;
+  const translateXRelative = simpleTransform.translate.x / width;
+  const translateYRelative = simpleTransform.translate.y / height;
   const degreesRotation = radiansToDegrees(simpleTransform.rotation);
+  // zIndex === bottommost y position
+  const zIndex = polygonBounds(transformedPoints)[2].y;
   return {
     cssText: `
         position: absolute;
@@ -50,7 +49,7 @@ export const getPolygonTransform = (
         transform-origin: 0 0;
         width: ${relativeWidth * 100}%;
         height: ${relativeHeight * 100}%;
-        z-index: ${Math.round(simpleTransform.translate.x + simpleTransform.translate.y * 2)};
+        z-index: ${zIndex};
         transform: ${[
           `translateX(${translateXRelative * 100}%)`,
           `translateY(${translateYRelative * 100}%)`,
@@ -58,13 +57,13 @@ export const getPolygonTransform = (
         ].join(" ")}
       `,
     matrix,
-    points: matrix.applyToArray(points),
+    points: transformedPoints,
     rotate: degreesRotation,
     scale,
     svgTransform: matrix.toCSS(),
     translateX: simpleTransform.translate.x,
     translateY: simpleTransform.translate.y,
-    zIndex: Math.round(simpleTransform.translate.x + simpleTransform.translate.y * 2)
+    zIndex
   };
 };
 
