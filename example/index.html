@@ -7,8 +7,6 @@ Boxes to pack polys in:
     <div id="boxToPackFluffer"></div>
   </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
 <script src="../dist/pack-animal.umd.js"></script>
 <script src="./realdata.js"></script>
 <script>
@@ -17,9 +15,9 @@ Boxes to pack polys in:
   const realData = Object.keys(window.incitoImages).map(url => ({
     url,
     ...window.incitoImages[url],
-    //  })).slice(rnd, rnd + 5)//1 + Math.ceil(Math.random() * 5));
-  })).slice(95, 99);
-  //    })).slice(59, 63);
+  })).slice(rnd, rnd + 1 + Math.ceil(Math.random() * 4));
+//    })).slice(52, 54);
+//    })).slice(132, 135);
   //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(16, 18);
   //  })).filter(({ channels, contour: { points } }) => channels === 4 && points.length > 4).slice(8, 13);
   const polygons = realData.map(child => child.contour.points);
@@ -29,24 +27,24 @@ Boxes to pack polys in:
     { x: width, y: height },
     { x: 0, y: height }
   ]);
-  const width = 484//590 //100 + ~~(Math.random() * 300);
-  const height = 423.172//445 + ~~(Math.random() * 700);
+  const width = 590 //100 + ~~(Math.random() * 300);
+  const height = 345 + ~~(Math.random() * 700);
   console.log(height);
   realData.forEach(({ contour: { points }, url, width, height, colorPalette }) => {
     const svgPoints = points.map(({ x, y }) => `${x},${y}`).join(' ');
-    $('.providedPolys').append(`
+    document.querySelector('.providedPolys').innerHTML += `
     <div style="border: 30px solid rgba(0,0,0,0.125); width: 100%; height: auto;">
       <svg viewBox="0 0 ${width} ${height}" style="background:url(${url}); background-size: cover;">
         <polygon points="${svgPoints}" style="fill:${colorPalette[3]};opacity: 0.5;" />
       <!--<image href="${url}"/>    -->
       </svg>
-    </div>`);
+    </div>`;
   });
-  const childTransforms = packAnimal(width, height, rectangles, { debug: true, margin: 12 });
+  const childTransforms = packAnimal(width, height, rectangles, { debug: true, margin: 0, algorithmOptions: { rotationMode: "OFF" } });
   //  const childTransforms = packAnimal(width, height, polygons, { debug: true, center: false, postPackPolygonScale: 0.9, algorithmOptions: { rotationMode: "SIMPLE" } });
 
   // SVG displllay
-  $('.boxToPack').append(`<svg viewBox="0 0 ${width} ${height}">
+  document.querySelector('.boxToPack').innerHTML = `<svg viewBox="0 0 ${width} ${height}">
     ${realData.map((child, index) => {
       const svgPoints = child.contour.points.map(({ x, y }) => `${x},${y}`).join(' ');
       const transform = childTransforms[index];
@@ -60,7 +58,7 @@ Boxes to pack polys in:
         />
       <image href="${child.url}" transform="${transformAttributeValue}"/>
     `}).join('')}
-    </svg>`)
+    </svg>`;
   // non-SVG displaly
   const boxToPack = document.getElementById('boxToPack');
   const fluffer = document.getElementById('boxToPackFluffer');
