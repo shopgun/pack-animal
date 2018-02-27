@@ -40,7 +40,7 @@ export const getPolygonTransform = (
   const translateYRelative = simpleTransform.translate.y / height;
   const degreesRotation = radiansToDegrees(simpleTransform.rotation);
   // zIndex === bottommost y position
-  const zIndex = polygonBounds(transformedPoints)[2].y;
+  const zIndex = Math.round(polygonBounds(transformedPoints)[2].y);
   return {
     cssText: `
         position: absolute;
