@@ -34,13 +34,17 @@ export const getPolygonTransform = (
   const scale = simpleTransform.scale.x;
   const width = polygonWidth(transformedPoints);
   const height = polygonHeight(transformedPoints);
+  const center = polygonCenter(transformedPoints);
   const relativeHeight = height / rectangleHeight;
   const relativeWidth = width / rectangleWidth;
   const translateXRelative = simpleTransform.translate.x / width;
   const translateYRelative = simpleTransform.translate.y / height;
   const degreesRotation = radiansToDegrees(simpleTransform.rotation);
   // zIndex === bottommost y position
-  const zIndex = Math.round(polygonBounds(transformedPoints)[2].y);
+  const zIndex = parseInt(
+    [`${center.y}`.padStart(10, "0"), `${center.x}`.padStart(10, "0")].join(""),
+    10
+  );
   return {
     cssText: `
         position: absolute;
