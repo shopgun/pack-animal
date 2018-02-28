@@ -10,9 +10,12 @@ export const staggerPack = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygons: IPoint[][],
-  { debug = noop } = {}
+  { debug: dbug = noop } = {}
 ): ITransform[] => {
-  debug("staggerPack:");
+  // Wrap debug function to include current algorithm.
+  const debug = (...args: any[]) => dbug("staggerPack:", ...args);
+  // Write out said algorithm entry.
+  debug();
   // find desired grid dimensions
   /*
 Given cellCount and gridRatio, find gridWidth and gridHeight such that:

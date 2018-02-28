@@ -9,7 +9,7 @@ import {
 } from "../geometry";
 import { average } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
-import { btoa, PackAnimalException } from "../utilities";
+import { btoa, noop, PackAnimalException } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 export enum RotationMode {
   Off,
@@ -21,6 +21,7 @@ export interface IGreedyPackOptions {
   rotationMode?: RotationMode;
   normalizePolygons?: boolean;
   polygonHitboxScale?: number;
+  debug?: (message?: any, ...optionalParams: any[]) => void;
 }
 
 enum MatrixAttribute {
@@ -60,9 +61,14 @@ export const greedyPack = (
   {
     normalizePolygons = true,
     rotationMode = RotationMode.Simple,
-    polygonHitboxScale
+    polygonHitboxScale,
+    debug: dbug = noop
   }: IGreedyPackOptions = {}
 ): ITransform[] => {
+  // Wrap debug function to include current algorithm.
+  const debug = (...args: any[]) => dbug("greedyPack:", ...args);
+  // Write out said algorithm entry.
+  debug();
   const length = polygons.length;
   if (!length) {
     return [];

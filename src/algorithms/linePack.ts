@@ -9,9 +9,12 @@ export const linePack = (
   rectangleHeight: number,
   polygons: IPoint[][],
   vertical: boolean = false,
-  { debug = noop } = {}
+  { debug: dbug = noop } = {}
 ): ITransform[] => {
-  debug("linePack:");
+  // Wrap debug function to include current algorithm.
+  const debug = (...args: any[]) => dbug("linePack:", ...args);
+  // Write out said algorithm entry.
+  debug();
   const averageArea = average(polygons.map(points => polygonArea(points)));
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>

@@ -52,8 +52,9 @@ const packAnimal = (
     jitter,
     algorithmOptions = {},
     recursion = 0,
-    /* istanbul ignore next */ debug = false
+    /* istanbul ignore next */ debug: dbug = false
   } = packAnimalOptions;
+  const debug = dbug ? console.log : noop;
   if (!polygons || !polygons.length) {
     throw new PackAnimalException("No polygons to pack, there must be at least one.", { polygons });
   }
@@ -73,13 +74,12 @@ const packAnimal = (
     polygons.map(polygon => polygonWidth(polygon) / polygonHeight(polygon))
   );
   if (polygons.length === 1) {
-    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { rotate });
+    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { debug, rotate });
   } else if (polygons.length > 1 && aspectRatioDeviation < 1 / 3) {
-    polygonTransforms = patternPack(rectangleWidth, rectangleHeight, polygons, {
-      debug: /* istanbul ignore next */ debug ? console.log : noop
-    });
+    polygonTransforms = patternPack(rectangleWidth, rectangleHeight, polygons, { debug });
   } else {
     polygonTransforms = greedyPack(rectangleWidth, rectangleHeight, polygons, {
+      debug,
       ...algorithmOptions,
       ...(rotate ? {} : { rotationMode: "OFF" })
     });
@@ -135,7 +135,7 @@ const packAnimal = (
     polygonTransforms.map(({ points }) => points)
   );
   /* istanbul ignore next */
-  if (debug) {
+  if (dbug) {
     // tslint:disable-next-line
     console.timeEnd("packAnimal");
     // tslint:disable-next-line
