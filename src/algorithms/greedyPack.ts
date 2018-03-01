@@ -216,8 +216,6 @@ export const greedyPack = (
 
   return polygonTransforms
     .map((o, i) => ({ o, i }))
-    .sort((a, b) => {
-      return polygonsOrder[a.i] - polygonsOrder[b.i];
-    })
+    .sort((a, b) => polygonsOrder[a.i] - polygonsOrder[b.i])
     .map(({ o }) => o);
 };
