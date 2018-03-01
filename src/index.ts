@@ -142,7 +142,7 @@ const packAnimal = (
     console.log(Math.round(utilization * 100) + "%");
   }
 
-  if (utilization < 0.65 && recursion < 1) {
+  if (utilization < 0.2 && recursion < 1) {
     const polygonRatios = polygons.map(poly => polygonWidth(poly) / polygonHeight(poly));
     const averageRatio = average(polygonRatios);
     let polygonsToRotate = polygons.map((_, index) => {
