@@ -37,6 +37,10 @@ export const permutator = <T>(list: T[], maxLen: number): T[][] => {
   return generate(list.map(val => [val]), 1);
 };
 
+export const rotateArray = (n: number, array: any[]) => {
+  return array.slice(n, array.length).concat(array.slice(0, n));
+};
+
 export const btoa = (str: string): string => {
   if (typeof window !== "undefined" && window && window.btoa) {
     // This only handles ASCII - I'm sure that'll never be a problem...

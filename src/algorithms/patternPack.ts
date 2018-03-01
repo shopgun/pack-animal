@@ -13,9 +13,6 @@ const packRatio = (polygonTransforms: ITransform[]) => {
 };
 const patternFlipperX = new Matrix().applyToArray.bind(new Matrix().flipX());
 const patternFlipperY = new Matrix().applyToArray.bind(new Matrix().flipY());
-const rotateArray = (n: number, array: any[]) => {
-  return array.slice(n, array.length).concat(array.slice(0, n));
-};
 
 const patterns: IPoint[][] = [
   /*
@@ -93,17 +90,7 @@ const patterns: IPoint[][] = [
     pattern,
     patternFlipperX(pattern),
     patternFlipperY(pattern),
-    ...pattern
-      .map((_, index) => rotateArray(index + 1, pattern))
-      .reduce(
-        (memo2, pattern2) => [
-          ...memo2,
-          pattern2,
-          patternFlipperX(pattern2),
-          patternFlipperY(pattern2)
-        ],
-        []
-      )
+    pattern.reverse()
   ],
   [[]]
 );
