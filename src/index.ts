@@ -9,7 +9,7 @@ import {
   rotateMatrixAroundPoint
 } from "./geometry";
 
-import { standardDeviation } from "./maths";
+import { average, standardDeviation } from "./maths";
 import {
   centerPolygonTransforms,
   getPolygonTransform,
@@ -20,7 +20,7 @@ import {
   maximizePolygonTransforms,
   scalePolygonTransforms
 } from "./transform";
-import { average, noop, PackAnimalException } from "./utilities";
+import { noop, PackAnimalException } from "./utilities";
 
 import { greedyPack, patternPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
@@ -52,8 +52,9 @@ const packAnimal = (
     jitter,
     algorithmOptions = {},
     recursion = 0,
-    /* istanbul ignore next */ debug = false
+    /* istanbul ignore next */ debug: dbug = false
   } = packAnimalOptions;
+  const debug = dbug ? console.log : noop;
   if (!polygons || !polygons.length) {
     throw new PackAnimalException("No polygons to pack, there must be at least one.", { polygons });
   }
@@ -73,13 +74,12 @@ const packAnimal = (
     polygons.map(polygon => polygonWidth(polygon) / polygonHeight(polygon))
   );
   if (polygons.length === 1) {
-    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { rotate });
-  } else if (polygons.length > 1 && aspectRatioDeviation < 1 / 3) {
-    polygonTransforms = patternPack(rectangleWidth, rectangleHeight, polygons, {
-      debug: /* istanbul ignore next */ debug ? console.log : noop
-    });
+    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { debug, rotate });
+  } else if (polygons.length > 1 && aspectRatioDeviation < 1 / 2) {
+    polygonTransforms = patternPack(rectangleWidth, rectangleHeight, polygons, { debug });
   } else {
     polygonTransforms = greedyPack(rectangleWidth, rectangleHeight, polygons, {
+      debug,
       ...algorithmOptions,
       ...(rotate ? {} : { rotationMode: "OFF" })
     });
@@ -135,14 +135,14 @@ const packAnimal = (
     polygonTransforms.map(({ points }) => points)
   );
   /* istanbul ignore next */
-  if (debug) {
+  if (dbug) {
     // tslint:disable-next-line
     console.timeEnd("packAnimal");
     // tslint:disable-next-line
     console.log(Math.round(utilization * 100) + "%");
   }
 
-  if (utilization < 0.65 && recursion < 1) {
+  if (utilization < 0.2 && recursion < 1) {
     const polygonRatios = polygons.map(poly => polygonWidth(poly) / polygonHeight(poly));
     const averageRatio = average(polygonRatios);
     let polygonsToRotate = polygons.map((_, index) => {

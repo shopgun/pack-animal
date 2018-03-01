@@ -8,18 +8,20 @@ import {
   scaleMatrixAroundPoint
 } from "../geometry";
 import { getPolygonTransform, ITransform } from "../transform";
-import { PackAnimalException } from "../utilities";
+import { noop, PackAnimalException } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 
-export interface ISinglePackOptions {
-  rotate?: boolean;
-}
 export const singlePack = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygons: IPoint[][],
-  { rotate = true }: ISinglePackOptions = {}
+  { debug: dbug = noop, rotate = true } = {}
 ): ITransform[] => {
+  // Wrap debug function to include current algorithm.
+  const debug = (...args: any[]) => dbug("singlePack:", ...args);
+  // Write out said algorithm entry.
+  debug();
+
   const polygon = polygons[0];
   if (!polygon.length) {
     throw new PackAnimalException("Pointless polygon not allowed.", { polygons });

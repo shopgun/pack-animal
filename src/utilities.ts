@@ -37,6 +37,15 @@ export const permutator = <T>(list: T[], maxLen: number): T[][] => {
   return generate(list.map(val => [val]), 1);
 };
 
+export const rotateArray = (n: number, array: any[]) =>
+  array.slice(n, array.length).concat(array.slice(0, n));
+
+export const setArrayOrder = (order: number[], array: any[]) =>
+  array
+    .map((o, i) => ({ o, i }))
+    .sort((a, b) => order[a.i] - order[b.i])
+    .map(({ o }) => o);
+
 export const btoa = (str: string): string => {
   if (typeof window !== "undefined" && window && window.btoa) {
     // This only handles ASCII - I'm sure that'll never be a problem...
@@ -45,6 +54,3 @@ export const btoa = (str: string): string => {
     return new Buffer(str.toString(), "binary").toString("base64");
   }
 };
-
-export const average = (values: number[]) =>
-  values.reduce((memo, value) => memo + value, 0) / values.length;

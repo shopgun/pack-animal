@@ -7,8 +7,9 @@ import {
   rotateMatrixAroundPoint,
   verifyPack
 } from "../geometry";
+import { average } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
-import { btoa, PackAnimalException } from "../utilities";
+import { btoa, noop, PackAnimalException, setArrayOrder } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 export enum RotationMode {
   Off,
@@ -20,6 +21,7 @@ export interface IGreedyPackOptions {
   rotationMode?: RotationMode;
   normalizePolygons?: boolean;
   polygonHitboxScale?: number;
+  debug?: (message?: any, ...optionalParams: any[]) => void;
 }
 
 enum MatrixAttribute {
@@ -59,9 +61,14 @@ export const greedyPack = (
   {
     normalizePolygons = true,
     rotationMode = RotationMode.Simple,
-    polygonHitboxScale
+    polygonHitboxScale,
+    debug: dbug = noop
   }: IGreedyPackOptions = {}
 ): ITransform[] => {
+  // Wrap debug function to include current algorithm.
+  const debug = (...args: any[]) => dbug("greedyPack:", ...args);
+  // Write out said algorithm entry.
+  debug();
   const length = polygons.length;
   if (!length) {
     return [];
@@ -82,7 +89,7 @@ export const greedyPack = (
   const verifyPackOptions: IVerifyPackOptions = {
     polygonHitboxScale
   };
-  const averageArea = polygons.reduce((memo, points) => memo + polygonArea(points), 0) / length;
+  const averageArea = average(polygons.map(points => polygonArea(points)));
   const polygonsOrder = Array.from({ length }, (_, i) => i).sort(
     (a, b) =>
       polygonHeight(polygons[b]) * ((averageArea / polygonArea(polygons[b]) - 1) / 2 + 1) -
@@ -207,10 +214,5 @@ export const greedyPack = (
     !verifyPack(polygonTransforms.map(({ points }) => points), rectangle, verifyPackOptions)
   );
 
-  return polygonTransforms
-    .map((o, i) => ({ o, i }))
-    .sort((a, b) => {
-      return polygonsOrder[a.i] - polygonsOrder[b.i];
-    })
-    .map(({ o }) => o);
+  return setArrayOrder(polygonsOrder, polygonTransforms);
 };
