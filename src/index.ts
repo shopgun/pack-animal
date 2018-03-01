@@ -75,7 +75,7 @@ const packAnimal = (
   );
   if (polygons.length === 1) {
     polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { debug, rotate });
-  } else if (polygons.length > 1 && aspectRatioDeviation < 1 / 3) {
+  } else if (polygons.length > 1 && aspectRatioDeviation < 1 / 2) {
     polygonTransforms = patternPack(rectangleWidth, rectangleHeight, polygons, { debug });
   } else {
     polygonTransforms = greedyPack(rectangleWidth, rectangleHeight, polygons, {
