@@ -9,7 +9,7 @@ import {
 } from "../geometry";
 import { average } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
-import { btoa, noop, PackAnimalException } from "../utilities";
+import { btoa, noop, PackAnimalException, setArrayOrder } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 export enum RotationMode {
   Off,
@@ -214,8 +214,5 @@ export const greedyPack = (
     !verifyPack(polygonTransforms.map(({ points }) => points), rectangle, verifyPackOptions)
   );
 
-  return polygonTransforms
-    .map((o, i) => ({ o, i }))
-    .sort((a, b) => polygonsOrder[a.i] - polygonsOrder[b.i])
-    .map(({ o }) => o);
+  return setArrayOrder(polygonsOrder, polygonTransforms);
 };
