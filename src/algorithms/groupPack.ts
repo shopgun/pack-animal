@@ -3,18 +3,11 @@ import packAnimal from "../.";
 
 import { getPolygonTransform, ITransform } from "../transform";
 
-import {
-  IPoint,
-  IPolygon,
-  polygonArea,
-  polygonHeight,
-  polygonsBounds,
-  polygonWidth
-} from "../geometry";
+import { IPolygon, polygonArea, polygonHeight, polygonsBounds, polygonWidth } from "../geometry";
+import { Matrix } from "../vendor/matrix";
 
 import { average } from "../maths";
 import { noop } from "../utilities";
-import { Matrix } from "../vendor/matrix";
 
 const packRatio = (polygonTransforms: ITransform[]) => {
   const bounds = polygonsBounds(polygonTransforms.map(t => t.points));
@@ -35,16 +28,19 @@ export const groupPack = (
   const averageArea = average(
     Array.prototype.concat(...polygonGroups).map(({ points }) => polygonArea(points))
   );
-  const normalizedScaleFromPoints = (points: IPoint[]) =>
-    (averageArea / polygonArea(points) - 1) / 2 + 1;
 
   const packs = polygonGroups.map(polygonGroup => ({
     polygons: polygonGroup,
     transforms: packAnimal(
-      rectangleWidth,
       rectangleHeight,
+      rectangleWidth,
       polygonGroup.map(({ points }) => points),
-      { debug: true, averageArea, maximize: false, center: true }
+      {
+        averageArea,
+        center: true,
+        debug: true,
+        maximize: false
+      }
     )
   }));
   const packsBounds = packs.map(polygonTransforms =>
@@ -52,14 +48,17 @@ export const groupPack = (
       polygonTransforms.transforms.map((polygonTransform: ITransform) => polygonTransform.points)
     )
   );
-
   const packedPacks = [
     linePack(
       rectangleWidth,
       rectangleHeight,
       packsBounds.map((points, index) => ({ points, index })),
       false,
-      { debug, averageArea: average(packsBounds.map(packBounds => polygonArea(packBounds))) }
+      {
+        alignBottom: false,
+        averageArea: average(packsBounds.map(packBounds => polygonArea(packBounds))),
+        debug
+      }
     ),
     linePack(
       rectangleWidth,
@@ -77,7 +76,6 @@ export const groupPack = (
     pack.polygons.forEach((polygon, polygonGroupPolygonIndex) => {
       const polyTransform = pack.transforms[polygonGroupPolygonIndex];
       const points = polyTransform.matrix.inverse().applyToArray(polyTransform.points);
-      const scale = normalizedScaleFromPoints(points);
       const sumTransform = getPolygonTransform(
         rectangleWidth,
         rectangleHeight,
@@ -97,14 +95,4 @@ export const groupPack = (
     return memo;
   }, []);
   return transforms;
-  //  return Array.prototype.concat(...packs);
-  /*
-    return polygonGroups.reduce((memo: ITransform[], polygonGroup) => [...memo, ...polygonGroup.map(polygon => getPolygonTransform(
-      rectangleWidth,
-      rectangleHeight,
-      polygon,
-      new Matrix()
-    ))], []
-    );
-    */
 };

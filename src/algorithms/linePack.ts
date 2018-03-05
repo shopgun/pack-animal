@@ -9,7 +9,7 @@ export const linePack = (
   rectangleHeight: number,
   polygonList: IPolygon[],
   vertical: boolean = false,
-  { debug: dbug = noop, averageArea = 0 } = {}
+  { debug: dbug = noop, averageArea = 0, alignBottom = true } = {}
 ): ITransform[] => {
   const polygons = polygonList.map(({ points }) => points);
   // Wrap debug function to include current algorithm.
@@ -19,10 +19,13 @@ export const linePack = (
   if (vertical) {
     return verticalLinePack(rectangleWidth, rectangleHeight, polygons, { averageArea });
   }
-  return horizontalLinePack(rectangleWidth, rectangleHeight, polygons, { averageArea });
+  return horizontalLinePack(rectangleWidth, rectangleHeight, polygons, {
+    alignBottom,
+    averageArea
+  });
 };
 
-const verticalLinePack = (
+export const verticalLinePack = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygons: IPoint[][],
@@ -48,11 +51,11 @@ const verticalLinePack = (
     return polygonTransform;
   });
 };
-const horizontalLinePack = (
+export const horizontalLinePack = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygons: IPoint[][],
-  { averageArea: averageAreaOption = 0 } = {}
+  { averageArea: averageAreaOption = 0, alignBottom = true } = {}
 ): ITransform[] => {
   const averageArea = averageAreaOption || average(polygons.map(points => polygonArea(points)));
 
@@ -61,8 +64,6 @@ const horizontalLinePack = (
   const maxHeight = Math.max(
     ...polygons.map(points => polygonHeight(points) * normalizedScaleFromPoints(points))
   );
-
-  const alignBottom = true;
 
   let horizontalOffset = 0;
   return polygons.map(polygon => {

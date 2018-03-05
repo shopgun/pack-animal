@@ -124,7 +124,6 @@ export const patternPack = (
       debug
     });
   }
-  console.log({ averageAreaOption });
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>
     (averageArea / polygonArea(points) - 1) / 2 + 1;
