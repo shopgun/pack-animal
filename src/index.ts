@@ -39,16 +39,14 @@ export interface IPackAnimalOptions {
   isGroupPack?: boolean;
   averageArea?: number;
 }
-interface IMap<T> {
-  [key: string]: T;
-}
+
 const packAnimal = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygonList: IPoint[][],
   packAnimalOptions: IPackAnimalOptions = {}
 ): ITransform[] => {
-  const polygons: IPolygon[] = polygonList.map((points, index) => ({ points, index }));
+  const polygons: IPolygon[] = polygonList.map((points: IPoint[], index) => ({ points, index }));
   const {
     center = true,
     rotate = true,
@@ -81,18 +79,27 @@ const packAnimal = (
   const aspectRatioDeviation = standardDeviation(
     polygons.map(({ points }) => polygonWidth(points) / polygonHeight(points))
   );
+  interface IPolygonGroups {
+    [key: string]: IPolygon[];
+  }
 
-  const groupedPolygons = polygons.reduce((memo: IMap<IPoint[]>, polygon) => {
-    const ratio = polygonWidth(polygon.points) / polygonHeight(polygon.points);
-    const groupRatio = ratio > 1.2 ? "landscape" : ratio < 0.8 ? "portrait" : "square";
-    return {
-      ...memo,
-      [groupRatio]: [...(memo[groupRatio] || []), polygon]
-    };
-  }, {});
+  const polygonsGroupedByRatio: IPolygonGroups = polygons.reduce(
+    (memo: IPolygonGroups, polygon) => {
+      const ratio = polygonWidth(polygon.points) / polygonHeight(polygon.points);
+      const groupRatio = ratio > 1.2 ? "landscape" : ratio < 0.8 ? "portrait" : "square";
+      return {
+        ...memo,
+        [groupRatio]: [...(memo[groupRatio] || []), polygon]
+      };
+    },
+    {}
+  );
+  const groupedPolygons: IPolygon[][] = Object.keys(polygonsGroupedByRatio).map(
+    key => polygonsGroupedByRatio[key]
+  );
 
-  if (!isGroupPack && Object.values(groupedPolygons).length > 1) {
-    polygonTransforms = groupPack(rectangleWidth, rectangleWidth, Object.values(groupedPolygons), {
+  if (!isGroupPack && groupedPolygons.length > 1) {
+    polygonTransforms = groupPack(rectangleWidth, rectangleWidth, groupedPolygons, {
       debug
     });
   } else if (polygons.length === 1) {
