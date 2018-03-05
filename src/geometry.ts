@@ -5,6 +5,10 @@ export interface IPoint {
   x: number;
   y: number;
 }
+export interface IPolygon {
+  points: IPoint[];
+  index: number;
+}
 
 export const rotateMatrixAroundPoint = (point: IPoint, degrees: number, matrix = new Matrix()) => {
   const rotatedMatrix = matrix.clone();

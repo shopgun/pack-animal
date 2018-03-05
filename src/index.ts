@@ -2,6 +2,7 @@ import { Matrix } from "./vendor/matrix";
 
 import {
   IPoint,
+  IPolygon,
   packUtilization,
   polygonBounds,
   polygonHeight,
@@ -22,7 +23,7 @@ import {
 } from "./transform";
 import { noop, PackAnimalException } from "./utilities";
 
-import { greedyPack, patternPack, singlePack } from "./algorithms";
+import { greedyPack, groupPack, patternPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
 
 export interface IPackAnimalOptions {
@@ -35,14 +36,19 @@ export interface IPackAnimalOptions {
   algorithmOptions?: IGreedyPackOptions;
   jitter?: IJitterOptions;
   recursion?: number;
+  isGroupPack?: boolean;
+  averageArea?: number;
 }
-
+interface IMap<T> {
+  [key: string]: T;
+}
 const packAnimal = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][],
+  polygonList: IPoint[][],
   packAnimalOptions: IPackAnimalOptions = {}
 ): ITransform[] => {
+  const polygons: IPolygon[] = polygonList.map((points, index) => ({ points, index }));
   const {
     center = true,
     rotate = true,
@@ -52,6 +58,8 @@ const packAnimal = (
     jitter,
     algorithmOptions = {},
     recursion = 0,
+    isGroupPack = false,
+    averageArea = 0,
     /* istanbul ignore next */ debug: dbug = false
   } = packAnimalOptions;
   const debug = dbug ? console.log : noop;
@@ -71,23 +79,42 @@ const packAnimal = (
   }
   let polygonTransforms: ITransform[];
   const aspectRatioDeviation = standardDeviation(
-    polygons.map(polygon => polygonWidth(polygon) / polygonHeight(polygon))
+    polygons.map(({ points }) => polygonWidth(points) / polygonHeight(points))
   );
-  if (polygons.length === 1) {
-    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, { debug, rotate });
+
+  const groupedPolygons = polygons.reduce((memo: IMap<IPoint[]>, polygon) => {
+    const ratio = polygonWidth(polygon.points) / polygonHeight(polygon.points);
+    const groupRatio = ratio > 1.2 ? "landscape" : ratio < 0.8 ? "portrait" : "square";
+    return {
+      ...memo,
+      [groupRatio]: [...(memo[groupRatio] || []), polygon]
+    };
+  }, {});
+
+  if (!isGroupPack && Object.values(groupedPolygons).length > 1) {
+    polygonTransforms = groupPack(rectangleWidth, rectangleWidth, Object.values(groupedPolygons), {
+      debug
+    });
+  } else if (polygons.length === 1) {
+    polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, {
+      averageArea,
+      debug,
+      rotate
+    });
   } else if (polygons.length > 1 && aspectRatioDeviation < 1 / 2) {
-    polygonTransforms = patternPack(rectangleWidth, rectangleHeight, polygons, { debug });
+    polygonTransforms = patternPack(rectangleWidth, rectangleHeight, polygons, {
+      averageArea,
+      debug
+    });
   } else {
     polygonTransforms = greedyPack(rectangleWidth, rectangleHeight, polygons, {
       debug,
       ...algorithmOptions,
+      averageArea,
       ...(rotate ? {} : { rotationMode: "OFF" })
     });
   }
-  if (
-    center &&
-    polygons.length !== 1 /* ignore `center`, single polys are already centered by singlePack*/
-  ) {
+  if (center) {
     polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
   }
   if (maximize) {
@@ -142,8 +169,10 @@ const packAnimal = (
     console.log(Math.round(utilization * 100) + "%");
   }
 
-  if (utilization < 0.2 && recursion < 1) {
-    const polygonRatios = polygons.map(poly => polygonWidth(poly) / polygonHeight(poly));
+  if (utilization < 0.2 && recursion < 0) {
+    const polygonRatios = polygons.map(
+      poly => polygonWidth(poly.points) / polygonHeight(poly.points)
+    );
     const averageRatio = average(polygonRatios);
     let polygonsToRotate = polygons.map((_, index) => {
       const polygonRatio = polygonRatios[index];
@@ -164,17 +193,25 @@ const packAnimal = (
       if (!polygonsToRotate[index]) {
         return polygon;
       }
-      const newBounds = polygonBounds(new Matrix().rotateDeg(90).applyToArray(polygon));
-      return new Matrix()
-        .translateX(-newBounds[0].x)
-        .translateY(-newBounds[0].y)
-        .rotateDeg(90)
-        .applyToArray(polygon);
+      const newBounds = polygonBounds(new Matrix().rotateDeg(90).applyToArray(polygon.points));
+      return {
+        ...polygon,
+        points: new Matrix()
+          .translateX(-newBounds[0].x)
+          .translateY(-newBounds[0].y)
+          .rotateDeg(90)
+          .applyToArray(polygon.points)
+      };
     });
-    const newPack = packAnimal(rectangleWidth, rectangleHeight, rotatedPolygons, {
-      ...packAnimalOptions,
-      recursion: 1
-    });
+    const newPack = packAnimal(
+      rectangleWidth,
+      rectangleHeight,
+      rotatedPolygons.map(({ points }) => points),
+      {
+        ...packAnimalOptions,
+        recursion: 1
+      }
+    );
     const newTransforms = newPack.map((polygonTransform, index) => {
       if (!polygonsToRotate[index]) {
         return polygonTransform;

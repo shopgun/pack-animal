@@ -1,4 +1,4 @@
-import { IPoint, polygonArea, polygonHeight, polygonWidth } from "../geometry";
+import { IPoint, IPolygon, polygonArea, polygonHeight, polygonWidth } from "../geometry";
 import { average } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
 import { noop } from "../utilities";
@@ -7,26 +7,28 @@ import { Matrix } from "../vendor/matrix";
 export const linePack = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][],
+  polygonList: IPolygon[],
   vertical: boolean = false,
-  { debug: dbug = noop } = {}
+  { debug: dbug = noop, averageArea = 0 } = {}
 ): ITransform[] => {
+  const polygons = polygonList.map(({ points }) => points);
   // Wrap debug function to include current algorithm.
   const debug = (...args: any[]) => dbug("linePack:", ...args);
   // Write out said algorithm entry.
   debug();
   if (vertical) {
-    return verticalLinePack(rectangleWidth, rectangleHeight, polygons);
+    return verticalLinePack(rectangleWidth, rectangleHeight, polygons, { averageArea });
   }
-  return horizontalLinePack(rectangleWidth, rectangleHeight, polygons);
+  return horizontalLinePack(rectangleWidth, rectangleHeight, polygons, { averageArea });
 };
 
 const verticalLinePack = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][]
+  polygons: IPoint[][],
+  { averageArea: averageAreaOption = 0 } = {}
 ): ITransform[] => {
-  const averageArea = average(polygons.map(points => polygonArea(points)));
+  const averageArea = averageAreaOption || average(polygons.map(points => polygonArea(points)));
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>
     (averageArea / polygonArea(points) - 1) / 2 + 1;
@@ -49,9 +51,10 @@ const verticalLinePack = (
 const horizontalLinePack = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][]
+  polygons: IPoint[][],
+  { averageArea: averageAreaOption = 0 } = {}
 ): ITransform[] => {
-  const averageArea = average(polygons.map(points => polygonArea(points)));
+  const averageArea = averageAreaOption || average(polygons.map(points => polygonArea(points)));
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>
     (averageArea / polygonArea(points) - 1) / 2 + 1;
