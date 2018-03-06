@@ -1,19 +1,19 @@
-import { Matrix } from "./vendor/matrix";
+// import { Matrix } from "./vendor/matrix";
 
 import {
   IPoint,
   IPolygon,
   packUtilization,
-  polygonBounds,
+  //  polygonBounds,
   polygonHeight,
-  polygonWidth,
-  rotateMatrixAroundPoint
+  polygonWidth
+  //  rotateMatrixAroundPoint
 } from "./geometry";
 
-import { average, standardDeviation } from "./maths";
+import { /* average, */ standardDeviation } from "./maths";
 import {
   centerPolygonTransforms,
-  getPolygonTransform,
+  //  getPolygonTransform,
   IJitterOptions,
   ITransform,
   jitterPolygonTransforms,
@@ -23,7 +23,7 @@ import {
 } from "./transform";
 import { noop, PackAnimalException } from "./utilities";
 
-import { greedyPack, groupPack, patternPack, singlePack } from "./algorithms";
+import { greedyPack, /* groupPack, */ patternPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
 
 export interface IPackAnimalOptions {
@@ -55,8 +55,8 @@ const packAnimal = (
     postPackPolygonScale,
     jitter,
     algorithmOptions = {},
-    recursion = 0,
-    isGroupPack = false,
+    //    recursion = 0,
+    //    isGroupPack = false,
     averageArea = 0,
     /* istanbul ignore next */ debug: dbug = false
   } = packAnimalOptions;
@@ -79,10 +79,10 @@ const packAnimal = (
   const aspectRatioDeviation = standardDeviation(
     polygons.map(({ points }) => polygonWidth(points) / polygonHeight(points))
   );
+  /*
   interface IPolygonGroups {
     [key: string]: IPolygon[];
   }
-
   const polygonsGroupedByRatio: IPolygonGroups = polygons.reduce(
     (memo: IPolygonGroups, polygon) => {
       const ratio = polygonWidth(polygon.points) / polygonHeight(polygon.points);
@@ -102,7 +102,9 @@ const packAnimal = (
     polygonTransforms = groupPack(rectangleWidth, rectangleWidth, groupedPolygons, {
       debug
     });
-  } else if (polygons.length === 1) {
+  } else*/ if (
+    polygons.length === 1
+  ) {
     polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, {
       averageArea,
       debug,
@@ -175,7 +177,7 @@ const packAnimal = (
     // tslint:disable-next-line
     console.log(Math.round(utilization * 100) + "%");
   }
-
+  /*
   if (utilization < 0.2 && recursion < 0) {
     const polygonRatios = polygons.map(
       poly => polygonWidth(poly.points) / polygonHeight(poly.points)
@@ -243,6 +245,7 @@ const packAnimal = (
       return newTransforms;
     }
   }
+  */
   return polygonTransforms;
 };
 
