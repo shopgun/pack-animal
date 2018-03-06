@@ -18,7 +18,7 @@ export const groupPack = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygonGroups: IPolygon[][],
-  { debug: dbug = noop } = {}
+  { /* istanbul ignore next */ debug: dbug = noop } = {}
 ): ITransform[] => {
   const rectangleRatio = rectangleWidth / rectangleHeight;
   // Wrap debug function to include current algorithm.
@@ -38,7 +38,7 @@ export const groupPack = (
       {
         averageArea,
         center: true,
-        debug: true,
+        debug: dbug !== noop,
         maximize: false
       }
     )
