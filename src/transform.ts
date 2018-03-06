@@ -33,7 +33,6 @@ export const getPolygonTransform = (
   const scale = simpleTransform.scale.x;
   const width = polygonWidth(transformedPoints);
   const height = polygonHeight(transformedPoints);
-  const center = polygonCenter(transformedPoints);
   const relativeHeight = height / rectangleHeight;
   const relativeWidth = width / rectangleWidth;
   const translateXRelative = simpleTransform.translate.x / width;
@@ -41,7 +40,10 @@ export const getPolygonTransform = (
   const degreesRotation = radiansToDegrees(simpleTransform.rotation);
   // zIndex === bottommost y position
   const zIndex = parseInt(
-    [`${center.y}`.padStart(10, "0"), `${center.x}`.padStart(10, "0")].join(""),
+    [
+      `${simpleTransform.translate.y + height}`.padStart(10, "0"),
+      `${simpleTransform.translate.x + width}`.padStart(10, "0")
+    ].join(""),
     10
   );
   return {
