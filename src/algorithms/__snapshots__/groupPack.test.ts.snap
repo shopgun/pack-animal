@@ -10,7 +10,7 @@ Array [
         transform-origin: 0 0;
         width: 0.3020833333333428%;
         height: 1.3027852650494263%;
-        z-index: 414;
+        z-index: 419;
         transform: translateX(15271.839080459293%) translateY(4243.021886124295%) rotate(0deg)
       ",
     "matrix": "{
@@ -44,7 +44,7 @@ Array [
     "svgTransform": "matrix(1.2083333333333335,0,0,1.2083333333333335,369.06944444444446,410.15878232535175)",
     "translateX": 369.06944444444446,
     "translateY": 410.15878232535175,
-    "zIndex": 414,
+    "zIndex": 419,
   },
   Object {
     "cssText": "
@@ -98,7 +98,7 @@ Array [
         transform-origin: 0 0;
         width: 0.6041666666666643%;
         height: 0.6513926325246977%;
-        z-index: 418;
+        z-index: 420;
         transform: translateX(8258.59596088066%) translateY(8608.51546746951%) rotate(0deg)
       ",
     "matrix": "{
@@ -132,7 +132,7 @@ Array [
     "svgTransform": "matrix(1.2083333333333335,0,0,1.2083333333333335,399.16547144256367,416.07824759435306)",
     "translateX": 399.16547144256367,
     "translateY": 416.07824759435306,
-    "zIndex": 418,
+    "zIndex": 420,
   },
   Object {
     "cssText": "
@@ -142,7 +142,7 @@ Array [
         transform-origin: 0 0;
         width: 1.2083333333333357%;
         height: 0.32569631626235657%;
-        z-index: 418;
+        z-index: 419;
         transform: translateX(3949.158465734759%) translateY(17251.101837260936%) rotate(0deg)
       ",
     "matrix": "{
@@ -176,7 +176,7 @@ Array [
     "svgTransform": "matrix(1.2083333333333335,0,0,1.2083333333333335,381.75198502102745,416.9016277338092)",
     "translateX": 381.75198502102745,
     "translateY": 416.9016277338092,
-    "zIndex": 418,
+    "zIndex": 419,
   },
   undefined,
   Object {
@@ -187,7 +187,7 @@ Array [
         transform-origin: 0 0;
         width: 0.6770833333333357%;
         height: 0.7300089847259761%;
-        z-index: 415;
+        z-index: 418;
         transform: translateX(7313.8240881703805%) translateY(7626.05995558795%) rotate(0deg)
       ",
     "matrix": "{
@@ -221,7 +221,7 @@ Array [
     "svgTransform": "matrix(0.6770833333333334,0,0,0.6770833333333334,396.16547144256367,413.07824759435306)",
     "translateX": 396.16547144256367,
     "translateY": 413.07824759435306,
-    "zIndex": 415,
+    "zIndex": 418,
   },
 ]
 `;
