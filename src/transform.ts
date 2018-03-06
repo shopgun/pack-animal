@@ -164,29 +164,11 @@ export const maximizePolygonTransforms = (
       )
     );
   });
-
-  const newPackCenter = polygonCenter(
-    polygonsBounds(polygonTransformz.map(({ points }) => points))
-  );
   // recenter pack and return
   // maybe some day find out why this is necessary,
   // but this is quite cheap and I'm not smart enough.
   // probably just inaccuracy tho
-  return polygonTransformz.map(({ matrix, points }) =>
-    getPolygonTransform(
-      rectangleWidth,
-      rectangleHeight,
-      matrix.inverse().applyToArray(points),
-      Matrix.from(
-        matrix.a,
-        matrix.b,
-        matrix.c,
-        matrix.d,
-        matrix.e + rectangleCenter.x - newPackCenter.x,
-        matrix.f + rectangleCenter.y - newPackCenter.y
-      )
-    )
-  );
+  return centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransformz);
 };
 const Mash = (r: string) => {
   let n = 4022871197;
