@@ -1,5 +1,6 @@
 import {
   IPoint,
+  IPolygon,
   IVerifyPackOptions,
   polygonArea,
   polygonCenter,
@@ -22,6 +23,7 @@ export interface IGreedyPackOptions {
   normalizePolygons?: boolean;
   polygonHitboxScale?: number;
   debug?: (message?: any, ...optionalParams: any[]) => void;
+  averageArea?: number;
 }
 
 enum MatrixAttribute {
@@ -57,14 +59,16 @@ const maxMatrix = (
 export const greedyPack = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][],
+  polygonList: IPolygon[],
   {
     normalizePolygons = true,
     rotationMode = RotationMode.Simple,
     polygonHitboxScale,
-    debug: dbug = noop
+    debug: dbug = noop,
+    averageArea: averageAreaOption = 0
   }: IGreedyPackOptions = {}
 ): ITransform[] => {
+  const polygons = polygonList.map(({ points }) => points);
   // Wrap debug function to include current algorithm.
   const debug = (...args: any[]) => dbug("greedyPack:", ...args);
   // Write out said algorithm entry.
@@ -89,7 +93,7 @@ export const greedyPack = (
   const verifyPackOptions: IVerifyPackOptions = {
     polygonHitboxScale
   };
-  const averageArea = average(polygons.map(points => polygonArea(points)));
+  const averageArea = averageAreaOption || average(polygons.map(points => polygonArea(points)));
   const polygonsOrder = Array.from({ length }, (_, i) => i).sort(
     (a, b) =>
       polygonHeight(polygons[b]) * ((averageArea / polygonArea(polygons[b]) - 1) / 2 + 1) -

@@ -1,5 +1,6 @@
 import {
-  IPoint,
+  IPolygon,
+  polygonArea,
   polygonBounds,
   polygonCenter,
   polygonHeight,
@@ -14,9 +15,10 @@ import { Matrix } from "../vendor/matrix";
 export const singlePack = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][],
-  { debug: dbug = noop, rotate = true } = {}
+  polygonList: IPolygon[],
+  { debug: dbug = noop, rotate = true, averageArea = 0 } = {}
 ): ITransform[] => {
+  const polygons = polygonList.map(({ points }) => points);
   // Wrap debug function to include current algorithm.
   const debug = (...args: any[]) => dbug("singlePack:", ...args);
   // Write out said algorithm entry.
@@ -40,9 +42,14 @@ export const singlePack = (
     ((ratio > 1 && rectangleRatio < 1) || (ratio < 1 && rectangleRatio > 1))
       ? 90
       : 0;
-  const scale = rotateDegrees
-    ? Math.min(1, rectangleWidth / height, rectangleHeight / width)
-    : Math.min(1, rectangleWidth / width, rectangleHeight / height);
+
+  const scale =
+    averageArea > 0
+      ? (averageArea / polygonArea(polygon) - 1) / 2 + 1
+      : rotateDegrees
+        ? Math.min(1, rectangleWidth / height, rectangleHeight / width)
+        : Math.min(1, rectangleWidth / width, rectangleHeight / height);
+
   const bounds = polygonBounds(polygon);
   const centeringTranslateX = (bounds[2].x - bounds[0].x - rectangleWidth) / 2;
   const centeringTranslateY = (bounds[2].y - bounds[0].y - rectangleHeight) / 2;

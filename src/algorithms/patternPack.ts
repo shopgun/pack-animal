@@ -2,7 +2,14 @@ import { average } from "../maths";
 import { linePack } from "./linePack";
 import { staggerPack } from "./staggerPack";
 
-import { IPoint, polygonArea, polygonHeight, polygonsBounds, polygonWidth } from "../geometry";
+import {
+  IPoint,
+  IPolygon,
+  polygonArea,
+  polygonHeight,
+  polygonsBounds,
+  polygonWidth
+} from "../geometry";
 import { getPolygonTransform, ITransform } from "../transform";
 import { noop } from "../utilities";
 import { Matrix } from "../vendor/matrix";
@@ -98,9 +105,10 @@ const patterns: IPoint[][] = [
 export const patternPack = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][],
-  { debug: dbug = noop } = {}
+  polygonList: IPolygon[],
+  { debug: dbug = noop, averageArea: averageAreaOption = 0 } = {}
 ): ITransform[] => {
+  const polygons = polygonList.map(({ points }) => points);
   const rectangleRatio = rectangleWidth / rectangleHeight;
   // Wrap debug function to include current algorithm.
   const debug = (...args: any[]) => dbug("patternPack:", ...args);
@@ -109,12 +117,13 @@ export const patternPack = (
 
   const patternsForPack = patterns.filter(pattern => pattern.length === polygons.length);
   debug(patternsForPack);
+  const averageArea = averageAreaOption || average(polygons.map(points => polygonArea(points)));
   if (!patternsForPack.length) {
-    return staggerPack(rectangleWidth, rectangleHeight, polygons, {
+    return staggerPack(rectangleWidth, rectangleHeight, polygonList, {
+      averageArea,
       debug
     });
   }
-  const averageArea = average(polygons.map(points => polygonArea(points)));
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>
     (averageArea / polygonArea(points) - 1) / 2 + 1;
@@ -125,8 +134,8 @@ export const patternPack = (
     ...polygons.map(points => polygonHeight(points) * normalizedScaleFromPoints(points))
   );
   const line = [
-    linePack(rectangleWidth, rectangleHeight, polygons, false, { debug }),
-    linePack(rectangleWidth, rectangleHeight, polygons, true, { debug })
+    linePack(rectangleWidth, rectangleHeight, polygonList, false, { debug, averageArea }),
+    linePack(rectangleWidth, rectangleHeight, polygonList, true, { debug, averageArea })
   ].sort(
     (a, b) => Math.abs(packRatio(a) - rectangleRatio) - Math.abs(packRatio(b) - rectangleRatio)
   )[0];

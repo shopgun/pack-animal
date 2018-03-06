@@ -33,7 +33,6 @@ export const getPolygonTransform = (
   const scale = simpleTransform.scale.x;
   const width = polygonWidth(transformedPoints);
   const height = polygonHeight(transformedPoints);
-  const center = polygonCenter(transformedPoints);
   const relativeHeight = height / rectangleHeight;
   const relativeWidth = width / rectangleWidth;
   const translateXRelative = simpleTransform.translate.x / width;
@@ -41,7 +40,10 @@ export const getPolygonTransform = (
   const degreesRotation = radiansToDegrees(simpleTransform.rotation);
   // zIndex === bottommost y position
   const zIndex = parseInt(
-    [`${center.y}`.padStart(10, "0"), `${center.x}`.padStart(10, "0")].join(""),
+    [
+      `${simpleTransform.translate.y + height}`.padStart(10, "0"),
+      `${simpleTransform.translate.x + width}`.padStart(10, "0")
+    ].join(""),
     10
   );
   return {
@@ -76,14 +78,10 @@ export const centerPolygonTransforms = (
   polygonTransforms: ITransform[]
 ): ITransform[] => {
   const packBounds = polygonsBounds(polygonTransforms.map(({ points }) => points));
-  const centeringTranslateX = (packBounds[2].x - packBounds[0].x - rectangleWidth) / 2;
-  const centeringTranslateY = (packBounds[2].y - packBounds[0].y - rectangleHeight) / 2;
-  const translateXpoz =
-    centeringTranslateX + packBounds[2].x <= rectangleWidth &&
-    centeringTranslateX + packBounds[0].x > 0;
-  const translateYpoz =
-    centeringTranslateY + packBounds[2].y <= rectangleHeight &&
-    centeringTranslateY + packBounds[0].y > 0;
+  const packCenter = polygonCenter(packBounds);
+  const rectangleCenter = { x: rectangleWidth / 2, y: rectangleHeight / 2 };
+  const centeringTranslateX = rectangleCenter.x - packCenter.x;
+  const centeringTranslateY = rectangleCenter.y - packCenter.y;
   return polygonTransforms.map(({ matrix, points }) =>
     getPolygonTransform(
       rectangleWidth,
@@ -94,8 +92,8 @@ export const centerPolygonTransforms = (
         matrix.b,
         matrix.c,
         matrix.d,
-        translateXpoz ? matrix.e + centeringTranslateX : matrix.e - centeringTranslateX,
-        translateYpoz ? matrix.f + centeringTranslateY : matrix.f - centeringTranslateY
+        matrix.e + centeringTranslateX,
+        matrix.f + centeringTranslateY
       )
     )
   );
@@ -168,29 +166,11 @@ export const maximizePolygonTransforms = (
       )
     );
   });
-
-  const newPackCenter = polygonCenter(
-    polygonsBounds(polygonTransformz.map(({ points }) => points))
-  );
   // recenter pack and return
   // maybe some day find out why this is necessary,
   // but this is quite cheap and I'm not smart enough.
   // probably just inaccuracy tho
-  return polygonTransformz.map(({ matrix, points }) =>
-    getPolygonTransform(
-      rectangleWidth,
-      rectangleHeight,
-      matrix.inverse().applyToArray(points),
-      Matrix.from(
-        matrix.a,
-        matrix.b,
-        matrix.c,
-        matrix.d,
-        matrix.e + rectangleCenter.x - newPackCenter.x,
-        matrix.f + rectangleCenter.y - newPackCenter.y
-      )
-    )
-  );
+  return centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransformz);
 };
 const Mash = (r: string) => {
   let n = 4022871197;

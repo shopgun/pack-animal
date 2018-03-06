@@ -1,6 +1,6 @@
 import { linePack } from "./linePack";
 
-import { IPoint, polygonArea, polygonHeight, polygonWidth } from "../geometry";
+import { IPoint, IPolygon, polygonArea, polygonHeight, polygonWidth } from "../geometry";
 import { average, standardDeviation } from "../maths";
 import { getPolygonTransform, ITransform } from "../transform";
 import { noop, numberRange, permutator } from "../utilities";
@@ -9,9 +9,10 @@ import { Matrix } from "../vendor/matrix";
 export const staggerPack = (
   rectangleWidth: number,
   rectangleHeight: number,
-  polygons: IPoint[][],
-  { debug: dbug = noop } = {}
+  polygonList: IPolygon[],
+  { debug: dbug = noop, averageArea: averageAreaOption = 0 } = {}
 ): ITransform[] => {
+  const polygons = polygonList.map(({ points }) => points);
   // Wrap debug function to include current algorithm.
   const debug = (...args: any[]) => dbug("staggerPack:", ...args);
   // Write out said algorithm entry.
@@ -27,7 +28,7 @@ gridWidth / gridHeight ≈ gridRatio
   debug({ rectangleRatio });
   const permutations = permutator(numberRange(1, cellCount), 2);
 
-  const averageArea = average(polygons.map(points => polygonArea(points)));
+  const averageArea = averageAreaOption || average(polygons.map(points => polygonArea(points)));
 
   const normalizedScaleFromPoints = (points: IPoint[]) =>
     (averageArea / polygonArea(points) - 1) / 2 + 1;
@@ -116,7 +117,7 @@ gridWidth / gridHeight ≈ gridRatio
   debug({ twoferPack });
   if (!twoferPack) {
     if (gridWidth === 1 || gridHeight === 1) {
-      return linePack(rectangleHeight, rectangleWidth, polygons, gridWidth === 1, { debug });
+      return linePack(rectangleHeight, rectangleWidth, polygonList, gridWidth === 1, { debug });
     }
   }
 
