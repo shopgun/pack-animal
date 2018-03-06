@@ -56,8 +56,12 @@ export const polygonHeight = (points: IPoint[]) => {
 };
 
 export const polygonBounds = (points: IPoint[]): IPoint[] => {
-  const Xs = points.map(point => point.x);
-  const Ys = points.map(point => point.y);
+  const Xs: number[] = [];
+  const Ys: number[] = [];
+  for (let i = 0, len = points.length; i < len; i++) {
+    Xs.push(points[i].x);
+    Ys.push(points[i].y);
+  }
   const left = Math.min(...Xs);
   const top = Math.min(...Ys);
   const right = Math.max(...Xs);
