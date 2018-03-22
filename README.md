@@ -32,7 +32,25 @@ const polygons = [
 const polygonTransforms = packAnimal(width, height, polygons);
 ```
 
+The `polygonTransforms` returned by packAnimal are sets of instructions that you can use to "transform" the input polygons into their packed positions. You can [check out the `transform` properties here.](https://shopgun.github.io/pack-animal/interfaces/itransform.html)
 
+### `<img/>` in HTML
+For the use case of positioning `<img/>`s in HTML, this transform object includes a handy `cssText` So you can do something like this with that object:
+```js
+const boxToPack = document.querySelector('.boxToPack');
+polygonTransforms.forEach((polygonTransform, index) => {
+  const image = document.createElement("img");
+  image.src = realData[index].url;
+  image.style.cssText = polygonTransform.cssText;
+  boxToPack.appendChild(image);
+});
+boxToPack.style.width = width;
+boxToPack.style.height = height;
+boxToPack.style.position = 'relative';
+```
+```html
+<div class="boxToPack"></div>
+```
 ## Contributing
 Check out the [internal API documentation](https://shopgun.github.io/pack-animal/)
 
