@@ -1,0 +1,79 @@
+<div style="display: flex;">
+  JSON Input/Output:
+  <textarea rows="4" style="width: 100%" id="packAnimalCallJSON">[296,307,[[{"x":0,"y":0},{"x":800,"y":0},{"x":800,"y":203},{"x":0,"y":203},{"x":0,"y":0}],[{"x":0,"y":0},{"x":800,"y":0},{"x":800,"y":184},{"x":0,"y":184},{"x":0,"y":0}],[{"x":0,"y":0},{"x":800,"y":0},{"x":800,"y":123},{"x":0,"y":123},{"x":0,"y":0}]],{"margin":6,"rotate":true,"jitter":{"rotate":0}}]</textarea>
+</div>
+<div style="display: flex; align-items: stretch">
+  <div style="display: flex; flex-flow: column;">
+    Resulting call:
+    <code><pre id="packAnimalCall"></pre></code>
+  </div>
+  <div style="display: flex; flex-flow: column; flex: 1;">
+    Provided polys:
+    <div class="providedPolys" style="margin-bottom: 40px;display: flex;align-items: center;"></div>
+    Packed box:
+    <div class="boxToPack" style="border: 1px solid teal;"></div>
+
+  </div>
+</div>
+<script src="../dist/pack-animal.umd.js"></script>
+<script>
+  const generateRectangleDataURL = (width, height) => {
+    var canvas = document.createElement('CANVAS');
+    var ctx = canvas.getContext('2d');
+    var dataURL;
+    canvas.height = height;
+    canvas.width = width;
+    ctx.drawImage(this, 0, 0);
+    dataURL = canvas.toDataURL(outputFormat);
+  }
+
+  const polygonWidth = (points) => {
+    const xs = points.map(point => point.x);
+    return Math.max(...xs) - Math.min(...xs);
+  };
+  const polygonHeight = (points) => {
+    const ys = points.map(point => point.y);
+    return Math.max(...ys) - Math.min(...ys);
+  };
+
+  const doPack = () => {
+    const packAnimalInputJSON = document.getElementById('packAnimalCallJSON').value;
+    const packAnimalInput = JSON.parse(packAnimalInputJSON)
+    localStorage.setItem('packAnimalPlaygroundInputJSON', packAnimalInputJSON);
+    console.log(packAnimalInput)
+    const [inputWidth, inputHeight, inputPolys, inputOptions] = packAnimalInput
+    packAnimalInput[3] = {
+      debug: true,
+      ...packAnimalInput[3]
+    }
+    document.querySelector('.providedPolys').innerHTML = '';
+    inputPolys.forEach((points) => {
+      const svgPoints = points.map(({ x, y }) => `${x},${y}`).join(' ');
+      const polyWidth = polygonWidth(points)
+      const polyHeight = polygonHeight(points)
+      document.querySelector('.providedPolys').innerHTML += `
+    <div style="width: 100%; height: auto;  margin: 5px;margin-top: 40px;">
+      <svg viewBox="0 0 ${polyWidth} ${polyHeight}">
+        <polygon points="${svgPoints}" style="fill: #edab00;" />
+      </svg>
+    </div>`;
+    });
+    document.getElementById('packAnimalCall').innerHTML
+      = `packAnimal(${inputWidth}, ${inputHeight}, ${JSON.stringify(inputPolys, null, 2)}${inputOptions ? `,${JSON.stringify(inputOptions, null, 2)}` : ''}`;
+    const childTransforms = packAnimal.apply(this, packAnimalInput)
+    // SVG displllay
+    document.querySelector('.boxToPack').innerHTML = `<svg viewBox="0 0 ${inputWidth} ${inputHeight}">
+    ${inputPolys.map((points, index) => {
+        const svgPoints = points.map(({ x, y }) => `${x},${y}`).join(' ');
+        const transform = childTransforms[index];
+        const transformAttributeValue = transform.svgTransform;
+
+        return `<polygon points="${svgPoints}" style="fill: #edab00;" transform="${transformAttributeValue}"/>`;
+      }).join('')}
+    </svg>`;
+  }
+  document.getElementById('packAnimalCallJSON').onchange = doPack
+  document.getElementById('packAnimalCallJSON').value = localStorage.getItem('packAnimalPlaygroundInputJSON');
+  doPack();
+
+</script>
