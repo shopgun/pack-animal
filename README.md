@@ -22,7 +22,7 @@ Browser environment
 ```
 ## Usage
 Pass a pack size and a list of polygons to `packAnimal`, the polygons argument must be an array of polygons each of which is an array of points represented each by a `{ x: number, y: number }` shape object.
-```
+```js
 const width = 600;
 const height = 400;
 const polygons = [
