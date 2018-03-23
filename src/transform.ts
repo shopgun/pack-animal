@@ -72,6 +72,70 @@ export const getPolygonTransform = (
   };
 };
 
+export const packRatio = (polygonTransforms: ITransform[]) => {
+  const bounds = polygonsBounds(polygonTransforms.map(t => t.points));
+  return polygonWidth(bounds) / polygonHeight(bounds);
+};
+
+export interface IPostProcessTransformsOptions {
+  center?: boolean;
+  rotate?: boolean;
+  margin?: number;
+  maximize?: boolean;
+  postPackPolygonScale?: number;
+  jitter?: IJitterOptions;
+}
+
+export const postProcessTransforms = (
+  rectangleWidth: number,
+  rectangleHeight: number,
+  polygonTransforms: ITransform[],
+  { center, jitter, margin, maximize, postPackPolygonScale }: IPostProcessTransformsOptions
+) => {
+  if (center) {
+    polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
+  }
+  if (maximize) {
+    polygonTransforms = maximizePolygonTransforms(
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
+  }
+  if (margin) {
+    polygonTransforms = marginalizePolygonTransforms(
+      margin,
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
+  }
+  if (postPackPolygonScale) {
+    polygonTransforms = scalePolygonTransforms(
+      postPackPolygonScale,
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
+  }
+  if (jitter) {
+    polygonTransforms = jitterPolygonTransforms(
+      jitter,
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
+  }
+  if (maximize) {
+    polygonTransforms = maximizePolygonTransforms(
+      rectangleWidth,
+      rectangleHeight,
+      polygonTransforms
+    );
+  }
+  return polygonTransforms;
+};
+
 export const centerPolygonTransforms = (
   rectangleWidth: number,
   rectangleHeight: number,

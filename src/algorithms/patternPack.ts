@@ -2,22 +2,11 @@ import { average } from "../maths";
 import { linePack } from "./linePack";
 import { staggerPack } from "./staggerPack";
 
-import {
-  IPoint,
-  IPolygon,
-  polygonArea,
-  polygonHeight,
-  polygonsBounds,
-  polygonWidth
-} from "../geometry";
-import { getPolygonTransform, ITransform } from "../transform";
+import { IPoint, IPolygon, polygonArea, polygonHeight, polygonWidth } from "../geometry";
+import { getPolygonTransform, ITransform, packRatio } from "../transform";
 import { noop } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 
-const packRatio = (polygonTransforms: ITransform[]) => {
-  const bounds = polygonsBounds(polygonTransforms.map(t => t.points));
-  return polygonWidth(bounds) / polygonHeight(bounds);
-};
 const patternFlipperX = new Matrix().applyToArray.bind(new Matrix().flipX());
 const patternFlipperY = new Matrix().applyToArray.bind(new Matrix().flipY());
 

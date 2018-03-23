@@ -12,29 +12,19 @@ import {
 
 import { /* average, */ standardDeviation } from "./maths";
 import {
-  centerPolygonTransforms,
-  //  getPolygonTransform,
-  IJitterOptions,
+  IPostProcessTransformsOptions,
   ITransform,
-  jitterPolygonTransforms,
-  marginalizePolygonTransforms,
-  maximizePolygonTransforms,
-  scalePolygonTransforms
+  packRatio,
+  postProcessTransforms
 } from "./transform";
 import { noop, PackAnimalException } from "./utilities";
 
-import { greedyPack, /* groupPack, */ patternPack, singlePack } from "./algorithms";
+import { greedyPack, linePack, patternPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
 
 export interface IPackAnimalOptions {
-  center?: boolean;
-  rotate?: boolean;
-  margin?: number;
-  maximize?: boolean;
-  postPackPolygonScale?: number;
   debug?: boolean;
   algorithmOptions?: IGreedyPackOptions;
-  jitter?: IJitterOptions;
   recursion?: number;
   isGroupPack?: boolean;
   averageArea?: number;
@@ -44,7 +34,7 @@ const packAnimal = (
   rectangleWidth: number,
   rectangleHeight: number,
   polygonList: IPoint[][],
-  packAnimalOptions: IPackAnimalOptions = {}
+  packAnimalOptions: IPackAnimalOptions & IPostProcessTransformsOptions = {}
 ): ITransform[] => {
   const polygons: IPolygon[] = polygonList.map((points: IPoint[], index) => ({ points, index }));
   const {
@@ -123,47 +113,13 @@ const packAnimal = (
       ...(rotate ? {} : { rotationMode: "OFF" })
     });
   }
-  if (center) {
-    polygonTransforms = centerPolygonTransforms(rectangleWidth, rectangleHeight, polygonTransforms);
-  }
-  if (maximize) {
-    polygonTransforms = maximizePolygonTransforms(
-      rectangleWidth,
-      rectangleHeight,
-      polygonTransforms
-    );
-  }
-  if (margin) {
-    polygonTransforms = marginalizePolygonTransforms(
-      margin,
-      rectangleWidth,
-      rectangleHeight,
-      polygonTransforms
-    );
-  }
-  if (postPackPolygonScale) {
-    polygonTransforms = scalePolygonTransforms(
-      postPackPolygonScale,
-      rectangleWidth,
-      rectangleHeight,
-      polygonTransforms
-    );
-  }
-  if (jitter) {
-    polygonTransforms = jitterPolygonTransforms(
-      jitter,
-      rectangleWidth,
-      rectangleHeight,
-      polygonTransforms
-    );
-  }
-  if (maximize) {
-    polygonTransforms = maximizePolygonTransforms(
-      rectangleWidth,
-      rectangleHeight,
-      polygonTransforms
-    );
-  }
+  polygonTransforms = postProcessTransforms(rectangleWidth, rectangleHeight, polygonTransforms, {
+    center,
+    jitter,
+    margin,
+    maximize,
+    postPackPolygonScale
+  });
 
   const utilization = packUtilization(
     rectangleWidth,
@@ -177,63 +133,20 @@ const packAnimal = (
     // tslint:disable-next-line
     console.log(Math.round(utilization * 100) + "%");
   }
-  /*
-  if (utilization < 0.2 && recursion < 0) {
-    const polygonRatios = polygons.map(
-      poly => polygonWidth(poly.points) / polygonHeight(poly.points)
-    );
-    const averageRatio = average(polygonRatios);
-    let polygonsToRotate = polygons.map((_, index) => {
-      const polygonRatio = polygonRatios[index];
-      if ((averageRatio > 1 && polygonRatio > 1) || (averageRatio < 1 && polygonRatio < 1)) {
-        return false;
-      }
-      if (polygonRatio < 1.1 && polygonRatio > 0.9) {
-        return false;
-      }
-      return true;
-    });
-    polygonsToRotate = polygonsToRotate.every(i => !i)
-      ? polygonsToRotate.map(
-          (_, index) => true && (polygonRatios[index] > 1.1 && polygonRatios[index] < 0.9)
-        )
-      : polygonsToRotate;
-    const rotatedPolygons = polygons.map((polygon, index) => {
-      if (!polygonsToRotate[index]) {
-        return polygon;
-      }
-      const newBounds = polygonBounds(new Matrix().rotateDeg(90).applyToArray(polygon.points));
-      return {
-        ...polygon,
-        points: new Matrix()
-          .translateX(-newBounds[0].x)
-          .translateY(-newBounds[0].y)
-          .rotateDeg(90)
-          .applyToArray(polygon.points)
-      };
-    });
-    const newPack = packAnimal(
-      rectangleWidth,
-      rectangleHeight,
-      rotatedPolygons.map(({ points }) => points),
-      {
-        ...packAnimalOptions,
-        recursion: 1
-      }
-    );
-    const newTransforms = newPack.map((polygonTransform, index) => {
-      if (!polygonsToRotate[index]) {
-        return polygonTransform;
-      }
-      const { matrix, points } = polygonTransform;
-      const originalPoints = matrix.inverse().applyToArray(points);
-      const preBounds = polygonBounds(points);
-      const newTranslateX = polygonWidth(originalPoints) + -preBounds[0].y - preBounds[0].x;
-      const newTranslateY = -preBounds[0].x + preBounds[0].y;
-      const newMatrix = rotateMatrixAroundPoint(preBounds[0], 90, matrix)
-        .translateX(-newTranslateY)
-        .translateY(-newTranslateX);
-      return getPolygonTransform(rectangleWidth, rectangleHeight, originalPoints, newMatrix);
+  if (utilization < 0.2) {
+    const rectangleRatio = rectangleWidth / rectangleHeight;
+    let newTransforms = [
+      linePack(rectangleWidth, rectangleHeight, polygons, false, { debug, averageArea }),
+      linePack(rectangleWidth, rectangleHeight, polygons, true, { debug, averageArea })
+    ].sort(
+      (a, b) => Math.abs(packRatio(a) - rectangleRatio) - Math.abs(packRatio(b) - rectangleRatio)
+    )[0];
+    newTransforms = postProcessTransforms(rectangleWidth, rectangleHeight, newTransforms, {
+      center,
+      jitter,
+      margin,
+      maximize,
+      postPackPolygonScale
     });
     const newUtilization = packUtilization(
       rectangleWidth,
@@ -242,10 +155,14 @@ const packAnimal = (
     );
     // Only use the new pack with potentially unsightly rotations if the utilization is somewhat better.
     if (newUtilization - 0.05 > utilization) {
+      /* istanbul ignore next */
+      if (dbug) {
+        // tslint:disable-next-line
+        console.log(Math.round(newUtilization * 100) + "%");
+      }
       return newTransforms;
     }
   }
-  */
   return polygonTransforms;
 };
 
