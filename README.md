@@ -54,11 +54,18 @@ boxToPack.style.position = 'relative';
 ## Contributing
 Check out the [internal API documentation](https://shopgun.github.io/pack-animal/)
 
+This project uses TypeScript for static typing and TSLint for linting. You can get both of these built into your editor with no configuration by opening this project in [Visual Studio Code](https://code.visualstudio.com/), an open source IDE which is available for free on all platforms.
+
+Running development mode:
+
+```sh
+npm install
+npm run start
+```
+
 Running tests locally:
 
 ```sh
 npm install
-npm run build
 npm test
 ```
-This project uses TypeScript for static typing and TSLint for linting. You can get both of these built into your editor with no configuration by opening this project in [Visual Studio Code](https://code.visualstudio.com/), an open source IDE which is available for free on all platforms.
