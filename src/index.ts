@@ -136,12 +136,13 @@ const packAnimal = (
     console.log(Math.round(utilization * 100) + "%");
   }
   if (utilization < 0.3) {
-    const rectangleRatio = rectangleWidth / rectangleHeight;
     let newTransforms = [
       linePack(rectangleWidth, rectangleHeight, polygons, false, { debug, averageArea }),
       linePack(rectangleWidth, rectangleHeight, polygons, true, { debug, averageArea })
     ].sort(
-      (a, b) => Math.abs(packRatio(a) - rectangleRatio) - Math.abs(packRatio(b) - rectangleRatio)
+      (a, b) =>
+        packUtilization(rectangleWidth, rectangleHeight, a.map(({ points }) => points)) -
+        packUtilization(rectangleWidth, rectangleHeight, b.map(({ points }) => points))
     )[0];
     newTransforms = postProcessTransforms(rectangleWidth, rectangleHeight, newTransforms, {
       center,
