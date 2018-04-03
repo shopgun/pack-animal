@@ -1,6 +1,12 @@
 # pack-animal [![Build Status](https://travis-ci.org/shopgun/pack-animal.svg?branch=master)](https://travis-ci.org/shopgun/pack-animal) [![npm version](https://badge.fury.io/js/pack-animal.svg)](https://badge.fury.io/js/pack-animal)
 it's hip to be in a square
 
+This is the utility we use to generate product image positions within layouts for our digital catalogues(incito), such as [this one](http://shopgun.com/publications/incito/SW5jaXRvUHVibGljYXRpb246MTE2NDY1MTM2OTU3NjAwNTk2Nw==).
+
+Basically you give packAnimal some box dimensions and a list of polygons, then it will give you back a list of transforms to apply to put the polygons neatly in the box.
+
+These transforms are expressed in several ways on the output objects, so that you may choose whichever is appropriate for your use case. [You can check that out here.](https://shopgun.github.io/pack-animal/interfaces/itransform.html)
+
 ## Installation
 ```sh
 npm install pack-animal --save
