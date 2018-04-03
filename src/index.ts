@@ -19,15 +19,15 @@ import {
 } from "./transform";
 import { noop, PackAnimalException } from "./utilities";
 
-import { greedyPack, linePack, patternPack, singlePack } from "./algorithms";
+import { greedyPack, groupPack, linePack, patternPack, singlePack } from "./algorithms";
 import { IGreedyPackOptions } from "./algorithms/greedyPack";
 
 export interface IPackAnimalOptions {
   debug?: boolean;
   algorithmOptions?: IGreedyPackOptions;
   recursion?: number;
-  isGroupPack?: boolean;
   averageArea?: number;
+  isGroupPack?: boolean;
 }
 
 const packAnimal = (
@@ -46,8 +46,8 @@ const packAnimal = (
     jitter,
     algorithmOptions = {},
     //    recursion = 0,
-    //    isGroupPack = false,
     averageArea = 0,
+    isGroupPack = false,
     /* istanbul ignore next */ debug: dbug = false
   } = packAnimalOptions;
   const debug = dbug ? console.log : noop;
@@ -69,14 +69,14 @@ const packAnimal = (
   const aspectRatioDeviation = standardDeviation(
     polygons.map(({ points }) => polygonWidth(points) / polygonHeight(points))
   );
-  /*
+
   interface IPolygonGroups {
     [key: string]: IPolygon[];
   }
   const polygonsGroupedByRatio: IPolygonGroups = polygons.reduce(
     (memo: IPolygonGroups, polygon) => {
       const ratio = polygonWidth(polygon.points) / polygonHeight(polygon.points);
-      const groupRatio = ratio > 1.2 ? "landscape" : ratio < 0.8 ? "portrait" : "square";
+      const groupRatio = ratio > 1.15 ? "landscape" : ratio < 0.85 ? "portrait" : "square";
       return {
         ...memo,
         [groupRatio]: [...(memo[groupRatio] || []), polygon]
@@ -88,13 +88,7 @@ const packAnimal = (
     key => polygonsGroupedByRatio[key]
   );
 
-  if (!isGroupPack && groupedPolygons.length > 1) {
-    polygonTransforms = groupPack(rectangleWidth, rectangleWidth, groupedPolygons, {
-      debug
-    });
-  } else*/ if (
-    polygons.length === 1
-  ) {
+  if (polygons.length === 1) {
     polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, {
       averageArea,
       debug,
@@ -103,6 +97,14 @@ const packAnimal = (
   } else if (polygons.length > 1 && aspectRatioDeviation < 1 / 2) {
     polygonTransforms = patternPack(rectangleWidth, rectangleHeight, polygons, {
       averageArea,
+      debug
+    });
+  } else if (
+    groupedPolygons.length > 1 &&
+    groupedPolygons.some(polygonsGroup => polygonsGroup.length > 1) &&
+    !isGroupPack
+  ) {
+    polygonTransforms = groupPack(rectangleWidth, rectangleHeight, groupedPolygons, {
       debug
     });
   } else {
@@ -133,7 +135,7 @@ const packAnimal = (
     // tslint:disable-next-line
     console.log(Math.round(utilization * 100) + "%");
   }
-  if (utilization < 0.2) {
+  if (utilization < 0.3) {
     const rectangleRatio = rectangleWidth / rectangleHeight;
     let newTransforms = [
       linePack(rectangleWidth, rectangleHeight, polygons, false, { debug, averageArea }),

@@ -3,16 +3,11 @@ import packAnimal from "../.";
 
 import { getPolygonTransform, ITransform } from "../transform";
 
-import { IPolygon, polygonArea, polygonHeight, polygonsBounds, polygonWidth } from "../geometry";
+import { IPolygon, polygonArea, polygonsBounds } from "../geometry";
 import { Matrix } from "../vendor/matrix";
 
 import { average } from "../maths";
 import { noop } from "../utilities";
-
-const packRatio = (polygonTransforms: ITransform[]) => {
-  const bounds = polygonsBounds(polygonTransforms.map(t => t.points));
-  return polygonWidth(bounds) / polygonHeight(bounds);
-};
 
 export const groupPack = (
   rectangleWidth: number,
@@ -20,7 +15,6 @@ export const groupPack = (
   polygonGroups: IPolygon[][],
   { /* istanbul ignore next */ debug: dbug = noop } = {}
 ): ITransform[] => {
-  const rectangleRatio = rectangleWidth / rectangleHeight;
   // Wrap debug function to include current algorithm.
   const debug = (...args: any[]) => dbug("groupPack:", ...args);
   // Write out said algorithm entry.
@@ -39,7 +33,9 @@ export const groupPack = (
         averageArea,
         center: true,
         debug: dbug !== noop,
-        maximize: false
+        isGroupPack: true,
+        maximize: false,
+        rotate: false
       }
     )
   }));
@@ -48,28 +44,17 @@ export const groupPack = (
       polygonTransforms.transforms.map((polygonTransform: ITransform) => polygonTransform.points)
     )
   );
-  const packedPacks = [
-    linePack(
-      rectangleWidth,
-      rectangleHeight,
-      packsBounds.map((points, index) => ({ points, index })),
-      false,
-      {
-        alignBottom: false,
-        averageArea: average(packsBounds.map(packBounds => polygonArea(packBounds))),
-        debug
-      }
-    ),
-    linePack(
-      rectangleWidth,
-      rectangleHeight,
-      packsBounds.map((points, index) => ({ points, index })),
-      true,
-      { debug, averageArea: average(packsBounds.map(packBounds => polygonArea(packBounds))) }
-    )
-  ].sort(
-    (a, b) => Math.abs(packRatio(a) - rectangleRatio) - Math.abs(packRatio(b) - rectangleRatio)
-  )[0];
+  const packedPacks = linePack(
+    rectangleWidth,
+    rectangleHeight,
+    packsBounds.map((points, index) => ({ points, index })),
+    rectangleWidth < rectangleHeight,
+    {
+      alignBottom: false,
+      averageArea: average(packsBounds.map(packBounds => polygonArea(packBounds))),
+      debug
+    }
+  );
 
   const transforms = packedPacks.reduce((memo: ITransform[], packTransform, index) => {
     const pack = packs[index];
