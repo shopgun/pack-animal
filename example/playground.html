@@ -38,7 +38,7 @@
 
   const doPack = () => {
     const packAnimalInputJSON = document.getElementById('packAnimalCallJSON').value;
-    const packAnimalInput = JSON.parse(packAnimalInputJSON)
+    const packAnimalInput = eval(packAnimalInputJSON)
     localStorage.setItem('packAnimalPlaygroundInputJSON', packAnimalInputJSON);
     console.log(packAnimalInput)
     const [inputWidth, inputHeight, inputPolys, inputOptions] = packAnimalInput
