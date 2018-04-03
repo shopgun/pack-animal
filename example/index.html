@@ -40,7 +40,9 @@ Boxes to pack polys in:
       </svg>
     </div>`;
   });
-  const childTransforms = packAnimal(width, height, rectangles, { debug: true, margin: 0, algorithmOptions: { rotationMode: "OFF" } });
+  const packAnimalInput = [width, height, rectangles, { debug: true, margin: 12 }]
+  console.log(JSON.stringify(packAnimalInput));
+  const childTransforms = packAnimal.apply(this, packAnimalInput);
   //  const childTransforms = packAnimal(width, height, polygons, { debug: true, center: false, postPackPolygonScale: 0.9, algorithmOptions: { rotationMode: "SIMPLE" } });
 
   // SVG displllay
