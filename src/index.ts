@@ -87,7 +87,6 @@ const packAnimal = (
   const groupedPolygons: IPolygon[][] = Object.keys(polygonsGroupedByRatio).map(
     key => polygonsGroupedByRatio[key]
   );
-
   if (polygons.length === 1) {
     polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, {
       averageArea,
@@ -135,7 +134,7 @@ const packAnimal = (
     // tslint:disable-next-line
     console.log(Math.round(utilization * 100) + "%");
   }
-  if (utilization < 0.3) {
+  if (true && utilization < 0.3) {
     let newTransforms = [
       linePack(rectangleWidth, rectangleHeight, polygons, false, { debug, averageArea }),
       linePack(rectangleWidth, rectangleHeight, polygons, true, { debug, averageArea })
