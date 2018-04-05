@@ -97,6 +97,13 @@ export const groupPack = (
       );
       const packScale = packTransform.matrix.decompose().scale.x;
       const packToPolyScaleMultiplier = packScale / averagePolygonScale;
+      noop(
+        polygonHeight,
+        calculatedPackCenter,
+        horizontalCorrection,
+        verticalCorrection,
+        packToPolyScaleMultiplier
+      );
       const sumTransform = getPolygonTransform(
         rectangleWidth,
         rectangleHeight,
