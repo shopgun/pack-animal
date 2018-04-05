@@ -143,7 +143,7 @@ const packAnimal = (
       (a, b) =>
         packUtilization(rectangleWidth, rectangleHeight, a.map(({ points }) => points)) -
         packUtilization(rectangleWidth, rectangleHeight, b.map(({ points }) => points))
-    )[0];
+    )[1];
     newTransforms = postProcessTransforms(rectangleWidth, rectangleHeight, newTransforms, {
       center,
       jitter,
@@ -156,8 +156,8 @@ const packAnimal = (
       rectangleHeight,
       newTransforms.map(({ points }) => points)
     );
-    // Only use the new pack with potentially unsightly rotations if the utilization is somewhat better.
-    if (newUtilization - 0.05 > utilization) {
+    // Only use the desperate linepack if it's actually "better".
+    if (newUtilization > utilization) {
       /* istanbul ignore next */
       if (dbug) {
         // tslint:disable-next-line
