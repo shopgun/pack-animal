@@ -11,12 +11,7 @@ import {
 } from "./geometry";
 
 import { /* average, */ standardDeviation } from "./maths";
-import {
-  IPostProcessTransformsOptions,
-  ITransform,
-  packRatio,
-  postProcessTransforms
-} from "./transform";
+import { IPostProcessTransformsOptions, ITransform, postProcessTransforms } from "./transform";
 import { noop, PackAnimalException } from "./utilities";
 
 import { greedyPack, groupPack, linePack, patternPack, singlePack } from "./algorithms";
