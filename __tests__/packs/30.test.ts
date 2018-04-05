@@ -3,7 +3,7 @@
 import packAnimal from "../../src";
 import { packUtilization } from "../../src/geometry";
 
-describe("Bad pack #29", () => {
+describe("Bad pack #30", () => {
   it("Utilizes the rectangle satisfyingly", () => {
     const input: any[] = [
       296,

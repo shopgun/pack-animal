@@ -38,7 +38,7 @@
 
   const doPack = () => {
     const packAnimalInputJSON = document.getElementById('packAnimalCallJSON').value;
-    const packAnimalInput = JSON.parse(packAnimalInputJSON)
+    const packAnimalInput = eval(packAnimalInputJSON)
     localStorage.setItem('packAnimalPlaygroundInputJSON', packAnimalInputJSON);
     console.log(packAnimalInput)
     const [inputWidth, inputHeight, inputPolys, inputOptions] = packAnimalInput
@@ -51,10 +51,11 @@
       const svgPoints = points.map(({ x, y }) => `${x},${y}`).join(' ');
       const polyWidth = polygonWidth(points)
       const polyHeight = polygonHeight(points)
+      const color = Math.floor((Math.abs(Math.sin(new Number(`${polyWidth}${polyHeight}`)) * 16777215)) % 16777215).toString(16);
       document.querySelector('.providedPolys').innerHTML += `
     <div style="width: 100%; height: auto;  margin: 5px;margin-top: 40px;">
       <svg viewBox="0 0 ${polyWidth} ${polyHeight}">
-        <polygon points="${svgPoints}" style="fill: #edab00;" />
+        <polygon points="${svgPoints}" style="fill: #${color}; opacity: 0.8;" />
       </svg>
     </div>`;
     });
@@ -67,8 +68,10 @@
         const svgPoints = points.map(({ x, y }) => `${x},${y}`).join(' ');
         const transform = childTransforms[index];
         const transformAttributeValue = transform.svgTransform;
-
-        return `<polygon points="${svgPoints}" style="fill: #edab00;" transform="${transformAttributeValue}"/>`;
+        const polyWidth = polygonWidth(points);
+        const polyHeight = polygonHeight(points);
+        const color = Math.floor((Math.abs(Math.sin(new Number(`${polyWidth}${polyHeight}`)) * 16777215)) % 16777215).toString(16);
+        return `<polygon points="${svgPoints}" style="fill: #${color}; opacity: 0.8;" transform="${transformAttributeValue}"/>`;
       }).join('')}
     </svg>`;
   }
