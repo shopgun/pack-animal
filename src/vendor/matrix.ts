@@ -149,8 +149,7 @@ export class Matrix {
         dist = q;
       }
 
-      m
-        .translate(b || 0, c || 0)
+      m.translate(b || 0, c || 0)
         .rotateFromVector(a)
         .scaleU(scale)
         .translate(dist, 0);
@@ -175,11 +174,11 @@ export class Matrix {
   public d: number;
   public e: number;
   public f: number;
-  public context: CanvasRenderingContext2D;
+  public context!: CanvasRenderingContext2D;
   private useCSS3D: boolean = false;
-  private px: string;
-  private st: { [index: string]: any };
-  private el: HTMLElement;
+  private px!: string;
+  private st!: { [index: string]: any };
+  private el!: HTMLElement;
   [key: string]: any;
 
   constructor(context?: CanvasRenderingContext2D, element?: HTMLElement) {
@@ -276,7 +275,7 @@ export class Matrix {
    * @returns {Matrix}
    */
   public rotateDeg(angle: number): Matrix {
-    return this.rotate(angle * Math.PI / 180);
+    return this.rotate((angle * Math.PI) / 180);
   }
 
   /**
@@ -348,7 +347,7 @@ export class Matrix {
    * Also see [`skew()`]{@link Matrix#skew}.
    */
   public skewDeg(ax: number, ay: number): Matrix {
-    return this.shear(Math.tan(ax / 180 * Math.PI), Math.tan(ay / 180 * Math.PI));
+    return this.shear(Math.tan((ax / 180) * Math.PI), Math.tan((ay / 180) * Math.PI));
   }
 
   /**

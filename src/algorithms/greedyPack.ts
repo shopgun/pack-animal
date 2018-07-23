@@ -13,7 +13,7 @@ import { getPolygonTransform, ITransform } from "../transform";
 import { btoa, noop, PackAnimalException, setArrayOrder } from "../utilities";
 import { Matrix } from "../vendor/matrix";
 export enum RotationMode {
-  Off,
+  Off = "OFF",
   Simple = "SIMPLE",
   Advanced = "ADVANCED"
 }
@@ -40,7 +40,10 @@ const maxMatrix = (
   let i = 0;
   let previousValue = null;
   let transformedPoints: IPoint[];
-  const { scale, translate: { x, y } } = matrix.decompose();
+  const {
+    scale,
+    translate: { x, y }
+  } = matrix.decompose();
   const initial = attribute === MatrixAttribute.translateX ? x : y;
   let value = initial;
   do {

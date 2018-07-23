@@ -15,7 +15,7 @@ import { IPostProcessTransformsOptions, ITransform, postProcessTransforms } from
 import { noop, PackAnimalException } from "./utilities";
 
 import { greedyPack, groupPack, linePack, patternPack, singlePack } from "./algorithms";
-import { IGreedyPackOptions } from "./algorithms/greedyPack";
+import { IGreedyPackOptions, RotationMode } from "./algorithms/greedyPack";
 
 export interface IPackAnimalOptions {
   debug?: boolean;
@@ -106,7 +106,7 @@ const packAnimal = (
       debug,
       ...algorithmOptions,
       averageArea,
-      ...(rotate ? {} : { rotationMode: "OFF" })
+      ...(rotate ? {} : { rotationMode: RotationMode.Off })
     });
   }
   polygonTransforms = postProcessTransforms(rectangleWidth, rectangleHeight, polygonTransforms, {
