@@ -81,7 +81,7 @@ const patterns: IPoint[][] = [
   []
 ].reduce(
   // Add reversed version of every pattern?
-  (memo, pattern) => [
+  (memo: IPoint[][], pattern) => [
     ...memo,
     pattern,
     patternFlipperX(pattern),
@@ -129,14 +129,16 @@ export const patternPack = (
     (a, b) => Math.abs(packRatio(a) - rectangleRatio) - Math.abs(packRatio(b) - rectangleRatio)
   )[0];
 
+  let bestRatio = packRatio(line);
+  let bestRatioDelta = Math.abs(bestRatio - rectangleRatio);
+  const horizontalOffset = maxWidth;
+  const verticalOffset = maxHeight;
   return patternsForPack.reduce((bestPack: ITransform[], pattern) => {
-    const horizontalOffset = maxWidth;
-    const verticalOffset = maxHeight;
     const newPack = polygons.map((polygon, index) => {
       const normalizingScale = normalizedScaleFromPoints(polygon);
       const { x, y } = pattern[index];
-      const horizontalCorrection = maxWidth - polygonWidth(polygon) * normalizingScale / 2;
-      const verticalCorrection = maxHeight - polygonHeight(polygon) * normalizingScale / 2;
+      const horizontalCorrection = maxWidth - (polygonWidth(polygon) * normalizingScale) / 2;
+      const verticalCorrection = maxHeight - (polygonHeight(polygon) * normalizingScale) / 2;
 
       return getPolygonTransform(
         rectangleWidth,
@@ -151,8 +153,9 @@ export const patternPack = (
       );
     });
     const newRatio = packRatio(newPack);
-    const bestRatio = packRatio(bestPack);
-    if (Math.abs(newRatio - rectangleRatio) < Math.abs(bestRatio - rectangleRatio)) {
+    if (Math.abs(newRatio - rectangleRatio) < bestRatioDelta) {
+      bestRatio = newRatio;
+      bestRatioDelta = Math.abs(bestRatio - rectangleRatio);
       debug(JSON.stringify(pattern));
       return newPack;
     }
