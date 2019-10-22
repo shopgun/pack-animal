@@ -13,7 +13,7 @@
   "author": "klarstrup <jk@shopgun.com> (https://shopgun.com/)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shopgun/pack-animal.git"
+    "url": "git+https://github.com/shopgun/pack-animal.git"
   },
   "license": "MIT",
   "engines": {
@@ -34,9 +34,7 @@
     "commit": "git-cz",
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
-    "precommit": "lint-staged",
-    "prepush": "npm run test:prod && npm run build",
-    "commitmsg": "validate-commit-msg"
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -55,7 +53,7 @@
   },
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest"
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -78,35 +76,35 @@
     "collectCoverage": true
   },
   "devDependencies": {
-    "@types/jest": "^24.0.19",
+    "@types/jest": "^21.1.0",
     "@types/lodash": "^4.14.112",
-    "@types/node": "^12.11.2",
+    "@types/node": "^8.10.21",
     "colors": "^1.3.1",
-    "commitizen": "^4.0.3",
+    "commitizen": "^2.10.1",
     "coveralls": "^3.0.2",
-    "cross-env": "^6.0.3",
-    "cz-conventional-changelog": "^3.0.2",
-    "husky": "^3.0.9",
-    "jest": "^24.9.0",
-    "lint-staged": "^9.4.2",
+    "cross-env": "^5.2.0",
+    "cz-conventional-changelog": "^2.0.0",
+    "husky": "^0.14.0",
+    "jest": "^22.4.4",
+    "lint-staged": "^6.1.1",
     "lodash.camelcase": "^4.3.0",
     "npm-run-all": "^4.1.3",
     "prettier": "^1.13.7",
     "prompt": "^1.0.0",
-    "replace-in-file": "^4.2.0",
-    "rimraf": "^3.0.0",
-    "rollup": "^1.25.1",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
+    "replace-in-file": "^3.4.0",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.52.0",
+    "rollup-plugin-commonjs": "^8.4.1",
+    "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "semantic-release": "^15.8.1",
-    "ts-jest": "^24.1.0",
-    "ts-node": "^8.4.1",
+    "ts-jest": "^22.4.6",
+    "ts-node": "^4.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.14.0",
-    "tslint-config-standard": "^8.0.1",
-    "typedoc": "^0.15.0",
-    "typescript": "^3.6.4",
+    "tslint-config-standard": "^7.1.0",
+    "typedoc": "^0.11.1",
+    "typescript": "^2.9.2",
     "validate-commit-msg": "^2.12.2"
   },
   "dependencies": {}
