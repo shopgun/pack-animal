@@ -56,12 +56,12 @@ export class Matrix {
      */
     const m1 = new Matrix();
     const m2 = new Matrix(context);
-    let r1;
-    let r2;
-    let rx1;
-    let ry1;
-    let rx2;
-    let ry2;
+    let r1: [number, number, number, number, number, number];
+    let r2: [number, number, number, number, number, number];
+    let rx1: number;
+    let ry1: number;
+    let rx2: number;
+    let ry2: number;
 
     if (Array.isArray(t1)) {
       if (typeof t1[0] === "number") {

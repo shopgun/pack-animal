@@ -1,5 +1,6 @@
 export class PackAnimalException {
   public error!: Error;
+  public meta: any;
   [key: string]: any;
   constructor(public message: string = "", meta: { [key: string]: any }) {
     this.meta = meta;
@@ -40,17 +41,22 @@ export const permutator = <T>(list: T[], maxLen: number): T[][] => {
 export const rotateArray = (n: number, array: any[]) =>
   array.slice(n, array.length).concat(array.slice(0, n));
 
-export const setArrayOrder = (order: number[], array: any[]) =>
-  array
-    .map((o, i) => ({ o, i }))
-    .sort((a, b) => order[a.i] - order[b.i])
-    .map(({ o }) => o);
+export function setArrayOrder(order: number[], array: any[]) {
+  const { length } = array;
+  if (order.length !== length) {
+    throw new Error("Both arrays passed to setArrayOrder must be of same length");
+  }
+  return array.reduce((out, element, index) => {
+    out[order[index]] = element;
+    return out;
+  }, Array.from({ length }));
+}
 
 export const btoa = (str: string): string => {
   if (typeof window !== "undefined" && window && window.btoa) {
     // This only handles ASCII - I'm sure that'll never be a problem...
     return window.btoa(str);
   } else {
-    return new Buffer(str.toString(), "binary").toString("base64");
+    return Buffer.from(str.toString()).toString("base64");
   }
 };

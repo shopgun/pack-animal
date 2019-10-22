@@ -14,8 +14,19 @@ import { /* average, */ standardDeviation } from "./maths";
 import { IPostProcessTransformsOptions, ITransform, postProcessTransforms } from "./transform";
 import { noop, PackAnimalException } from "./utilities";
 
-import { greedyPack, groupPack, linePack, patternPack, singlePack } from "./algorithms";
+import {
+  greedyPack,
+  groupPack,
+  linePack,
+  patternPack,
+  singlePack,
+  staggerPack
+} from "./algorithms";
 import { IGreedyPackOptions, RotationMode } from "./algorithms/greedyPack";
+
+enum PackAnimalAlgorithms {
+  StaggerPack = "staggerPack"
+}
 
 export interface IPackAnimalOptions {
   debug?: boolean;
@@ -23,6 +34,7 @@ export interface IPackAnimalOptions {
   recursion?: number;
   averageArea?: number;
   isGroupPack?: boolean;
+  algorithm?: PackAnimalAlgorithms;
 }
 
 const packAnimal = (
@@ -43,7 +55,8 @@ const packAnimal = (
     //    recursion = 0,
     averageArea = 0,
     isGroupPack = false,
-    /* istanbul ignore next */ debug: dbug = false
+    /* istanbul ignore next */ debug: dbug = false,
+    algorithm
   } = packAnimalOptions;
   const debug = dbug ? console.log : noop;
   if (!polygons || !polygons.length) {
@@ -82,7 +95,17 @@ const packAnimal = (
   const groupedPolygons: IPolygon[][] = Object.keys(polygonsGroupedByRatio).map(
     key => polygonsGroupedByRatio[key]
   );
-  if (polygons.length === 1) {
+  if (algorithm) {
+    switch (algorithm) {
+      case PackAnimalAlgorithms.StaggerPack:
+        polygonTransforms = staggerPack(rectangleWidth, rectangleHeight, polygons, {
+          averageArea,
+          debug
+        });
+      default:
+        throw new Error("PackAnimal: unknown `algorithm` option provided.");
+    }
+  } else if (polygons.length === 1) {
     polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, {
       averageArea,
       debug,
@@ -162,5 +185,7 @@ const packAnimal = (
   }
   return polygonTransforms;
 };
+
+packAnimal.PackAnimalAlgorithms = PackAnimalAlgorithms;
 
 export default packAnimal;

@@ -4,7 +4,7 @@ import packAnimal from "../../src";
 import { packUtilization } from "../../src/geometry";
 
 describe("Bad pack #35", () => {
-  const input: any[] = [
+  const input: any = [
     296,
     183,
     [
@@ -17,7 +17,7 @@ describe("Bad pack #35", () => {
     { margin: 6, rotate: true, jitter: { rotate: 0 } }
   ];
   it("Utilizes the rectangle satisfyingly", () => {
-    const packedPolygons = packAnimal.apply(this, input).map(({ points }) => points);
+    const packedPolygons = packAnimal.apply(void 0, input).map(({ points }: any) => points);
     expect(packUtilization(input[0], input[1], packedPolygons)).toBeGreaterThanOrEqual(0.4);
   });
 });
