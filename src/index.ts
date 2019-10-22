@@ -69,7 +69,7 @@ const packAnimal = (
     });
   }
   /* istanbul ignore next */
-  if (debug) {
+  if (dbug) {
     // tslint:disable-next-line
     console.time("packAnimal");
   }
