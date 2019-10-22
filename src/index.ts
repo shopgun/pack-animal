@@ -186,6 +186,7 @@ const packAnimal = (
   return polygonTransforms;
 };
 
+// @ts-ignore
 packAnimal.PackAnimalAlgorithms = PackAnimalAlgorithms;
 
 export default packAnimal;
