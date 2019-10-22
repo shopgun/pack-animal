@@ -1,5 +1,6 @@
 export class PackAnimalException {
   public error!: Error;
+  public meta: any;
   [key: string]: any;
   constructor(public message: string = "", meta: { [key: string]: any }) {
     this.meta = meta;
@@ -56,6 +57,6 @@ export const btoa = (str: string): string => {
     // This only handles ASCII - I'm sure that'll never be a problem...
     return window.btoa(str);
   } else {
-    return new Buffer(str.toString(), "binary").toString("base64");
+    return Buffer.from(str.toString()).toString("base64");
   }
 };
