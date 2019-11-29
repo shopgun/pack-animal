@@ -19,7 +19,6 @@ jobs:
           key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ matrix.node-version }}-
-      - run: yarn install
       - run: npm run build
       - run: npm run test:prod
       - name: release
