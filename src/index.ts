@@ -102,8 +102,9 @@ const packAnimal = (
           averageArea,
           debug
         });
+        break;
       default:
-        throw new Error("PackAnimal: unknown `algorithm` option provided.");
+        throw new Error("PackAnimal: unknown value for `algorithm` option provided.");
     }
   } else if (polygons.length === 1) {
     polygonTransforms = singlePack(rectangleWidth, rectangleHeight, polygons, {
