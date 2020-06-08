@@ -25,7 +25,8 @@ import {
 import { IGreedyPackOptions, RotationMode } from "./algorithms/greedyPack";
 
 enum PackAnimalAlgorithms {
-  StaggerPack = "staggerPack"
+  StaggerPack = "staggerPack",
+  LinePack = "linePack"
 }
 
 export interface IPackAnimalOptions {
@@ -102,6 +103,15 @@ const packAnimal = (
           averageArea,
           debug
         });
+        break;
+      case PackAnimalAlgorithms.LinePack:
+        polygonTransforms = linePack(
+          rectangleWidth,
+          rectangleHeight,
+          polygons,
+          rectangleHeight > rectangleWidth,
+          { averageArea, debug }
+        );
         break;
       default:
         throw new Error("PackAnimal: unknown value for `algorithm` option provided.");
