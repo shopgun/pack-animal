@@ -9,7 +9,7 @@ export const linePack = (
   rectangleHeight: number,
   polygonList: IPolygon[],
   vertical: boolean = false,
-  { debug: dbug = noop, averageArea: averageAreaOption = 0, alignBottom = true } = {}
+  { debug: dbug = noop, averageArea: averageAreaOption = 0, alignBottom = true, margin = 0 } = {}
 ): ITransform[] => {
   const polygons = polygonList.map(({ points }) => points);
   // Wrap debug function to include current algorithm.
@@ -23,7 +23,7 @@ export const linePack = (
     (_, i) => (averageArea / polygonAreas[i] - 1) / 2 + 1
   );
   const polygonWidths = polygons.map(
-    (polygon, i) => polygonWidth(polygon) * polygonNormalizingScales[i]
+    (polygon, i) => polygonWidth(polygon) * polygonNormalizingScales[i] + margin
   );
   const polygonHeights = polygons.map(
     (polygon, i) => polygonHeight(polygon) * polygonNormalizingScales[i]

@@ -110,7 +110,7 @@ const packAnimal = (
           rectangleHeight,
           polygons,
           rectangleHeight > rectangleWidth,
-          { averageArea, debug }
+          { averageArea, debug, margin }
         );
         break;
       default:
@@ -146,7 +146,7 @@ const packAnimal = (
   polygonTransforms = postProcessTransforms(rectangleWidth, rectangleHeight, polygonTransforms, {
     center,
     jitter,
-    margin,
+    margin: algorithm === PackAnimalAlgorithms.LinePack ? 0 : margin,
     maximize,
     postPackPolygonScale
   });
@@ -163,10 +163,12 @@ const packAnimal = (
     // tslint:disable-next-line
     console.log(Math.round(utilization * 100) + "%");
   }
-  if (true && utilization < 0.3) {
+  // Fallback to linePack in case of catastrophically bad packs.
+  // Notice: linePack is not guaranteed to not be catastrophically bad.
+  if (utilization < 0.3) {
     let newTransforms = [
-      linePack(rectangleWidth, rectangleHeight, polygons, false, { debug, averageArea }),
-      linePack(rectangleWidth, rectangleHeight, polygons, true, { debug, averageArea })
+      linePack(rectangleWidth, rectangleHeight, polygons, false, { debug, averageArea, margin }),
+      linePack(rectangleWidth, rectangleHeight, polygons, true, { debug, averageArea, margin })
     ].sort(
       (a, b) =>
         packUtilization(rectangleWidth, rectangleHeight, a.map(({ points }) => points)) -
@@ -175,7 +177,7 @@ const packAnimal = (
     newTransforms = postProcessTransforms(rectangleWidth, rectangleHeight, newTransforms, {
       center,
       jitter,
-      margin,
+      margin: algorithm === PackAnimalAlgorithms.LinePack ? 0 : margin,
       maximize,
       postPackPolygonScale
     });
